@@ -1,6 +1,7 @@
 import { BaseResource } from './BaseResource';
 import { TransformedResource, TransformedList } from '../adapter/JsonApiAdapter';
 import { OsfUserAttributes, UserListParams } from '../types/user';
+import { PaginatedResult } from '../pagination/PaginatedResult';
 
 /**
  * Users resource class for interacting with OSF user endpoints
@@ -49,5 +50,27 @@ export class Users extends BaseResource {
    */
   async listUsers(params?: UserListParams): Promise<TransformedList<OsfUserAttributes>> {
     return super.list<OsfUserAttributes>('users/', params);
+  }
+
+  /**
+   * List users with automatic pagination support
+   *
+   * Returns a PaginatedResult that can iterate through all pages automatically.
+   *
+   * @param params - Optional filter and pagination parameters
+   * @returns PaginatedResult with async iteration support
+   *
+   * @example
+   * ```typescript
+   * const result = await users.listUsersPaginated({ 'filter[family_name]': 'Smith' });
+   *
+   * // Iterate through all items
+   * for await (const user of result.items()) {
+   *   console.log(user.full_name);
+   * }
+   * ```
+   */
+  async listUsersPaginated(params?: UserListParams): Promise<PaginatedResult<OsfUserAttributes>> {
+    return super.listPaginated<OsfUserAttributes>('users/', params);
   }
 }

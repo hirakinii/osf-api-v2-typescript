@@ -1,13 +1,15 @@
 import { OsfClient } from '../../src/index';
 
 describe('OsfClient', () => {
-    it('should be instantiated with a token', () => {
-        const client = new OsfClient('test-token');
-        expect(client).toBeDefined();
-    });
+  it('should be instantiated with a config object', () => {
+    const client = new OsfClient({ token: 'test-token' });
+    expect(client).toBeDefined();
+  });
 
-    it('should return a fetch string', () => {
-        const client = new OsfClient('test-token');
-        expect(client.get('/nodes')).toBe('Fetching /nodes with token test-token');
-    });
+  it('should provide access to resources', () => {
+    const client = new OsfClient({ token: 'test-token' });
+    expect(client.nodes).toBeDefined();
+    expect(client.files).toBeDefined();
+    expect(client.users).toBeDefined();
+  });
 });
