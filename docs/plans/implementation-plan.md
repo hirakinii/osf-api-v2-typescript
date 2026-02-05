@@ -8,10 +8,10 @@
 このフェーズでは、開発環境の整備と、API クライアントの土台となる通信・エラー処理・型定義を実装します。
 
 ### 1.1 環境構築 (Environment Setup)
-- [ ] ディレクトリ構造の作成 (`src/`, `tests/` 等)
-- [ ] TypeScript 設定 (`tsconfig.json`) の最適化
-- [ ] Linter/Formatter 設定 (`eslint`, `prettier`) の確立
-- [ ] テスト環境 (`jest`, `ts-jest`) のセットアップ
+- [x] ディレクトリ構造の作成 (`src/`, `tests/` 等)
+- [x] TypeScript 設定 (`tsconfig.json`) の最適化
+- [x] Linter/Formatter 設定 (`eslint`, `prettier`) の確立
+- [x] テスト環境 (`jest`, `ts-jest`) のセットアップ
 
 ### 1.2 基本型定義 (Core Types)
 - [ ] JSON:API レスポンスのジェネリクス型定義 (`JsonApiResponse<T>`)
