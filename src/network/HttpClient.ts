@@ -7,12 +7,22 @@ import {
   OsfApiError,
 } from './Errors';
 
+/**
+ * Configuration options for the HttpClient
+ */
 export interface HttpClientConfig {
+  /** Personal access token for authentication */
   token: string;
+  /** Base URL for the API (defaults to https://api.osf.io/v2/) */
   baseUrl?: string;
-  timeout?: number; // Timeout in milliseconds (default: 30000)
+  /** Request timeout in milliseconds (defaults to 30000) */
+  timeout?: number;
 }
 
+/**
+ * Common HTTP client for making requests to OSF APIs.
+ * Handles authentication, base URL resolution, and error mapping.
+ */
 export class HttpClient {
   private token: string;
   private baseUrl: string;
@@ -24,10 +34,25 @@ export class HttpClient {
     this.timeout = config.timeout ?? 30000; // Default: 30 seconds
   }
 
+  /**
+   * Perform a GET request
+   *
+   * @param endpoint - The API endpoint path or full URL
+   * @param options - Additional request options
+   * @returns The parsed JSON response
+   */
   async get<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
 
+  /**
+   * Perform a POST request
+   *
+   * @param endpoint - The API endpoint path or full URL
+   * @param body - The request body (will be stringified)
+   * @param options - Additional request options
+   * @returns The parsed JSON response
+   */
   async post<T>(endpoint: string, body: unknown, options: RequestInit = {}): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
@@ -36,6 +61,14 @@ export class HttpClient {
     });
   }
 
+  /**
+   * Perform a PATCH request
+   *
+   * @param endpoint - The API endpoint path or full URL
+   * @param body - The request body (will be stringified)
+   * @param options - Additional request options
+   * @returns The parsed JSON response
+   */
   async patch<T>(endpoint: string, body: unknown, options: RequestInit = {}): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
@@ -44,6 +77,12 @@ export class HttpClient {
     });
   }
 
+  /**
+   * Perform a DELETE request
+   *
+   * @param endpoint - The API endpoint path or full URL
+   * @param options - Additional request options
+   */
   async delete(endpoint: string, options: RequestInit = {}): Promise<void> {
     await this.request<void>(endpoint, { ...options, method: 'DELETE' });
   }
