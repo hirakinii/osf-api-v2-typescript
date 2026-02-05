@@ -1,3 +1,4 @@
+/** Base class for all OSF API related errors */
 export class OsfApiError extends Error {
   constructor(message: string) {
     super(message);
@@ -5,6 +6,7 @@ export class OsfApiError extends Error {
   }
 }
 
+/** Thrown when authentication fails (401) */
 export class OsfAuthenticationError extends OsfApiError {
   constructor(message = 'Authentication failed') {
     super(message);
@@ -12,6 +14,7 @@ export class OsfAuthenticationError extends OsfApiError {
   }
 }
 
+/** Thrown when the user lacks permission for the request (403) */
 export class OsfPermissionError extends OsfApiError {
   constructor(message = 'Permission denied') {
     super(message);
@@ -19,6 +22,7 @@ export class OsfPermissionError extends OsfApiError {
   }
 }
 
+/** Thrown when a resource is not found (404) */
 export class OsfNotFoundError extends OsfApiError {
   constructor(message = 'Resource not found') {
     super(message);
@@ -26,6 +30,7 @@ export class OsfNotFoundError extends OsfApiError {
   }
 }
 
+/** Thrown when the rate limit is exceeded (429) */
 export class OsfRateLimitError extends OsfApiError {
   constructor(message = 'Rate limit exceeded') {
     super(message);
@@ -33,6 +38,7 @@ export class OsfRateLimitError extends OsfApiError {
   }
 }
 
+/** Thrown when the OSF server returns a 5xx error */
 export class OsfServerError extends OsfApiError {
   constructor(message = 'Internal server error') {
     super(message);

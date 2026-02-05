@@ -104,13 +104,18 @@ JSON:API の複雑さを吸収する変換処理と、リソース操作の共�
 ## Phase 5: 品質保証とドキュメント (QA & Documentation)
 
 ### 5.1 統合テスト (Integration Testing)
-- [ ] 主要なユースケースを通した E2E シナリオテストの実装
-- [ ] テストカバレッジの最終確認 (80% 以上必須)
+- [x] 主要なユースケースを通した E2E シナリオテストの実装
+- [x] テストカバレッジの最終確認 (80% 以上必須)
 
 ### 5.2 ドキュメント整備
-- [ ] README.md の更新 (使用例の追加)
-- [ ] TSDoc コメントの網羅チェック
-- [ ] CHANGELOG の作成
+- [x] README.md の更新 (使用例の追加)
+- [x] TSDoc コメントの網羅チェック
+- [x] CHANGELOG の作成
+- [x] サンプルコードの作成
+- [x] NPM 公開準備
+- [x] GitHub Actions の設定
+    - [x] CI workflow on pull request and merge to main
+    - [x] CD workflow on merge to main
 
 ## 6. 今後の拡張 (Post-MVP)
 - [ ] OAuth2 認証フローの追加
