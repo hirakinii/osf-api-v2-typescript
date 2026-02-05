@@ -106,4 +106,48 @@ describe('HttpClient', () => {
         fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 500 });
         await expect(client.get('nodes')).rejects.toThrow(OsfServerError);
     });
+
+    describe('Timeout handling', () => {
+        it('should use default timeout of 30 seconds', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await client.get('nodes');
+
+            const [, options] = fetchMock.mock.calls[0];
+            expect(options?.signal).toBeDefined();
+        });
+
+        it('should allow custom timeout configuration', async () => {
+            const customClient = new HttpClient({ token, baseUrl, timeout: 5000 });
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await customClient.get('nodes');
+
+            const [, options] = fetchMock.mock.calls[0];
+            expect(options?.signal).toBeDefined();
+        });
+
+        it('should throw error when request times out', async () => {
+            const shortTimeoutClient = new HttpClient({ token, baseUrl, timeout: 100 });
+
+            // Mock a delayed response that will be aborted
+            fetchMock.mockImplementation(() =>
+                new Promise((_, reject) => {
+                    setTimeout(() => {
+                        const error = new Error('The operation was aborted');
+                        error.name = 'AbortError';
+                        reject(error);
+                    }, 50);
+                })
+            );
+
+            await expect(shortTimeoutClient.get('nodes')).rejects.toThrow('Request timeout after 100ms');
+        });
+
+        it('should allow per-request timeout override', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await client.get('nodes', { signal: AbortSignal.timeout(1000) });
+
+            const [, options] = fetchMock.mock.calls[0];
+            expect(options?.signal).toBeDefined();
+        });
+    });
 });

@@ -10,15 +10,18 @@ import {
 export interface HttpClientConfig {
   token: string;
   baseUrl?: string;
+  timeout?: number; // Timeout in milliseconds (default: 30000)
 }
 
 export class HttpClient {
   private token: string;
   private baseUrl: string;
+  private timeout: number;
 
   constructor(config: HttpClientConfig) {
     this.token = config.token;
     this.baseUrl = config.baseUrl || 'https://api.osf.io/v2/';
+    this.timeout = config.timeout ?? 30000; // Default: 30 seconds
   }
 
   async get<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -34,20 +37,38 @@ export class HttpClient {
       headers.set('Content-Type', 'application/json');
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    // Setup timeout using AbortController
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
-    if (!response.ok) {
-      await this.handleError(response);
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+        signal: options.signal ?? controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        await this.handleError(response);
+      }
+
+      if (response.status === 204) {
+        return {} as T;
+      }
+
+      return response.json();
+    } catch (error) {
+      clearTimeout(timeoutId);
+
+      // Handle timeout error
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new OsfApiError(`Request timeout after ${this.timeout}ms`);
+      }
+
+      throw error;
     }
-
-    if (response.status === 204) {
-      return {} as T;
-    }
-
-    return response.json();
   }
 
   private resolveUrl(endpoint: string): string {
