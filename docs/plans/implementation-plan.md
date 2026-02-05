@@ -33,16 +33,16 @@
 JSON:API の複雑さを吸収する変換処理と、リソース操作の共通ロジックを実装します。
 
 ### 2.1 アダプター実装 (Adapter Layer) - TDD
-- [ ] **Test:** JSON:API 形式のサンプルレスポンスを用いた変換テスト作成
-- [ ] **Impl:** `JsonApiAdapter` の実装
-    - [ ] `data.attributes` のフラット化
-    - [ ] リレーションシップ情報の整理
+- [x] **Test:** JSON:API 形式のサンプルレスポンスを用いた変換テスト作成
+- [x] **Impl:** `JsonApiAdapter` の実装
+    - [x] `data.attributes` のフラット化
+    - [x] リレーションシップ情報の整理
 
 ### 2.2 リソース基底クラス (Base Resource)
-- [ ] **Test:** 基底クラスの共通メソッドに対するテスト作成
-- [ ] **Impl:** `BaseResource` クラスの実装
-    - [ ] `HttpClient` の保持
-    - [ ] 共通の `get`, `list` 処理の枠組み
+- [x] **Test:** 基底クラスの共通メソッドに対するテスト作成
+- [x] **Impl:** `BaseResource` クラスの実装
+    - [x] `HttpClient` の保持
+    - [x] 共通の `get`, `list` 処理の枠組み
 
 ## Phase 3: リソース実装 (Resource Implementation)
 
