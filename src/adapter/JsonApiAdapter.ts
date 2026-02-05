@@ -3,13 +3,12 @@ import { JsonApiResponse, JsonApiListResponse } from '../types';
 /**
  * Represents a transformed resource with flattened attributes
  */
-export interface TransformedResource<T> {
+export type TransformedResource<T> = T & {
   id: string;
   type: string;
   relationships?: Record<string, unknown>;
   links?: Record<string, string>;
-  [key: string]: unknown;
-}
+};
 
 /**
  * Represents a transformed list response with metadata and pagination links

@@ -5,12 +5,12 @@ import fetchMock from 'jest-fetch-mock';
 
 // Create a concrete implementation for testing
 class TestResource extends BaseResource {
-    async getItem(id: string) {
-        return this.get<{ name: string }>(`items/${id}`);
+    async getItem<T>(id: string) {
+        return this.get<T>(`items/${id}`);
     }
 
-    async listItems(params?: Record<string, unknown>) {
-        return this.list<{ name: string }>('items', params);
+    async listItems<T>(params?: Record<string, unknown>) {
+        return this.list<T>('items', params);
     }
 }
 
@@ -53,7 +53,7 @@ describe('BaseResource', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await resource.getItem('item-123');
+            const result = await resource.getItem<{ name: string }>('item-123');
 
             expect(result.id).toBe('item-123');
             expect(result.type).toBe('items');
@@ -62,12 +62,9 @@ describe('BaseResource', () => {
         });
 
         it('should handle 404 error for non-existent resource', async () => {
-            fetchMock.mockResponseOnce(
-                JSON.stringify({ errors: [{ detail: 'Not found' }] }),
-                { status: 404 }
-            );
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [{ detail: 'Not found' }] }), { status: 404 });
 
-            await expect(resource.getItem('non-existent')).rejects.toThrow();
+            await expect(resource.getItem<{ name: string }>('non-existent')).rejects.toThrow();
         });
 
         it('should transform response using adapter', async () => {
@@ -89,7 +86,7 @@ describe('BaseResource', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await resource.getItem('node-456');
+            const result = await resource.getItem<{ title: string; description: string }>('node-456');
 
             // Verify attributes are flattened
             expect(result.title).toBe('My Node');
@@ -127,7 +124,7 @@ describe('BaseResource', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await resource.listItems();
+            const result = await resource.listItems<{ name: string }>();
 
             expect(result.data).toHaveLength(2);
             expect(result.data[0].id).toBe('item-1');
@@ -157,7 +154,7 @@ describe('BaseResource', () => {
                 sort: '-created',
             };
 
-            await resource.listItems(params);
+            await resource.listItems<{ name: string }>(params);
 
             const [url] = fetchMock.mock.calls[0];
             expect(url).toContain('filter=active');
@@ -188,7 +185,7 @@ describe('BaseResource', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await resource.listItems();
+            const result = await resource.listItems<{ title: string }>();
 
             expect(result.meta).toBeDefined();
             expect(result.meta?.total).toBe(100);
@@ -204,7 +201,7 @@ describe('BaseResource', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            await resource.listItems();
+            await resource.listItems<{ name: string }>();
 
             const [url] = fetchMock.mock.calls[0];
             expect(url).toBe('https://api.test-osf.io/v2/items');
@@ -220,7 +217,7 @@ describe('BaseResource', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await resource.listItems();
+            const result = await resource.listItems<{ name: string }>();
 
             expect(result.data).toHaveLength(0);
             expect(result.meta?.total).toBe(0);
