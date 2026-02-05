@@ -20,13 +20,13 @@
 - [x] エラー型定義 (`OsfApiError`)
 
 ### 1.3 ネットワーク層 (Network Layer) - TDD
-- [ ] **Test:** モックサーバーを用いた HTTP リクエスト/レスポンスのテスト作成
-- [ ] **Impl:** `HttpClient` クラスの実装 (Node.js native `fetch` 使用)
-    - [ ] Base URL 管理
-    - [ ] Authorization Header 付与
+- [x] **Test:** モックサーバーを用いた HTTP リクエスト/レスポンスのテスト作成
+- [x] **Impl:** `HttpClient` クラスの実装 (Node.js native `fetch` 使用)
+    - [x] Base URL 管理
+    - [x] Authorization Header 付与
     - [ ] タイムアウト処理
-- [ ] **Impl:** エラーハンドリングロジックの実装
-    - [ ] ステータスコードに基づくカスタムエラー (`OsfAuthenticationError` 等) へのマッピング
+- [x] **Impl:** エラーハンドリングロジックの実装
+    - [x] ステータスコードに基づくカスタムエラー (`OsfAuthenticationError` 等) へのマッピング
 
 ## Phase 2: データアダプターとリソース基盤 (Adapters & Base Resource)
 
