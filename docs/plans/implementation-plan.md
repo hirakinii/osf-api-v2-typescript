@@ -113,7 +113,9 @@ JSON:API の複雑さを吸収する変換処理と、リソース操作の共�
 - [x] CHANGELOG の作成
 - [x] サンプルコードの作成
 - [x] NPM 公開準備
-- [ ] GitHub workflow の設定
+- [ ] GitHub Actions の設定
+    - [ ] CI workflow on pull request and merge to main
+    - [ ] CD workflow on merge to main
 
 ## 6. 今後の拡張 (Post-MVP)
 - [ ] OAuth2 認証フローの追加
