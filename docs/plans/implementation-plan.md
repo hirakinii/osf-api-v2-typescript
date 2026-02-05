@@ -112,6 +112,8 @@ JSON:API の複雑さを吸収する変換処理と、リソース操作の共�
 - [x] TSDoc コメントの網羅チェック
 - [x] CHANGELOG の作成
 - [x] サンプルコードの作成
+- [x] NPM 公開準備
+- [ ] GitHub workflow の設定
 
 ## 6. 今後の拡張 (Post-MVP)
 - [ ] OAuth2 認証フローの追加

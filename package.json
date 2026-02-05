@@ -2,10 +2,17 @@
   "name": "osf-api-v2-typescript",
   "version": "0.1.0",
   "description": "このプロジェクトは、OSF (Open Science Framework) API v2 の仕様に基づき、TypeScript を用いたクライアントライブラリを実装することを目的としています。",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc",
+    "prepack": "npm run build",
     "lint": "eslint '{src,examples}/**/*.{ts,tsx}'",
     "format": "prettier --write '{src,examples}/**/*.{ts,tsx}'"
   },
@@ -13,8 +20,15 @@
     "type": "git",
     "url": "git+https://github.com/hirakinii/osf-api-v2-typescript.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "osf",
+    "open-science-framework",
+    "api",
+    "client",
+    "json-api",
+    "typescript"
+  ],
+  "author": "hirakinii",
   "license": "Apache-2.0",
   "type": "commonjs",
   "bugs": {
