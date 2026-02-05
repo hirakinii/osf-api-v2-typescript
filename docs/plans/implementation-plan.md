@@ -24,7 +24,7 @@
 - [x] **Impl:** `HttpClient` クラスの実装 (Node.js native `fetch` 使用)
     - [x] Base URL 管理
     - [x] Authorization Header 付与
-    - [ ] タイムアウト処理
+    - [x] タイムアウト処理
 - [x] **Impl:** エラーハンドリングロジックの実装
     - [x] ステータスコードに基づくカスタムエラー (`OsfAuthenticationError` 等) へのマッピング
 
