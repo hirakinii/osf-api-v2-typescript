@@ -1,0 +1,68 @@
+schema_version: "1.0"
+model_name: "OsfFile_LogicalModel"
+description: "OSF File logical data model"
+entities:
+  OsfFile:
+    description: "A file or folder in OSF"
+    attributes:
+      id:
+        type: "String"
+        description: "The identifier of the file entity."
+        primary_key: true
+      type:
+        type: "String"
+        description: "The type identifier of the file entity (`files`)."
+        required: true
+      name:
+        type: "String"
+        description: "Name of the file"
+        required: true
+      kind:
+        type: "Enum"
+        description: "The kind of files object it is (`file` or `folder`)."
+        options:
+          - "file"
+          - "folder"
+      path:
+        type: "String"
+        description: "The unique identifier for this file entity for this project and storage provider."
+      materialized_path:
+        type: "String"
+        description: "Unix-style path to the file relative to the provider root."
+      provider:
+        type: "String"
+        description: "The id of the file provider (e.g., `osfstorage`)"
+      size:
+        type: "Integer"
+        description: "Size of the file in bytes."
+      start_version:
+        type: "Integer"
+        description: "Version number of the file."
+      date_created:
+        type: "Date"
+        description: "The time at which the file was created."
+      date_modified:
+        type: "Date"
+        description: "The time at which the file was last modified."
+      current_user_can_comment:
+        type: "Boolean"
+        description: "Whether or not the current user is allowed to post comments."
+      guid:
+        type: "String"
+        description: "Global unique identifier (GUID) for this file."
+      delete_allowed:
+        type: "Boolean"
+        description: "Whether or not deletion of the file is allowed."
+    relationships:
+      node:
+        target: "OsfNode"
+        description: "The node the file is on."
+        cardinality: "1:1"
+      comments:
+        target: "Comment"
+        description: "Comments on the file."
+        cardinality: "0:N"
+      versions:
+        target: "FileVersion"
+        description: "Versions of the file."
+        cardinality: "0:N"
