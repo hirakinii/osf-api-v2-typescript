@@ -12,6 +12,18 @@ class TestResource extends BaseResource {
     async listItems<T>(params?: Record<string, unknown>) {
         return this.list<T>('items', params);
     }
+
+    async createItem<T>(data: unknown) {
+        return this.post<T>('items/', data);
+    }
+
+    async updateItem<T>(id: string, data: unknown) {
+        return this.patch<T>(`items/${id}/`, data);
+    }
+
+    async deleteItem(id: string) {
+        return this.remove(`items/${id}/`);
+    }
 }
 
 describe('BaseResource', () => {
@@ -221,6 +233,115 @@ describe('BaseResource', () => {
 
             expect(result.data).toHaveLength(0);
             expect(result.meta?.total).toBe(0);
+        });
+    });
+
+    describe('post method', () => {
+        it('should create resource and transform response', async () => {
+            const mockResponse: JsonApiResponse<{ name: string }> = {
+                data: {
+                    id: 'new-item-123',
+                    type: 'items',
+                    attributes: {
+                        name: 'New Item',
+                    },
+                    links: {
+                        self: 'https://api.test-osf.io/v2/items/new-item-123/',
+                    },
+                },
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const requestData = {
+                data: {
+                    type: 'items',
+                    attributes: { name: 'New Item' },
+                },
+            };
+            const result = await resource.createItem<{ name: string }>(requestData);
+
+            expect(result.id).toBe('new-item-123');
+            expect(result.type).toBe('items');
+            expect(result.name).toBe('New Item');
+
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/items/');
+            expect(options?.method).toBe('POST');
+            expect(options?.body).toBe(JSON.stringify(requestData));
+        });
+
+        it('should handle validation errors', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [{ detail: 'Validation failed' }] }), {
+                status: 400,
+            });
+
+            await expect(resource.createItem<{ name: string }>({})).rejects.toThrow('Validation failed');
+        });
+    });
+
+    describe('patch method', () => {
+        it('should update resource and transform response', async () => {
+            const mockResponse: JsonApiResponse<{ name: string }> = {
+                data: {
+                    id: 'item-123',
+                    type: 'items',
+                    attributes: {
+                        name: 'Updated Item',
+                    },
+                },
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const requestData = {
+                data: {
+                    type: 'items',
+                    id: 'item-123',
+                    attributes: { name: 'Updated Item' },
+                },
+            };
+            const result = await resource.updateItem<{ name: string }>('item-123', requestData);
+
+            expect(result.id).toBe('item-123');
+            expect(result.name).toBe('Updated Item');
+
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/items/item-123/');
+            expect(options?.method).toBe('PATCH');
+            expect(options?.body).toBe(JSON.stringify(requestData));
+        });
+
+        it('should handle 404 for non-existent resource', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [{ detail: 'Not found' }] }), { status: 404 });
+
+            await expect(resource.updateItem<{ name: string }>('non-existent', {})).rejects.toThrow();
+        });
+    });
+
+    describe('remove method', () => {
+        it('should delete resource successfully', async () => {
+            fetchMock.mockResponseOnce('', { status: 204 });
+
+            await resource.deleteItem('item-123');
+
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/items/item-123/');
+            expect(options?.method).toBe('DELETE');
+        });
+
+        it('should handle 403 permission error', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [{ detail: 'Permission denied' }] }), {
+                status: 403,
+            });
+
+            await expect(resource.deleteItem('item-123')).rejects.toThrow('Permission denied');
+        });
+
+        it('should handle 404 for non-existent resource', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [{ detail: 'Not found' }] }), { status: 404 });
+
+            await expect(resource.deleteItem('non-existent')).rejects.toThrow();
         });
     });
 });

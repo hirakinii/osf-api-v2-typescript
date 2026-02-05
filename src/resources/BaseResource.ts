@@ -46,6 +46,39 @@ export abstract class BaseResource {
   }
 
   /**
+   * Create a new resource via POST request
+   *
+   * @param endpoint - API endpoint path
+   * @param data - JSON:API formatted request body
+   * @returns Transformed resource with flattened attributes
+   */
+  protected async post<T>(endpoint: string, data: unknown): Promise<TransformedResource<T>> {
+    const response = await this.httpClient.post<JsonApiResponse<T>>(endpoint, data);
+    return this.adapter.transformSingle<T>(response);
+  }
+
+  /**
+   * Update a resource via PATCH request
+   *
+   * @param endpoint - API endpoint path
+   * @param data - JSON:API formatted request body
+   * @returns Transformed resource with flattened attributes
+   */
+  protected async patch<T>(endpoint: string, data: unknown): Promise<TransformedResource<T>> {
+    const response = await this.httpClient.patch<JsonApiResponse<T>>(endpoint, data);
+    return this.adapter.transformSingle<T>(response);
+  }
+
+  /**
+   * Delete a resource via DELETE request
+   *
+   * @param endpoint - API endpoint path
+   */
+  protected async remove(endpoint: string): Promise<void> {
+    await this.httpClient.delete(endpoint);
+  }
+
+  /**
    * Build a query string from parameters object
    *
    * @param params - Parameters to serialize
