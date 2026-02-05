@@ -64,7 +64,7 @@ export class HttpClient {
       if (errorBody && errorBody.errors && errorBody.errors.length > 0) {
         errorMessage = errorBody.errors[0].detail || errorMessage;
       }
-    } catch (e) {
+    } catch {
       // ignore JSON parse error
     }
 

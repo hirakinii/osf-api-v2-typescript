@@ -7,10 +7,10 @@ export interface JsonApiResponse<T> {
     id: string;
     type: string;
     attributes: T;
-    relationships?: Record<string, any>;
+    relationships?: Record<string, unknown>;
     links?: Record<string, string>;
   };
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
   links?: Record<string, string>;
 }
 
@@ -19,7 +19,7 @@ export interface JsonApiListResponse<T> {
     id: string;
     type: string;
     attributes: T;
-    relationships?: Record<string, any>;
+    relationships?: Record<string, unknown>;
     links?: Record<string, string>;
   }>;
   meta?: {
