@@ -28,6 +28,82 @@ export class HttpClient {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
 
+  async post<T>(endpoint: string, body: unknown, options: RequestInit = {}): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async patch<T>(endpoint: string, body: unknown, options: RequestInit = {}): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async delete(endpoint: string, options: RequestInit = {}): Promise<void> {
+    await this.request<void>(endpoint, { ...options, method: 'DELETE' });
+  }
+
+  /**
+   * PUT request for binary uploads (Waterbutler API)
+   * Content-Type defaults to application/octet-stream
+   */
+  async put<T>(endpoint: string, body: ArrayBuffer | Blob | Buffer | string, options: RequestInit = {}): Promise<T> {
+    const headers = new Headers(options.headers);
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/octet-stream');
+    }
+
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: body as BodyInit,
+      headers,
+    });
+  }
+
+  /**
+   * GET request that returns raw binary data (for file downloads)
+   */
+  async getRaw(endpoint: string, options: RequestInit = {}): Promise<ArrayBuffer> {
+    const url = this.resolveUrl(endpoint);
+    const headers = new Headers(options.headers);
+
+    headers.set('Authorization', `Bearer ${this.token}`);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        method: 'GET',
+        headers,
+        signal: options.signal ?? controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        await this.handleError(response);
+      }
+
+      return response.arrayBuffer();
+    } catch (error) {
+      clearTimeout(timeoutId);
+
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new OsfApiError(`Request timeout after ${this.timeout}ms`);
+      }
+
+      throw error;
+    }
+  }
+
   private async request<T>(endpoint: string, options: RequestInit): Promise<T> {
     const url = this.resolveUrl(endpoint);
     const headers = new Headers(options.headers);

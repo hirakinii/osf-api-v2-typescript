@@ -107,6 +107,123 @@ describe('HttpClient', () => {
         await expect(client.get('nodes')).rejects.toThrow(OsfServerError);
     });
 
+    describe('post()', () => {
+        it('should send POST request with JSON body', async () => {
+            const mockResponse = { data: { id: 'new-123', type: 'nodes' } };
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const body = { data: { type: 'nodes', attributes: { title: 'Test' } } };
+            const result = await client.post('nodes/', body);
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/nodes/');
+            expect(options?.method).toBe('POST');
+            expect(options?.body).toBe(JSON.stringify(body));
+            expect(result).toEqual(mockResponse);
+        });
+
+        it('should throw error on POST failure', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 400 });
+            await expect(client.post('nodes/', {})).rejects.toThrow();
+        });
+    });
+
+    describe('patch()', () => {
+        it('should send PATCH request with JSON body', async () => {
+            const mockResponse = { data: { id: 'abc12', type: 'nodes' } };
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const body = { data: { type: 'nodes', id: 'abc12', attributes: { title: 'Updated' } } };
+            const result = await client.patch('nodes/abc12/', body);
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/nodes/abc12/');
+            expect(options?.method).toBe('PATCH');
+            expect(options?.body).toBe(JSON.stringify(body));
+            expect(result).toEqual(mockResponse);
+        });
+
+        it('should throw OsfNotFoundError on 404', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 404 });
+            await expect(client.patch('nodes/unknown/', {})).rejects.toThrow(OsfNotFoundError);
+        });
+    });
+
+    describe('delete()', () => {
+        it('should send DELETE request', async () => {
+            fetchMock.mockResponseOnce('', { status: 204 });
+
+            await client.delete('nodes/abc12/');
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/nodes/abc12/');
+            expect(options?.method).toBe('DELETE');
+        });
+
+        it('should throw OsfPermissionError on 403', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 403 });
+            await expect(client.delete('nodes/abc12/')).rejects.toThrow(OsfPermissionError);
+        });
+    });
+
+    describe('put()', () => {
+        it('should send PUT request with binary body', async () => {
+            const mockResponse = { data: { id: 'file-123', type: 'files' } };
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const binaryData = new ArrayBuffer(10);
+            const result = await client.put('https://files.osf.io/v1/upload', binaryData);
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://files.osf.io/v1/upload');
+            expect(options?.method).toBe('PUT');
+            const headers = options?.headers as Headers;
+            expect(headers.get('Content-Type')).toBe('application/octet-stream');
+            expect(result).toEqual(mockResponse);
+        });
+
+        it('should allow custom Content-Type header', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+
+            await client.put('https://files.osf.io/v1/upload', 'test', {
+                headers: { 'Content-Type': 'text/plain' },
+            });
+
+            const [, options] = fetchMock.mock.calls[0];
+            const headers = options?.headers as Headers;
+            expect(headers.get('Content-Type')).toBe('text/plain');
+        });
+    });
+
+    describe('getRaw()', () => {
+        it('should return ArrayBuffer for binary download', async () => {
+            // Use a simple string that will be converted to ArrayBuffer
+            const binaryString = 'Hello';
+            fetchMock.mockResponseOnce(binaryString, {
+                headers: { 'Content-Type': 'application/octet-stream' },
+            });
+
+            const result = await client.getRaw('https://files.osf.io/v1/download/abc123');
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://files.osf.io/v1/download/abc123');
+            expect(options?.method).toBe('GET');
+            expect(result).toBeInstanceOf(ArrayBuffer);
+        });
+
+        it('should throw error on download failure', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 404 });
+            await expect(client.getRaw('https://files.osf.io/v1/download/unknown')).rejects.toThrow(
+                OsfNotFoundError
+            );
+        });
+    });
+
     describe('Timeout handling', () => {
         it('should use default timeout of 30 seconds', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
