@@ -110,6 +110,23 @@ try {
 }
 ```
 
+## Samples
+
+We provide several sample scripts in the `examples/` directory to help you get started:
+
+- `basic_usage.ts`: Client initialization and basic profile fetching.
+- `nodes_management.ts`: Project (Node) lifecycle: Create, List, Update, and Delete.
+- `file_operations.ts`: Listing storage providers, files, and downloading content.
+- `pagination_demo.ts`: Using the auto-pagination feature (`AsyncIterator`).
+
+To run the samples, set your OSF token as an environment variable and use `npx ts-node`:
+
+```bash
+export OSF_TOKEN='your_personal_access_token'
+npx ts-node examples/basic_usage.ts
+```
+
+
 ## Development
 
 ```bash
@@ -125,4 +142,4 @@ npm run build
 
 ## License
 
-ISC License. See [LICENSE](./LICENSE) for details.
+Apache License 2.0. See [LICENSE](./LICENSE) for details.
