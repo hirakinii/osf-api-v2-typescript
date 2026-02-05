@@ -1,6 +1,7 @@
 import { BaseResource } from './BaseResource';
 import { TransformedResource, TransformedList } from '../adapter/JsonApiAdapter';
 import { OsfFileAttributes, FileVersionAttributes, StorageProviderAttributes, FileListParams } from '../types/file';
+import { PaginatedResult } from '../pagination/PaginatedResult';
 
 /**
  * Files resource class for interacting with OSF file endpoints
@@ -62,6 +63,34 @@ export class Files extends BaseResource {
     params?: FileListParams,
   ): Promise<TransformedList<OsfFileAttributes>> {
     return super.list<OsfFileAttributes>(`nodes/${nodeId}/files/${provider}/`, params);
+  }
+
+  /**
+   * List files in a node with automatic pagination support
+   *
+   * Returns a PaginatedResult that can iterate through all pages automatically.
+   *
+   * @param nodeId - The unique identifier of the node
+   * @param provider - The storage provider (defaults to 'osfstorage')
+   * @param params - Optional filter and pagination parameters
+   * @returns PaginatedResult with async iteration support
+   *
+   * @example
+   * ```typescript
+   * const result = await files.listByNodePaginated('abc12');
+   *
+   * // Iterate through all files
+   * for await (const file of result.items()) {
+   *   console.log(file.name);
+   * }
+   * ```
+   */
+  async listByNodePaginated(
+    nodeId: string,
+    provider: string = 'osfstorage',
+    params?: FileListParams,
+  ): Promise<PaginatedResult<OsfFileAttributes>> {
+    return super.listPaginated<OsfFileAttributes>(`nodes/${nodeId}/files/${provider}/`, params);
   }
 
   /**

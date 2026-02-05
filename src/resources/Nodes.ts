@@ -1,6 +1,7 @@
 import { BaseResource } from './BaseResource';
 import { TransformedResource, TransformedList } from '../adapter/JsonApiAdapter';
 import { OsfNodeAttributes, CreateNodeInput, UpdateNodeInput, NodeListParams } from '../types/node';
+import { PaginatedResult } from '../pagination/PaginatedResult';
 
 /**
  * Nodes resource class for interacting with OSF node endpoints
@@ -50,6 +51,33 @@ export class Nodes extends BaseResource {
    */
   async listNodes(params?: NodeListParams): Promise<TransformedList<OsfNodeAttributes>> {
     return super.list<OsfNodeAttributes>('nodes/', params);
+  }
+
+  /**
+   * List nodes with automatic pagination support
+   *
+   * Returns a PaginatedResult that can iterate through all pages automatically.
+   *
+   * @param params - Optional filter and pagination parameters
+   * @returns PaginatedResult with async iteration support
+   *
+   * @example
+   * ```typescript
+   * const result = await nodes.listNodesPaginated({ 'filter[public]': true });
+   *
+   * // Iterate through all pages
+   * for await (const page of result) {
+   *   console.log(`Got ${page.length} nodes`);
+   * }
+   *
+   * // Or iterate through all items
+   * for await (const node of result.items()) {
+   *   console.log(node.title);
+   * }
+   * ```
+   */
+  async listNodesPaginated(params?: NodeListParams): Promise<PaginatedResult<OsfNodeAttributes>> {
+    return super.listPaginated<OsfNodeAttributes>('nodes/', params);
   }
 
   /**

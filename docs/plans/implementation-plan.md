@@ -80,15 +80,26 @@ JSON:API の複雑さを吸収する変換処理と、リソース操作の共�
 
 ## Phase 4: ユーティリティとクライアント統合 (Utils & Integration)
 
+> **実装完了**: 2026-02-05
+> テスト: 126件全通過 / カバレッジ: 93.92%
+
 ### 4.1 ページネーション (Pagination) - TDD
-- [ ] **Test:** 複数ページに渡るリストのイテレーションテスト
-- [ ] **Impl:** `PaginatedResult` および `AsyncIterator` の実装
-    - [ ] `next` リンクの自動追従
+- [x] **Test:** 複数ページに渡るリストのイテレーションテスト (11テスト)
+- [x] **Impl:** `PaginatedResult` および `AsyncIterator` の実装 (`src/pagination/PaginatedResult.ts`)
+    - [x] `next` リンクの自動追従
+    - [x] `items()` による要素単位イテレーション
+    - [x] `toArray()` による全件取得
 
 ### 4.2 クライアント統合 (Client Entry Point)
-- [ ] **Impl:** `OsfClient` クラスの実装
-    - [ ] 各リソースクラスのインスタンス化と公開
-    - [ ] 設定情報の注入
+- [x] **Impl:** `OsfClient` クラスの実装 (`src/client.ts`)
+    - [x] 各リソースクラスのインスタンス化と公開 (nodes, files, users)
+    - [x] 設定情報の注入 (token, baseUrl, timeout)
+    - [x] 遅延初期化 (lazy singleton) パターン
+
+### 4.3 リソースクラス拡張
+- [x] `Nodes.listNodesPaginated()` - ノード一覧のページネーション対応
+- [x] `Users.listUsersPaginated()` - ユーザー一覧のページネーション対応
+- [x] `Files.listByNodePaginated()` - ファイル一覧のページネーション対応
 
 ## Phase 5: 品質保証とドキュメント (QA & Documentation)
 

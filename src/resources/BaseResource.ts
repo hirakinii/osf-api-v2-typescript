@@ -1,6 +1,7 @@
 import { HttpClient } from '../network/HttpClient';
 import { JsonApiAdapter, TransformedResource, TransformedList } from '../adapter/JsonApiAdapter';
 import { JsonApiResponse, JsonApiListResponse } from '../types';
+import { PaginatedResult } from '../pagination/PaginatedResult';
 
 /**
  * Base class for all resource classes
@@ -76,6 +77,25 @@ export abstract class BaseResource {
    */
   protected async remove(endpoint: string): Promise<void> {
     await this.httpClient.delete(endpoint);
+  }
+
+  /**
+   * Fetch a paginated list of resources from the API
+   * Returns a PaginatedResult that supports async iteration
+   *
+   * @param endpoint - API endpoint path
+   * @param params - Optional query parameters
+   * @returns PaginatedResult with async iteration support
+   */
+  protected async listPaginated<T>(endpoint: string, params?: Record<string, unknown>): Promise<PaginatedResult<T>> {
+    const firstPage = await this.list<T>(endpoint, params);
+
+    const fetcher = async (url: string): Promise<TransformedList<T>> => {
+      const response = await this.httpClient.get<JsonApiListResponse<T>>(url);
+      return this.adapter.transformList<T>(response);
+    };
+
+    return new PaginatedResult<T>(firstPage, fetcher);
   }
 
   /**
