@@ -14,9 +14,10 @@
 - [x] テスト環境 (`jest`, `ts-jest`) のセットアップ
 
 ### 1.2 基本型定義 (Core Types)
-- [ ] JSON:API レスポンスのジェネリクス型定義 (`JsonApiResponse<T>`)
-- [ ] 共通エンティティインターフェース定義 (`OsfNode`, `OsfFile`, `OsfUser`)
-- [ ] エラー型定義 (`OsfApiError`)
+- [x] 論理データモデル定義 (`docs/data-model/*.yaml`)
+- [x] JSON:API レスポンスのジェネリクス型定義 (`JsonApiResponse<T>`)
+- [x] 共通エンティティインターフェース定義 (`OsfNode`, `OsfFile`, `OsfUser`)
+- [x] エラー型定義 (`OsfApiError`)
 
 ### 1.3 ネットワーク層 (Network Layer) - TDD
 - [ ] **Test:** モックサーバーを用いた HTTP リクエスト/レスポンスのテスト作成
