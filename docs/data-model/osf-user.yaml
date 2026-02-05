@@ -1,0 +1,58 @@
+schema_version: "1.0"
+model_name: "OsfUser_LogicalModel"
+description: "OSF User logical data model"
+entities:
+  OsfUser:
+    description: "A user in OSF"
+    attributes:
+      id:
+        type: "String"
+        description: "The unique identifier of the user entity."
+        primary_key: true
+      type:
+        type: "String"
+        description: "The type identifier of the user entity (`users`)."
+        required: true
+      full_name:
+        type: "String"
+        description: "The full name of the user."
+        required: true
+      given_name:
+        type: "String"
+        description: "The given name of the user."
+      middle_names:
+        type: "String"
+        description: "The middle names of the user."
+      family_name:
+        type: "String"
+        description: "The family name of the user."
+      suffix:
+        type: "String"
+        description: "The suffix of the user."
+      date_registered:
+        type: "Date"
+        description: "The time at which the user registered their account."
+        required: true
+      active:
+        type: "Boolean"
+        description: "Whether or not the user is an active user."
+        required: true
+      timezone:
+        type: "String"
+        description: "The user's timezone."
+      locale:
+        type: "String"
+        description: "The user's locale."
+      social:
+        type: "String"
+        description: "A dictionary of the user's social and academic profile links."
+        note: "Object in implementation"
+    relationships:
+      nodes:
+        target: "OsfNode"
+        description: "List of nodes the user is a contributor to."
+        cardinality: "0:N"
+      institutions:
+        target: "Institution"
+        description: "List of institutions the user is affiliated with."
+        cardinality: "0:N"

@@ -1,0 +1,76 @@
+schema_version: "1.0"
+model_name: "OsfNode_LogicalModel"
+description: "OSF Node (Project/Component) logical data model"
+entities:
+  OsfNode:
+    description: "A project or component in OSF"
+    attributes:
+      id:
+        type: "String"
+        description: "The unique identifier of the node entity."
+        primary_key: true
+      type:
+        type: "String"
+        description: "The type identifier of the node entity (`nodes`)."
+        required: true
+      title:
+        type: "String"
+        description: "The title of the node."
+        required: true
+      description:
+        type: "Text"
+        description: "The description of the node."
+      category:
+        type: "Enum"
+        description: "The category of the node."
+        options:
+          - "analysis"
+          - "communication"
+          - "data"
+          - "hypothesis"
+          - "instrumentation"
+          - "methods and measures"
+          - "procedure"
+          - "project"
+          - "software"
+          - "other"
+        required: true
+      public:
+        type: "Boolean"
+        description: "Whether or not the node is publicly visible."
+      tags:
+        type: "String"
+        description: "A list of strings that describe this node."
+        note: "Array of strings in implementation"
+      date_created:
+        type: "Date"
+        description: "The time at which the node was created."
+      date_modified:
+        type: "Date"
+        description: "The time at which the node was last modified."
+      current_user_can_comment:
+        type: "Boolean"
+        description: "Whether or not the current user has permission to post comments."
+      fork:
+        type: "Boolean"
+        description: "Whether or not this node represents a fork of another node."
+      preprint:
+        type: "Boolean"
+        description: "Whether or not a preprint has been created from this node."
+    relationships:
+      children:
+        target: "OsfNode"
+        description: "List of this node's children (components)."
+        cardinality: "0:N"
+      contributors:
+        target: "OsfUser"
+        description: "List of contributors on this node."
+        cardinality: "0:N"
+      files:
+        target: "OsfFile"
+        description: "List of storage providers that have been enabled on this node."
+        cardinality: "0:N"
+      parent:
+        target: "OsfNode"
+        description: "The direct parent of the current node."
+        cardinality: "0:1"
