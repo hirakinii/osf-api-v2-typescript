@@ -112,31 +112,31 @@ OSF の根幹となる研究成果の永続化・共有機能を実装します�
 査読前論文の共有機能。arXiv 等と類似の機能。
 
 #### 型定義
-- [ ] `src/types/preprint.ts` の作成
-    - [ ] `OsfPreprintAttributes` インターフェース
-    - [ ] `PreprintListParams` フィルタ型
-    - [ ] `PreprintState` 列挙型
-    - [ ] `CreatePreprintInput` 型
-    - [ ] `UpdatePreprintInput` 型
+- [x] `src/types/preprint.ts` の作成
+    - [x] `OsfPreprintAttributes` インターフェース
+    - [x] `PreprintListParams` フィルタ型
+    - [x] `PreprintReviewsState` / `PreprintDataLinksState` 型
+    - [x] `CreatePreprintInput` 型
+    - [x] `UpdatePreprintInput` 型
 
 #### テスト作成
-- [ ] **Test:** Preprint 取得テスト
-- [ ] **Test:** Preprint 一覧取得テスト
-- [ ] **Test:** Preprint 作成テスト
-- [ ] **Test:** Preprint 更新テスト
-- [ ] **Test:** Preprint コントリビューター一覧テスト
-- [ ] **Test:** Preprint ファイル一覧テスト
+- [x] **Test:** Preprint 取得テスト
+- [x] **Test:** Preprint 一覧取得テスト
+- [x] **Test:** Preprint 作成テスト
+- [x] **Test:** Preprint 更新テスト
+- [x] **Test:** Preprint コントリビューター一覧テスト
+- [x] **Test:** Preprint ファイル一覧テスト
 
 #### 実装
-- [ ] **Impl:** `Preprints` クラスの実装 (`src/resources/Preprints.ts`)
-    - [ ] `getById(id)` - Preprint 取得
-    - [ ] `listPreprints(params)` - 一覧取得
-    - [ ] `listPreprintsPaginated(params)` - ページネーション対応
-    - [ ] `create(data)` - Preprint 作成
-    - [ ] `update(id, data)` - Preprint 更新
-    - [ ] `listContributors(id)` - コントリビューター一覧
-    - [ ] `listFiles(id)` - ファイル一覧
-    - [ ] `getCitation(id, styleId)` - 引用取得
+- [x] **Impl:** `Preprints` クラスの実装 (`src/resources/Preprints.ts`)
+    - [x] `getById(id)` - Preprint 取得
+    - [x] `listPreprints(params)` - 一覧取得
+    - [x] `listPreprintsPaginated(params)` - ページネーション対応
+    - [x] `create(data)` - Preprint 作成
+    - [x] `update(id, data)` - Preprint 更新
+    - [x] `listContributors(id)` - コントリビューター一覧
+    - [x] `listFiles(id)` - ファイル一覧
+    - [x] `getCitation(id, styleId)` - 引用取得
 
 ### 2.2 Draft Registrations リソース - TDD
 

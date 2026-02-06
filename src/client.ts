@@ -5,6 +5,7 @@ import { Users } from './resources/Users';
 import { Registrations } from './resources/Registrations';
 import { Contributors } from './resources/Contributors';
 import { Institutions } from './resources/Institutions';
+import { Preprints } from './resources/Preprints';
 
 /**
  * Configuration options for the OSF client
@@ -43,6 +44,7 @@ export class OsfClient {
   private _registrations?: Registrations;
   private _contributors?: Contributors;
   private _institutions?: Institutions;
+  private _preprints?: Preprints;
 
   /**
    * Create a new OSF client
@@ -127,5 +129,17 @@ export class OsfClient {
       this._institutions = new Institutions(this.httpClient);
     }
     return this._institutions;
+  }
+
+  /**
+   * Access the Preprints resource
+   *
+   * Provides methods for working with preprints (scholarly works shared before peer review)
+   */
+  get preprints(): Preprints {
+    if (!this._preprints) {
+      this._preprints = new Preprints(this.httpClient);
+    }
+    return this._preprints;
   }
 }
