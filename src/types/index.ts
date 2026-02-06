@@ -4,6 +4,7 @@ export * from './user';
 export * from './registration';
 export * from './contributor';
 export * from './institution';
+export * from './preprint';
 
 export interface JsonApiResponse<T> {
   data: {

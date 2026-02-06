@@ -5,3 +5,4 @@ export * from './Files';
 export * from './Registrations';
 export * from './Contributors';
 export * from './Institutions';
+export * from './Preprints';
