@@ -2,6 +2,7 @@ export * from './node';
 export * from './file';
 export * from './user';
 export * from './registration';
+export * from './contributor';
 
 export interface JsonApiResponse<T> {
   data: {

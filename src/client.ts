@@ -3,6 +3,7 @@ import { Nodes } from './resources/Nodes';
 import { Files } from './resources/Files';
 import { Users } from './resources/Users';
 import { Registrations } from './resources/Registrations';
+import { Contributors } from './resources/Contributors';
 
 /**
  * Configuration options for the OSF client
@@ -39,6 +40,7 @@ export class OsfClient {
   private _files?: Files;
   private _users?: Users;
   private _registrations?: Registrations;
+  private _contributors?: Contributors;
 
   /**
    * Create a new OSF client
@@ -99,5 +101,17 @@ export class OsfClient {
       this._registrations = new Registrations(this.httpClient);
     }
     return this._registrations;
+  }
+
+  /**
+   * Access the Contributors resource
+   *
+   * Provides methods for managing contributors on nodes and registrations
+   */
+  get contributors(): Contributors {
+    if (!this._contributors) {
+      this._contributors = new Contributors(this.httpClient);
+    }
+    return this._contributors;
   }
 }
