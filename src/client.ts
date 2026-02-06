@@ -6,6 +6,7 @@ import { Registrations } from './resources/Registrations';
 import { Contributors } from './resources/Contributors';
 import { Institutions } from './resources/Institutions';
 import { Preprints } from './resources/Preprints';
+import { DraftRegistrations } from './resources/DraftRegistrations';
 
 /**
  * Configuration options for the OSF client
@@ -45,6 +46,7 @@ export class OsfClient {
   private _contributors?: Contributors;
   private _institutions?: Institutions;
   private _preprints?: Preprints;
+  private _draftRegistrations?: DraftRegistrations;
 
   /**
    * Create a new OSF client
@@ -141,5 +143,17 @@ export class OsfClient {
       this._preprints = new Preprints(this.httpClient);
     }
     return this._preprints;
+  }
+
+  /**
+   * Access the Draft Registrations resource
+   *
+   * Provides methods for working with draft registrations (editable registration drafts before archiving)
+   */
+  get draftRegistrations(): DraftRegistrations {
+    if (!this._draftRegistrations) {
+      this._draftRegistrations = new DraftRegistrations(this.httpClient);
+    }
+    return this._draftRegistrations;
   }
 }

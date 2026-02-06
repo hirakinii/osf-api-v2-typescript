@@ -143,28 +143,28 @@ OSF の根幹となる研究成果の永続化・共有機能を実装します�
 Registration の下書き管理。Registration 作成ワークフローの一部。
 
 #### 型定義
-- [ ] `src/types/draft-registration.ts` の作成
-    - [ ] `OsfDraftRegistrationAttributes` インターフェース
-    - [ ] `DraftRegistrationListParams` フィルタ型
-    - [ ] `CreateDraftRegistrationInput` 型
-    - [ ] `UpdateDraftRegistrationInput` 型
+- [x] `src/types/draft-registration.ts` の作成
+    - [x] `OsfDraftRegistrationAttributes` インターフェース
+    - [x] `DraftRegistrationListParams` フィルタ型
+    - [x] `CreateDraftRegistrationInput` 型
+    - [x] `UpdateDraftRegistrationInput` 型
 
 #### テスト作成
-- [ ] **Test:** Draft Registration 取得テスト
-- [ ] **Test:** Draft Registration 一覧取得テスト
-- [ ] **Test:** Draft Registration 作成テスト
-- [ ] **Test:** Draft Registration 更新テスト
-- [ ] **Test:** Draft Registration 削除テスト
+- [x] **Test:** Draft Registration 取得テスト
+- [x] **Test:** Draft Registration 一覧取得テスト
+- [x] **Test:** Draft Registration 作成テスト
+- [x] **Test:** Draft Registration 更新テスト
+- [x] **Test:** Draft Registration 削除テスト
 
 #### 実装
-- [ ] **Impl:** `DraftRegistrations` クラスの実装 (`src/resources/DraftRegistrations.ts`)
-    - [ ] `getById(id)` - Draft Registration 取得
-    - [ ] `listDraftRegistrations(params)` - 一覧取得
-    - [ ] `listDraftRegistrationsPaginated(params)` - ページネーション対応
-    - [ ] `create(data)` - 作成
-    - [ ] `update(id, data)` - 更新
-    - [ ] `delete(id)` - 削除
-    - [ ] `listContributors(id)` - コントリビューター一覧
+- [x] **Impl:** `DraftRegistrations` クラスの実装 (`src/resources/DraftRegistrations.ts`)
+    - [x] `getById(id)` - Draft Registration 取得
+    - [x] `listDraftRegistrations(params)` - 一覧取得
+    - [x] `listDraftRegistrationsPaginated(params)` - ページネーション対応
+    - [x] `create(data)` - 作成
+    - [x] `update(id, data)` - 更新
+    - [x] `delete(id)` - 削除
+    - [x] `listContributors(id)` - コントリビューター一覧
 
 ---
 
