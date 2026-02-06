@@ -4,6 +4,7 @@ import { Files } from './resources/Files';
 import { Users } from './resources/Users';
 import { Registrations } from './resources/Registrations';
 import { Contributors } from './resources/Contributors';
+import { Institutions } from './resources/Institutions';
 
 /**
  * Configuration options for the OSF client
@@ -41,6 +42,7 @@ export class OsfClient {
   private _users?: Users;
   private _registrations?: Registrations;
   private _contributors?: Contributors;
+  private _institutions?: Institutions;
 
   /**
    * Create a new OSF client
@@ -113,5 +115,17 @@ export class OsfClient {
       this._contributors = new Contributors(this.httpClient);
     }
     return this._contributors;
+  }
+
+  /**
+   * Access the Institutions resource
+   *
+   * Provides methods for working with research institutions and their affiliations
+   */
+  get institutions(): Institutions {
+    if (!this._institutions) {
+      this._institutions = new Institutions(this.httpClient);
+    }
+    return this._institutions;
   }
 }

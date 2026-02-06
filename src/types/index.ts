@@ -3,6 +3,7 @@ export * from './file';
 export * from './user';
 export * from './registration';
 export * from './contributor';
+export * from './institution';
 
 export interface JsonApiResponse<T> {
   data: {
