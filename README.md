@@ -8,7 +8,7 @@ TypeScript client library for the [Open Science Framework (OSF) API v2](https://
 ## Features
 
 - **Type-safe**: Comprehensive TypeScript definitions for OSF entities.
-- **Resource-oriented**: Intuitive API for Nodes, Files, and Users.
+- **Resource-oriented**: Intuitive API for Nodes, Files, Users, Registrations, Contributors, and Institutions.
 - **Automatic Pagination**: Effortlessly iterate through large datasets using `AsyncIterator`.
 - **JSON:API Simplified**: Flattens complex JSON:API structures into easy-to-use objects.
 - **Modern**: Built with modern TypeScript and native `fetch`.
@@ -71,6 +71,80 @@ const content = await client.files.download(file);
 
 // List file versions
 const versions = await client.files.listVersions(file.id);
+```
+
+### Registrations
+
+```typescript
+// Get a registration by ID
+const registration = await client.registrations.getById('reg12');
+console.log(registration.title);
+
+// List registrations
+const registrations = await client.registrations.listRegistrations({
+  'filter[public]': true,
+});
+
+// Update a registration
+await client.registrations.update('reg12', { public: true });
+
+// List child registrations
+const children = await client.registrations.listChildren('reg12');
+
+// List contributors of a registration
+const contributors = await client.registrations.listContributors('reg12');
+
+// List files of a registration
+const files = await client.registrations.listFiles('reg12', 'osfstorage');
+```
+
+### Contributors
+
+```typescript
+// List contributors for a node
+const contributors = await client.contributors.listByNode('abc12');
+
+// Get a specific contributor
+const contributor = await client.contributors.getByNodeAndUser('abc12', 'user1');
+console.log(contributor.permission); // 'read' | 'write' | 'admin'
+
+// Add a contributor to a node
+await client.contributors.addToNode('abc12', {
+  userId: 'user1',
+  permission: 'write',
+  bibliographic: true,
+});
+
+// Update a contributor's permission
+await client.contributors.update('abc12', 'user1', { permission: 'admin' });
+
+// Remove a contributor from a node
+await client.contributors.removeFromNode('abc12', 'user1');
+
+// List contributors for a registration
+const regContributors = await client.contributors.listByRegistration('reg12');
+```
+
+### Institutions
+
+```typescript
+// Get an institution by ID
+const institution = await client.institutions.getById('inst1');
+console.log(institution.name);
+
+// List institutions
+const institutions = await client.institutions.listInstitutions({
+  'filter[name]': 'University',
+});
+
+// List users affiliated with an institution
+const users = await client.institutions.listUsers('inst1');
+
+// List nodes affiliated with an institution
+const nodes = await client.institutions.listNodes('inst1');
+
+// List registrations affiliated with an institution
+const registrations = await client.institutions.listRegistrations('inst1');
 ```
 
 ### Pagination
