@@ -118,5 +118,8 @@ JSON:API の複雑さを吸収する変換処理と、リソース操作の共�
     - [x] CD workflow on merge to main
 
 ## 6. 今後の拡張 (Post-MVP)
+
+- [ ] 他のエンティティへの対応
+    - 参照: [implementation-other-entity-api.md](./implementation-other-entity-api.md)
 - [ ] OAuth2 認証フローの追加
 - [ ] ブラウザ対応の強化
