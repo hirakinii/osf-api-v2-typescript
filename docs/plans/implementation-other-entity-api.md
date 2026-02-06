@@ -82,24 +82,24 @@ OSF の根幹となる研究成果の永続化・共有機能を実装します�
 研究機関。ユーザーやノードのアフィリエーション管理。
 
 #### 型定義
-- [ ] `src/types/institution.ts` の作成
-    - [ ] `OsfInstitutionAttributes` インターフェース
-    - [ ] `InstitutionListParams` フィルタ型
+- [x] `src/types/institution.ts` の作成
+    - [x] `OsfInstitutionAttributes` インターフェース
+    - [x] `InstitutionListParams` フィルタ型
 
 #### テスト作成
-- [ ] **Test:** Institution 取得テスト
-- [ ] **Test:** Institution 一覧取得テスト
-- [ ] **Test:** Institution 所属ユーザー一覧テスト
-- [ ] **Test:** Institution 所属ノード一覧テスト
+- [x] **Test:** Institution 取得テスト
+- [x] **Test:** Institution 一覧取得テスト
+- [x] **Test:** Institution 所属ユーザー一覧テスト
+- [x] **Test:** Institution 所属ノード一覧テスト
 
 #### 実装
-- [ ] **Impl:** `Institutions` クラスの実装 (`src/resources/Institutions.ts`)
-    - [ ] `getById(id)` - 機関取得
-    - [ ] `listInstitutions(params)` - 一覧取得
-    - [ ] `listInstitutionsPaginated(params)` - ページネーション対応
-    - [ ] `listUsers(institutionId)` - 所属ユーザー一覧
-    - [ ] `listNodes(institutionId)` - 所属ノード一覧
-    - [ ] `listRegistrations(institutionId)` - 所属 Registration 一覧
+- [x] **Impl:** `Institutions` クラスの実装 (`src/resources/Institutions.ts`)
+    - [x] `getById(id)` - 機関取得
+    - [x] `listInstitutions(params)` - 一覧取得
+    - [x] `listInstitutionsPaginated(params)` - ページネーション対応
+    - [x] `listUsers(institutionId)` - 所属ユーザー一覧
+    - [x] `listNodes(institutionId)` - 所属ノード一覧
+    - [x] `listRegistrations(institutionId)` - 所属 Registration 一覧
 
 ---
 
