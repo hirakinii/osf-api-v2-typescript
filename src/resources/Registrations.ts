@@ -73,7 +73,9 @@ export class Registrations extends BaseResource {
    * }
    * ```
    */
-  async listRegistrationsPaginated(params?: RegistrationListParams): Promise<PaginatedResult<OsfRegistrationAttributes>> {
+  async listRegistrationsPaginated(
+    params?: RegistrationListParams,
+  ): Promise<PaginatedResult<OsfRegistrationAttributes>> {
     return super.listPaginated<OsfRegistrationAttributes>('registrations/', params);
   }
 
