@@ -54,28 +54,28 @@ OSF の根幹となる研究成果の永続化・共有機能を実装します�
 ノード/Registration のコントリビューター管理。Nodes 実装と密接に関連。
 
 #### 型定義
-- [ ] `src/types/contributor.ts` の作成
-    - [ ] `OsfContributorAttributes` インターフェース
-    - [ ] `ContributorPermission` 列挙型 (read, write, admin)
-    - [ ] `CreateContributorInput` 型
-    - [ ] `UpdateContributorInput` 型
+- [x] `src/types/contributor.ts` の作成
+    - [x] `OsfContributorAttributes` インターフェース
+    - [x] `ContributorPermission` 列挙型 (read, write, admin)
+    - [x] `CreateContributorInput` 型
+    - [x] `UpdateContributorInput` 型
 
 #### テスト作成
-- [ ] **Test:** Contributor 取得テスト
-- [ ] **Test:** Node の Contributor 一覧取得テスト
-- [ ] **Test:** Contributor 追加テスト
-- [ ] **Test:** Contributor 権限更新テスト
-- [ ] **Test:** Contributor 削除テスト
+- [x] **Test:** Contributor 取得テスト
+- [x] **Test:** Node の Contributor 一覧取得テスト
+- [x] **Test:** Contributor 追加テスト
+- [x] **Test:** Contributor 権限更新テスト
+- [x] **Test:** Contributor 削除テスト
 
 #### 実装
-- [ ] **Impl:** `Contributors` クラスの実装 (`src/resources/Contributors.ts`)
-    - [ ] `getByNodeAndUser(nodeId, userId)` - 特定コントリビューター取得
-    - [ ] `listByNode(nodeId, params)` - ノードのコントリビューター一覧
-    - [ ] `listByNodePaginated(nodeId, params)` - ページネーション対応
-    - [ ] `addToNode(nodeId, data)` - コントリビューター追加
-    - [ ] `update(nodeId, userId, data)` - 権限更新
-    - [ ] `removeFromNode(nodeId, userId)` - コントリビューター削除
-    - [ ] `listByRegistration(registrationId, params)` - Registration 用
+- [x] **Impl:** `Contributors` クラスの実装 (`src/resources/Contributors.ts`)
+    - [x] `getByNodeAndUser(nodeId, userId)` - 特定コントリビューター取得
+    - [x] `listByNode(nodeId, params)` - ノードのコントリビューター一覧
+    - [x] `listByNodePaginated(nodeId, params)` - ページネーション対応
+    - [x] `addToNode(nodeId, data)` - コントリビューター追加
+    - [x] `update(nodeId, userId, data)` - 権限更新
+    - [x] `removeFromNode(nodeId, userId)` - コントリビューター削除
+    - [x] `listByRegistration(registrationId, params)` - Registration 用
 
 ### 1.3 Institutions リソース - TDD
 
