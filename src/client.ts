@@ -2,6 +2,7 @@ import { HttpClient } from './network/HttpClient';
 import { Nodes } from './resources/Nodes';
 import { Files } from './resources/Files';
 import { Users } from './resources/Users';
+import { Registrations } from './resources/Registrations';
 
 /**
  * Configuration options for the OSF client
@@ -37,6 +38,7 @@ export class OsfClient {
   private _nodes?: Nodes;
   private _files?: Files;
   private _users?: Users;
+  private _registrations?: Registrations;
 
   /**
    * Create a new OSF client
@@ -85,5 +87,17 @@ export class OsfClient {
       this._users = new Users(this.httpClient);
     }
     return this._users;
+  }
+
+  /**
+   * Access the Registrations resource
+   *
+   * Provides methods for working with OSF registrations (frozen, time-stamped project snapshots)
+   */
+  get registrations(): Registrations {
+    if (!this._registrations) {
+      this._registrations = new Registrations(this.httpClient);
+    }
+    return this._registrations;
   }
 }
