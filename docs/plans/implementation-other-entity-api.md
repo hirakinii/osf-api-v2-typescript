@@ -26,28 +26,28 @@ OSF の根幹となる研究成果の永続化・共有機能を実装します�
 研究の永続的なスナップショット。OSF の最重要機能の一つ。
 
 #### 型定義
-- [ ] `src/types/registration.ts` の作成
-    - [ ] `OsfRegistrationAttributes` インターフェース
-    - [ ] `RegistrationListParams` フィルタ型
-    - [ ] `RegistrationState` 列挙型 (public, embargoed, withdrawn 等)
+- [x] `src/types/registration.ts` の作成
+    - [x] `OsfRegistrationAttributes` インターフェース
+    - [x] `RegistrationListParams` フィルタ型
+    - [x] `RegistrationState` 列挙型 (public, embargoed, withdrawn 等)
 
 #### テスト作成
-- [ ] **Test:** Registration 取得テスト
-- [ ] **Test:** Registration 一覧取得テスト (フィルタ・ページネーション)
-- [ ] **Test:** Registration 更新テスト (メタデータ編集)
-- [ ] **Test:** Registration の子要素取得テスト (children, contributors, files)
+- [x] **Test:** Registration 取得テスト
+- [x] **Test:** Registration 一覧取得テスト (フィルタ・ページネーション)
+- [x] **Test:** Registration 更新テスト (メタデータ編集)
+- [x] **Test:** Registration の子要素取得テスト (children, contributors, files)
 
 #### 実装
-- [ ] **Impl:** `Registrations` クラスの実装 (`src/resources/Registrations.ts`)
-    - [ ] `getById(id)` - Registration 取得
-    - [ ] `listRegistrations(params)` - 一覧取得
-    - [ ] `listRegistrationsPaginated(params)` - ページネーション対応一覧
-    - [ ] `update(id, data)` - メタデータ更新
-    - [ ] `listChildren(id)` - 子 Registration 一覧
-    - [ ] `listContributors(id)` - コントリビューター一覧
-    - [ ] `listFiles(id, provider)` - ファイル一覧
-    - [ ] `listWikis(id)` - Wiki 一覧
-    - [ ] `listLogs(id)` - ログ一覧
+- [x] **Impl:** `Registrations` クラスの実装 (`src/resources/Registrations.ts`)
+    - [x] `getById(id)` - Registration 取得
+    - [x] `listRegistrations(params)` - 一覧取得
+    - [x] `listRegistrationsPaginated(params)` - ページネーション対応一覧
+    - [x] `update(id, data)` - メタデータ更新
+    - [x] `listChildren(id)` - 子 Registration 一覧
+    - [x] `listContributors(id)` - コントリビューター一覧
+    - [x] `listFiles(id, provider)` - ファイル一覧
+    - [x] `listWikis(id)` - Wiki 一覧
+    - [x] `listLogs(id)` - ログ一覧
 
 ### 1.2 Contributors リソース - TDD
 
