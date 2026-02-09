@@ -28,6 +28,11 @@ npx ts-node examples/<ファイル名>.ts
 | [registrations.ts](registrations.ts) | Registration の一覧・詳細取得、子 Registration / Contributors / Files の取得 |
 | [contributors.ts](contributors.ts) | Contributor の一覧・詳細取得、追加・権限更新・削除、フィルタリング |
 | [institutions.ts](institutions.ts) | Institution の一覧・詳細取得、所属ユーザー / ノード / Registration の取得 |
+| [preprints.ts](preprints.ts) | Preprint の一覧・詳細取得、Contributors / Files / Citation の取得、ページネーション |
+| [draft_registrations.ts](draft_registrations.ts) | Draft Registration の作成・更新・削除（CRUD）、Contributors の取得、ページネーション |
+| [collections.ts](collections.ts) | Collection の作成・削除、ノードのリンク / アンリンク、関連リソースの取得 |
+| [wikis.ts](wikis.ts) | Wiki ページのメタデータ・コンテンツ取得、バージョン一覧、新バージョン作成 |
+| [comments.ts](comments.ts) | Comment の作成・更新・削除、返信、ページネーション |
 
 ## サンプルごとの環境変数
 
@@ -36,10 +41,11 @@ npx ts-node examples/<ファイル名>.ts
 | 環境変数 | 必要なサンプル | 説明 |
 | --- | --- | --- |
 | `OSF_TOKEN` | すべて | OSF Personal Access Token |
-| `NODE_ID` | contributors.ts | 操作対象のノード ID（省略時は公開ノードを自動選択） |
+| `NODE_ID` | contributors.ts, comments.ts | 操作対象のノード ID（contributors.ts では省略時に公開ノードを自動選択） |
 | `TARGET_USER_ID` | contributors.ts | 追加 / 更新 / 削除する対象ユーザー ID（省略時は読み取り操作のみ） |
+| `WIKI_ID` | wikis.ts | 操作対象の Wiki ページ ID |
 
 ## 注意事項
 
-- `nodes_management.ts` と `contributors.ts` は実際にデータを作成・変更・削除します。テスト用のプロジェクトで実行することを推奨します。
+- `nodes_management.ts`、`contributors.ts`、`draft_registrations.ts`、`collections.ts`、`comments.ts` は実際にデータを作成・変更・削除します。テスト用のプロジェクトで実行することを推奨します。
 - その他のサンプルは読み取り専用の操作のみです。
