@@ -9,6 +9,7 @@ import { Preprints } from './resources/Preprints';
 import { DraftRegistrations } from './resources/DraftRegistrations';
 import { Collections } from './resources/Collections';
 import { Wikis } from './resources/Wikis';
+import { Comments } from './resources/Comments';
 
 /**
  * Configuration options for the OSF client
@@ -51,6 +52,7 @@ export class OsfClient {
   private _draftRegistrations?: DraftRegistrations;
   private _collections?: Collections;
   private _wikis?: Wikis;
+  private _comments?: Comments;
 
   /**
    * Create a new OSF client
@@ -183,5 +185,17 @@ export class OsfClient {
       this._wikis = new Wikis(this.httpClient);
     }
     return this._wikis;
+  }
+
+  /**
+   * Access the Comments resource
+   *
+   * Provides methods for working with comments on nodes (discussions, replies)
+   */
+  get comments(): Comments {
+    if (!this._comments) {
+      this._comments = new Comments(this.httpClient);
+    }
+    return this._comments;
   }
 }

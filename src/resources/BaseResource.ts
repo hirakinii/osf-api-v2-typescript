@@ -71,6 +71,20 @@ export abstract class BaseResource {
   }
 
   /**
+   * Update a resource via PUT request
+   *
+   * @param endpoint - API endpoint path
+   * @param data - JSON:API formatted request body
+   * @returns Transformed resource with flattened attributes
+   */
+  protected async put<T>(endpoint: string, data: unknown): Promise<TransformedResource<T>> {
+    const response = await this.httpClient.put<JsonApiResponse<T>>(endpoint, JSON.stringify(data), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return this.adapter.transformSingle<T>(response);
+  }
+
+  /**
    * Delete a resource via DELETE request
    *
    * @param endpoint - API endpoint path

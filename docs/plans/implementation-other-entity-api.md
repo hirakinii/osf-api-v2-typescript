@@ -228,26 +228,26 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 ディスカッション・コメント機能。
 
 #### 型定義
-- [ ] `src/types/comment.ts` の作成
-    - [ ] `OsfCommentAttributes` インターフェース
-    - [ ] `CreateCommentInput` 型
-    - [ ] `UpdateCommentInput` 型
+- [x] `src/types/comment.ts` の作成
+    - [x] `OsfCommentAttributes` インターフェース
+    - [x] `CreateCommentInput` 型
+    - [x] `UpdateCommentInput` 型
 
 #### テスト作成
-- [ ] **Test:** Comment 取得テスト
-- [ ] **Test:** Node のコメント一覧テスト
-- [ ] **Test:** Comment 作成テスト
-- [ ] **Test:** Comment 更新テスト
-- [ ] **Test:** Comment 削除テスト
+- [x] **Test:** Comment 取得テスト
+- [x] **Test:** Node のコメント一覧テスト
+- [x] **Test:** Comment 作成テスト
+- [x] **Test:** Comment 更新テスト
+- [x] **Test:** Comment 削除テスト
 
 #### 実装
-- [ ] **Impl:** `Comments` クラスの実装 (`src/resources/Comments.ts`)
-    - [ ] `getById(id)` - コメント取得
-    - [ ] `listByNode(nodeId)` - ノードのコメント一覧
-    - [ ] `listByNodePaginated(nodeId)` - ページネーション対応
-    - [ ] `create(nodeId, data)` - コメント作成
-    - [ ] `update(id, data)` - コメント更新
-    - [ ] `delete(id)` - コメント削除
+- [x] **Impl:** `Comments` クラスの実装 (`src/resources/Comments.ts`)
+    - [x] `getById(id)` - コメント取得
+    - [x] `listByNode(nodeId)` - ノードのコメント一覧
+    - [x] `listByNodePaginated(nodeId)` - ページネーション対応
+    - [x] `create(nodeId, data)` - コメント作成
+    - [x] `update(id, data)` - コメント更新
+    - [x] `delete(id)` - コメント削除
 
 ---
 
