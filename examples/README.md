@@ -36,6 +36,11 @@ npx ts-node examples/<ファイル名>.ts
 | [logs.ts](logs.ts) | ノードのアクティビティログ一覧・詳細取得、アクションフィルタ、ページネーション |
 | [subjects.ts](subjects.ts) | タクソノミー（Subject）の一覧・詳細取得、テキスト検索、子 Subject の探索 |
 | [licenses.ts](licenses.ts) | ライセンスの一覧・詳細取得、名前フィルタ、ページネーション |
+| [view_only_links.ts](view_only_links.ts) | View Only Link の詳細取得、アクセス可能なノード一覧 |
+| [identifiers.ts](identifiers.ts) | 識別子（DOI / ARK）の一覧・詳細取得、ノード / Registration 別の取得、ページネーション |
+| [citations.ts](citations.ts) | 引用スタイルの一覧・詳細取得、タイトルフィルタ、ページネーション |
+| [providers.ts](providers.ts) | Preprint / Registration / Collection プロバイダーの一覧・詳細取得、名前フィルタ |
+| [auth.ts](auth.ts) | OAuth アプリの CRUD、PAT の作成・削除、OAuth スコープの一覧・詳細取得 |
 
 ## サンプルごとの環境変数
 
@@ -50,8 +55,20 @@ npx ts-node examples/<ファイル名>.ts
 | `LOG_ID` | logs.ts | 特定ログの詳細取得用 ID（省略可） |
 | `SUBJECT_ID` | subjects.ts | 特定 Subject の詳細・子 Subject 取得用 ID（省略可） |
 | `LICENSE_ID` | licenses.ts | 特定ライセンスの詳細取得用 ID（省略可） |
+| `VOL_ID` | view_only_links.ts | View Only Link の ID（必須） |
+| `IDENTIFIER_ID` | identifiers.ts | 特定識別子の詳細取得用 ID（省略可） |
+| `REGISTRATION_ID` | identifiers.ts | Registration の識別子一覧取得用 ID（省略可） |
+| `CITATION_STYLE_ID` | citations.ts | 引用スタイル ID（省略時は `apa`） |
+| `PREPRINT_PROVIDER_ID` | providers.ts | プレプリントプロバイダー ID（省略時は `osf`） |
+| `REGISTRATION_PROVIDER_ID` | providers.ts | Registration プロバイダー ID（省略時は `osf`） |
+| `COLLECTION_PROVIDER_ID` | providers.ts | コレクションプロバイダー ID（省略可） |
+| `SCOPE_ID` | auth.ts | OAuth スコープ ID（省略時は `osf.full_read`） |
+| `APP_CLIENT_ID` | auth.ts | OAuth アプリの client_id（省略可） |
+| `DEMO_APP_CRUD` | auth.ts | `true` に設定すると OAuth アプリの作成・更新・削除デモを実行 |
+| `TOKEN_ID` | auth.ts | PAT の ID（省略可） |
+| `DEMO_TOKEN_CRUD` | auth.ts | `true` に設定すると PAT の作成・削除デモを実行 |
 
 ## 注意事項
 
-- `nodes_management.ts`、`contributors.ts`、`draft_registrations.ts`、`collections.ts`、`comments.ts` は実際にデータを作成・変更・削除します。テスト用のプロジェクトで実行することを推奨します。
+- `nodes_management.ts`、`contributors.ts`、`draft_registrations.ts`、`collections.ts`、`comments.ts`、`auth.ts`（CRUD デモ有効時）は実際にデータを作成・変更・削除します。テスト用のプロジェクトで実行することを推奨します。
 - その他のサンプルは読み取り専用の操作のみです。
