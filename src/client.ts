@@ -19,6 +19,9 @@ import { Citations } from './resources/Citations';
 import { PreprintProviders } from './resources/PreprintProviders';
 import { RegistrationProviders } from './resources/RegistrationProviders';
 import { CollectionProviders } from './resources/CollectionProviders';
+import { Scopes } from './resources/Scopes';
+import { Applications } from './resources/Applications';
+import { Tokens } from './resources/Tokens';
 
 /**
  * Configuration options for the OSF client
@@ -71,6 +74,9 @@ export class OsfClient {
   private _preprintProviders?: PreprintProviders;
   private _registrationProviders?: RegistrationProviders;
   private _collectionProviders?: CollectionProviders;
+  private _scopes?: Scopes;
+  private _applications?: Applications;
+  private _tokens?: Tokens;
 
   /**
    * Create a new OSF client
@@ -323,5 +329,41 @@ export class OsfClient {
       this._collectionProviders = new CollectionProviders(this.httpClient);
     }
     return this._collectionProviders;
+  }
+
+  /**
+   * Access the Scopes resource
+   *
+   * Provides methods for working with OAuth scopes (permissions for applications and tokens)
+   */
+  get scopes(): Scopes {
+    if (!this._scopes) {
+      this._scopes = new Scopes(this.httpClient);
+    }
+    return this._scopes;
+  }
+
+  /**
+   * Access the Applications resource
+   *
+   * Provides methods for managing OAuth2 applications (registration, update, deactivation)
+   */
+  get applications(): Applications {
+    if (!this._applications) {
+      this._applications = new Applications(this.httpClient);
+    }
+    return this._applications;
+  }
+
+  /**
+   * Access the Tokens resource
+   *
+   * Provides methods for managing personal access tokens (creation, listing, deactivation)
+   */
+  get tokens(): Tokens {
+    if (!this._tokens) {
+      this._tokens = new Tokens(this.httpClient);
+    }
+    return this._tokens;
   }
 }

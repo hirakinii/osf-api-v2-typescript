@@ -18,6 +18,9 @@ export * from './citation-style';
 export * from './preprint-provider';
 export * from './registration-provider';
 export * from './collection-provider';
+export * from './scope';
+export * from './application';
+export * from './token';
 
 export interface JsonApiResponse<T> {
   data: {

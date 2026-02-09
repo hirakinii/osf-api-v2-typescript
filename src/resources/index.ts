@@ -19,3 +19,6 @@ export * from './Citations';
 export * from './PreprintProviders';
 export * from './RegistrationProviders';
 export * from './CollectionProviders';
+export * from './Scopes';
+export * from './Applications';
+export * from './Tokens';

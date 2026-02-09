@@ -343,9 +343,9 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 - [x] `CollectionProviders` クラスの実装
 
 ### 5.5 認証関連 (オプション)
-- [ ] `Applications` クラスの実装 (OAuth アプリ管理)
-- [ ] `Tokens` クラスの実装 (PAT 管理)
-- [ ] `Scopes` クラスの実装 (OAuth スコープ)
+- [x] `Applications` クラスの実装 (OAuth アプリ管理)
+- [x] `Tokens` クラスの実装 (PAT 管理)
+- [x] `Scopes` クラスの実装 (OAuth スコープ)
 
 ---
 
