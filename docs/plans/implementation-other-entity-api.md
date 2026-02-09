@@ -338,9 +338,9 @@ Registration の下書き管理。Registration 作成ワークフローの一部
     - [x] `getStyle(id)` - スタイル詳細取得
 
 ### 5.4 Providers リソース (オプション)
-- [ ] `PreprintProviders` クラスの実装
-- [ ] `RegistrationProviders` クラスの実装
-- [ ] `CollectionProviders` クラスの実装
+- [x] `PreprintProviders` クラスの実装
+- [x] `RegistrationProviders` クラスの実装
+- [x] `CollectionProviders` クラスの実装
 
 ### 5.5 認証関連 (オプション)
 - [ ] `Applications` クラスの実装 (OAuth アプリ管理)

@@ -16,6 +16,9 @@ import { Licenses } from './resources/Licenses';
 import { ViewOnlyLinks } from './resources/ViewOnlyLinks';
 import { Identifiers } from './resources/Identifiers';
 import { Citations } from './resources/Citations';
+import { PreprintProviders } from './resources/PreprintProviders';
+import { RegistrationProviders } from './resources/RegistrationProviders';
+import { CollectionProviders } from './resources/CollectionProviders';
 
 /**
  * Configuration options for the OSF client
@@ -65,6 +68,9 @@ export class OsfClient {
   private _viewOnlyLinks?: ViewOnlyLinks;
   private _identifiers?: Identifiers;
   private _citations?: Citations;
+  private _preprintProviders?: PreprintProviders;
+  private _registrationProviders?: RegistrationProviders;
+  private _collectionProviders?: CollectionProviders;
 
   /**
    * Create a new OSF client
@@ -281,5 +287,41 @@ export class OsfClient {
       this._citations = new Citations(this.httpClient);
     }
     return this._citations;
+  }
+
+  /**
+   * Access the Preprint Providers resource
+   *
+   * Provides methods for working with preprint providers (services hosting preprints on OSF)
+   */
+  get preprintProviders(): PreprintProviders {
+    if (!this._preprintProviders) {
+      this._preprintProviders = new PreprintProviders(this.httpClient);
+    }
+    return this._preprintProviders;
+  }
+
+  /**
+   * Access the Registration Providers resource
+   *
+   * Provides methods for working with registration providers (services managing registrations on OSF)
+   */
+  get registrationProviders(): RegistrationProviders {
+    if (!this._registrationProviders) {
+      this._registrationProviders = new RegistrationProviders(this.httpClient);
+    }
+    return this._registrationProviders;
+  }
+
+  /**
+   * Access the Collection Providers resource
+   *
+   * Provides methods for working with collection providers (services curating collections on OSF)
+   */
+  get collectionProviders(): CollectionProviders {
+    if (!this._collectionProviders) {
+      this._collectionProviders = new CollectionProviders(this.httpClient);
+    }
+    return this._collectionProviders;
   }
 }

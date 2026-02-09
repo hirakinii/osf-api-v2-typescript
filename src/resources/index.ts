@@ -16,3 +16,6 @@ export * from './Licenses';
 export * from './ViewOnlyLinks';
 export * from './Identifiers';
 export * from './Citations';
+export * from './PreprintProviders';
+export * from './RegistrationProviders';
+export * from './CollectionProviders';

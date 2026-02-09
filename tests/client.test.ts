@@ -16,6 +16,9 @@ import { Licenses } from '../src/resources/Licenses';
 import { ViewOnlyLinks } from '../src/resources/ViewOnlyLinks';
 import { Identifiers } from '../src/resources/Identifiers';
 import { Citations } from '../src/resources/Citations';
+import { PreprintProviders } from '../src/resources/PreprintProviders';
+import { RegistrationProviders } from '../src/resources/RegistrationProviders';
+import { CollectionProviders } from '../src/resources/CollectionProviders';
 
 fetchMock.enableMocks();
 
@@ -169,6 +172,24 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.citations).toBeInstanceOf(Citations);
       expect(client.citations).toBe(client.citations);
+    });
+
+    it('should provide preprintProviders accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.preprintProviders).toBeInstanceOf(PreprintProviders);
+      expect(client.preprintProviders).toBe(client.preprintProviders);
+    });
+
+    it('should provide registrationProviders accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.registrationProviders).toBeInstanceOf(RegistrationProviders);
+      expect(client.registrationProviders).toBe(client.registrationProviders);
+    });
+
+    it('should provide collectionProviders accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.collectionProviders).toBeInstanceOf(CollectionProviders);
+      expect(client.collectionProviders).toBe(client.collectionProviders);
     });
   });
 
