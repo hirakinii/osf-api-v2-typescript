@@ -33,6 +33,9 @@ npx ts-node examples/<ファイル名>.ts
 | [collections.ts](collections.ts) | Collection の作成・削除、ノードのリンク / アンリンク、関連リソースの取得 |
 | [wikis.ts](wikis.ts) | Wiki ページのメタデータ・コンテンツ取得、バージョン一覧、新バージョン作成 |
 | [comments.ts](comments.ts) | Comment の作成・更新・削除、返信、ページネーション |
+| [logs.ts](logs.ts) | ノードのアクティビティログ一覧・詳細取得、アクションフィルタ、ページネーション |
+| [subjects.ts](subjects.ts) | タクソノミー（Subject）の一覧・詳細取得、テキスト検索、子 Subject の探索 |
+| [licenses.ts](licenses.ts) | ライセンスの一覧・詳細取得、名前フィルタ、ページネーション |
 
 ## サンプルごとの環境変数
 
@@ -41,9 +44,12 @@ npx ts-node examples/<ファイル名>.ts
 | 環境変数 | 必要なサンプル | 説明 |
 | --- | --- | --- |
 | `OSF_TOKEN` | すべて | OSF Personal Access Token |
-| `NODE_ID` | contributors.ts, comments.ts | 操作対象のノード ID（contributors.ts では省略時に公開ノードを自動選択） |
+| `NODE_ID` | contributors.ts, comments.ts, logs.ts | 操作対象のノード ID（contributors.ts では省略時に公開ノードを自動選択） |
 | `TARGET_USER_ID` | contributors.ts | 追加 / 更新 / 削除する対象ユーザー ID（省略時は読み取り操作のみ） |
 | `WIKI_ID` | wikis.ts | 操作対象の Wiki ページ ID |
+| `LOG_ID` | logs.ts | 特定ログの詳細取得用 ID（省略可） |
+| `SUBJECT_ID` | subjects.ts | 特定 Subject の詳細・子 Subject 取得用 ID（省略可） |
+| `LICENSE_ID` | licenses.ts | 特定ライセンスの詳細取得用 ID（省略可） |
 
 ## 注意事項
 
