@@ -177,29 +177,29 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 コンテンツのグループ化・キュレーション機能。
 
 #### 型定義
-- [ ] `src/types/collection.ts` の作成
-    - [ ] `OsfCollectionAttributes` インターフェース
-    - [ ] `CollectionListParams` フィルタ型
-    - [ ] `CreateCollectionInput` 型
+- [x] `src/types/collection.ts` の作成
+    - [x] `OsfCollectionAttributes` インターフェース
+    - [x] `CollectionListParams` フィルタ型
+    - [x] `CreateCollectionInput` 型
 
 #### テスト作成
-- [ ] **Test:** Collection 取得テスト
-- [ ] **Test:** Collection 一覧取得テスト
-- [ ] **Test:** Collection 作成テスト
-- [ ] **Test:** Collection 削除テスト
-- [ ] **Test:** Collection のリンクノード一覧テスト
+- [x] **Test:** Collection 取得テスト
+- [x] **Test:** Collection 一覧取得テスト
+- [x] **Test:** Collection 作成テスト
+- [x] **Test:** Collection 削除テスト
+- [x] **Test:** Collection のリンクノード一覧テスト
 
 #### 実装
-- [ ] **Impl:** `Collections` クラスの実装 (`src/resources/Collections.ts`)
-    - [ ] `getById(id)` - Collection 取得
-    - [ ] `listCollections(params)` - 一覧取得
-    - [ ] `listCollectionsPaginated(params)` - ページネーション対応
-    - [ ] `create(data)` - 作成
-    - [ ] `delete(id)` - 削除
-    - [ ] `listLinkedNodes(id)` - リンクノード一覧
-    - [ ] `listLinkedRegistrations(id)` - リンク Registration 一覧
-    - [ ] `addLinkedNode(id, nodeId)` - ノードをリンク
-    - [ ] `removeLinkedNode(id, nodeId)` - リンク解除
+- [x] **Impl:** `Collections` クラスの実装 (`src/resources/Collections.ts`)
+    - [x] `getById(id)` - Collection 取得
+    - [x] `listCollections(params)` - 一覧取得
+    - [x] `listCollectionsPaginated(params)` - ページネーション対応
+    - [x] `create(data)` - 作成
+    - [x] `delete(id)` - 削除
+    - [x] `listLinkedNodes(id)` - リンクノード一覧
+    - [x] `listLinkedRegistrations(id)` - リンク Registration 一覧
+    - [x] `addLinkedNode(id, nodeId)` - ノードをリンク
+    - [x] `removeLinkedNode(id, nodeId)` - リンク解除
 
 ### 3.2 Wikis リソース - TDD
 
