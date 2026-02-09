@@ -8,3 +8,5 @@ export * from './Institutions';
 export * from './Preprints';
 export * from './DraftRegistrations';
 export * from './Collections';
+export * from './Wikis';
+export * from './Comments';

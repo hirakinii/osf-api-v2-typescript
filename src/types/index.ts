@@ -7,6 +7,8 @@ export * from './institution';
 export * from './preprint';
 export * from './draft-registration';
 export * from './collection';
+export * from './wiki';
+export * from './comment';
 
 export interface JsonApiResponse<T> {
   data: {

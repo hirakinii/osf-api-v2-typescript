@@ -9,6 +9,7 @@ import { Institutions } from '../src/resources/Institutions';
 import { Preprints } from '../src/resources/Preprints';
 import { DraftRegistrations } from '../src/resources/DraftRegistrations';
 import { Collections } from '../src/resources/Collections';
+import { Wikis } from '../src/resources/Wikis';
 
 fetchMock.enableMocks();
 
@@ -120,6 +121,12 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.collections).toBeInstanceOf(Collections);
       expect(client.collections).toBe(client.collections);
+    });
+
+    it('should provide wikis accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.wikis).toBeInstanceOf(Wikis);
+      expect(client.wikis).toBe(client.wikis);
     });
   });
 
