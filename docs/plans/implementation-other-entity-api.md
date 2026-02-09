@@ -366,11 +366,11 @@ Registration の下書き管理。Registration 作成ワークフローの一部
     - [x] `client.licenses`
 
 ### 6.2 統合テスト
-- [ ] 主要ユースケースの E2E テスト
-    - [ ] Registration 作成フロー (Draft → Register)
-    - [ ] Preprint 投稿フロー
-    - [ ] コラボレーターの招待・権限管理
-- [ ] テストカバレッジ確認 (80% 以上維持)
+- [x] 主要ユースケースの E2E テスト
+    - [x] Registration 作成フロー (Draft → Register)
+    - [x] Preprint 投稿フロー
+    - [x] コラボレーターの招待・権限管理
+- [x] テストカバレッジ確認 (80% 以上維持)
 
 ### 6.3 ドキュメント更新
 - [ ] README.md の更新 (新 API の使用例追加)
