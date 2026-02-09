@@ -7,6 +7,7 @@ import { Contributors } from './resources/Contributors';
 import { Institutions } from './resources/Institutions';
 import { Preprints } from './resources/Preprints';
 import { DraftRegistrations } from './resources/DraftRegistrations';
+import { Collections } from './resources/Collections';
 
 /**
  * Configuration options for the OSF client
@@ -47,6 +48,7 @@ export class OsfClient {
   private _institutions?: Institutions;
   private _preprints?: Preprints;
   private _draftRegistrations?: DraftRegistrations;
+  private _collections?: Collections;
 
   /**
    * Create a new OSF client
@@ -155,5 +157,17 @@ export class OsfClient {
       this._draftRegistrations = new DraftRegistrations(this.httpClient);
     }
     return this._draftRegistrations;
+  }
+
+  /**
+   * Access the Collections resource
+   *
+   * Provides methods for grouping and curating content (nodes, registrations, preprints)
+   */
+  get collections(): Collections {
+    if (!this._collections) {
+      this._collections = new Collections(this.httpClient);
+    }
+    return this._collections;
   }
 }

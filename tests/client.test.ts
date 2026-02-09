@@ -3,6 +3,12 @@ import { OsfClient } from '../src/client';
 import { Nodes } from '../src/resources/Nodes';
 import { Files } from '../src/resources/Files';
 import { Users } from '../src/resources/Users';
+import { Registrations } from '../src/resources/Registrations';
+import { Contributors } from '../src/resources/Contributors';
+import { Institutions } from '../src/resources/Institutions';
+import { Preprints } from '../src/resources/Preprints';
+import { DraftRegistrations } from '../src/resources/DraftRegistrations';
+import { Collections } from '../src/resources/Collections';
 
 fetchMock.enableMocks();
 
@@ -78,6 +84,42 @@ describe('OsfClient', () => {
       const users1 = client.users;
       const users2 = client.users;
       expect(users1).toBe(users2);
+    });
+
+    it('should provide registrations accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.registrations).toBeInstanceOf(Registrations);
+      expect(client.registrations).toBe(client.registrations);
+    });
+
+    it('should provide contributors accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.contributors).toBeInstanceOf(Contributors);
+      expect(client.contributors).toBe(client.contributors);
+    });
+
+    it('should provide institutions accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.institutions).toBeInstanceOf(Institutions);
+      expect(client.institutions).toBe(client.institutions);
+    });
+
+    it('should provide preprints accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.preprints).toBeInstanceOf(Preprints);
+      expect(client.preprints).toBe(client.preprints);
+    });
+
+    it('should provide draftRegistrations accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.draftRegistrations).toBeInstanceOf(DraftRegistrations);
+      expect(client.draftRegistrations).toBe(client.draftRegistrations);
+    });
+
+    it('should provide collections accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.collections).toBeInstanceOf(Collections);
+      expect(client.collections).toBe(client.collections);
     });
   });
 
