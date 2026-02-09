@@ -12,6 +12,9 @@ export * from './comment';
 export * from './log';
 export * from './subject';
 export * from './license';
+export * from './view-only-link';
+export * from './identifier';
+export * from './citation-style';
 
 export interface JsonApiResponse<T> {
   data: {

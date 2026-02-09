@@ -13,6 +13,9 @@ import { Comments } from './resources/Comments';
 import { Logs } from './resources/Logs';
 import { Subjects } from './resources/Subjects';
 import { Licenses } from './resources/Licenses';
+import { ViewOnlyLinks } from './resources/ViewOnlyLinks';
+import { Identifiers } from './resources/Identifiers';
+import { Citations } from './resources/Citations';
 
 /**
  * Configuration options for the OSF client
@@ -59,6 +62,9 @@ export class OsfClient {
   private _logs?: Logs;
   private _subjects?: Subjects;
   private _licenses?: Licenses;
+  private _viewOnlyLinks?: ViewOnlyLinks;
+  private _identifiers?: Identifiers;
+  private _citations?: Citations;
 
   /**
    * Create a new OSF client
@@ -239,5 +245,41 @@ export class OsfClient {
       this._licenses = new Licenses(this.httpClient);
     }
     return this._licenses;
+  }
+
+  /**
+   * Access the View Only Links resource
+   *
+   * Provides methods for working with view-only links (sharing read-only access to private nodes)
+   */
+  get viewOnlyLinks(): ViewOnlyLinks {
+    if (!this._viewOnlyLinks) {
+      this._viewOnlyLinks = new ViewOnlyLinks(this.httpClient);
+    }
+    return this._viewOnlyLinks;
+  }
+
+  /**
+   * Access the Identifiers resource
+   *
+   * Provides methods for working with identifiers (DOIs, ARKs, and other permanent references)
+   */
+  get identifiers(): Identifiers {
+    if (!this._identifiers) {
+      this._identifiers = new Identifiers(this.httpClient);
+    }
+    return this._identifiers;
+  }
+
+  /**
+   * Access the Citations resource
+   *
+   * Provides methods for working with citation styles (APA, MLA, Chicago, etc.)
+   */
+  get citations(): Citations {
+    if (!this._citations) {
+      this._citations = new Citations(this.httpClient);
+    }
+    return this._citations;
   }
 }

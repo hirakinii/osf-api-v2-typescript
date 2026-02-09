@@ -13,6 +13,9 @@ import { Wikis } from '../src/resources/Wikis';
 import { Logs } from '../src/resources/Logs';
 import { Subjects } from '../src/resources/Subjects';
 import { Licenses } from '../src/resources/Licenses';
+import { ViewOnlyLinks } from '../src/resources/ViewOnlyLinks';
+import { Identifiers } from '../src/resources/Identifiers';
+import { Citations } from '../src/resources/Citations';
 
 fetchMock.enableMocks();
 
@@ -148,6 +151,24 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.licenses).toBeInstanceOf(Licenses);
       expect(client.licenses).toBe(client.licenses);
+    });
+
+    it('should provide viewOnlyLinks accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.viewOnlyLinks).toBeInstanceOf(ViewOnlyLinks);
+      expect(client.viewOnlyLinks).toBe(client.viewOnlyLinks);
+    });
+
+    it('should provide identifiers accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.identifiers).toBeInstanceOf(Identifiers);
+      expect(client.identifiers).toBe(client.identifiers);
+    });
+
+    it('should provide citations accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.citations).toBeInstanceOf(Citations);
+      expect(client.citations).toBe(client.citations);
     });
   });
 

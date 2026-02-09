@@ -13,3 +13,6 @@ export * from './Comments';
 export * from './Logs';
 export * from './Subjects';
 export * from './Licenses';
+export * from './ViewOnlyLinks';
+export * from './Identifiers';
+export * from './Citations';
