@@ -10,6 +10,9 @@ import { Preprints } from '../src/resources/Preprints';
 import { DraftRegistrations } from '../src/resources/DraftRegistrations';
 import { Collections } from '../src/resources/Collections';
 import { Wikis } from '../src/resources/Wikis';
+import { Logs } from '../src/resources/Logs';
+import { Subjects } from '../src/resources/Subjects';
+import { Licenses } from '../src/resources/Licenses';
 
 fetchMock.enableMocks();
 
@@ -127,6 +130,24 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.wikis).toBeInstanceOf(Wikis);
       expect(client.wikis).toBe(client.wikis);
+    });
+
+    it('should provide logs accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.logs).toBeInstanceOf(Logs);
+      expect(client.logs).toBe(client.logs);
+    });
+
+    it('should provide subjects accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.subjects).toBeInstanceOf(Subjects);
+      expect(client.subjects).toBe(client.subjects);
+    });
+
+    it('should provide licenses accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.licenses).toBeInstanceOf(Licenses);
+      expect(client.licenses).toBe(client.licenses);
     });
   });
 
