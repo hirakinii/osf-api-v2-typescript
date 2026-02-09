@@ -12,6 +12,7 @@ import { Wikis } from './resources/Wikis';
 import { Comments } from './resources/Comments';
 import { Logs } from './resources/Logs';
 import { Subjects } from './resources/Subjects';
+import { Licenses } from './resources/Licenses';
 
 /**
  * Configuration options for the OSF client
@@ -57,6 +58,7 @@ export class OsfClient {
   private _comments?: Comments;
   private _logs?: Logs;
   private _subjects?: Subjects;
+  private _licenses?: Licenses;
 
   /**
    * Create a new OSF client
@@ -225,5 +227,17 @@ export class OsfClient {
       this._subjects = new Subjects(this.httpClient);
     }
     return this._subjects;
+  }
+
+  /**
+   * Access the Licenses resource
+   *
+   * Provides methods for working with licenses (terms under which content is shared)
+   */
+  get licenses(): Licenses {
+    if (!this._licenses) {
+      this._licenses = new Licenses(this.httpClient);
+    }
+    return this._licenses;
   }
 }

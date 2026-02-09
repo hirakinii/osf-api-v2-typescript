@@ -11,6 +11,7 @@ export * from './wiki';
 export * from './comment';
 export * from './log';
 export * from './subject';
+export * from './license';
 
 export interface JsonApiResponse<T> {
   data: {

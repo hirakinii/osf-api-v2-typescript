@@ -303,18 +303,18 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 ライセンス情報の取得。
 
 #### 型定義
-- [ ] `src/types/license.ts` の作成
-    - [ ] `OsfLicenseAttributes` インターフェース
+- [x] `src/types/license.ts` の作成
+    - [x] `OsfLicenseAttributes` インターフェース
 
 #### テスト作成
-- [ ] **Test:** License 取得テスト
-- [ ] **Test:** License 一覧取得テスト
-- [ ] **Test:** `tests/client.test.ts` への License 関連テスト追加
+- [x] **Test:** License 取得テスト
+- [x] **Test:** License 一覧取得テスト
+- [x] **Test:** `tests/client.test.ts` への License 関連テスト追加
 
 #### 実装
-- [ ] **Impl:** `Licenses` クラスの実装 (`src/resources/Licenses.ts`)
-    - [ ] `getById(id)` - ライセンス取得
-    - [ ] `listLicenses()` - 一覧取得
+- [x] **Impl:** `Licenses` クラスの実装 (`src/resources/Licenses.ts`)
+    - [x] `getById(id)` - ライセンス取得
+    - [x] `listLicenses()` - 一覧取得
 
 ---
 
