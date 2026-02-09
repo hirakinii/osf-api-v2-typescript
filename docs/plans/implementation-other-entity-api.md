@@ -260,21 +260,22 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 アクティビティログ・監査機能。
 
 #### 型定義
-- [ ] `src/types/log.ts` の作成
-    - [ ] `OsfLogAttributes` インターフェース
-    - [ ] `LogAction` 列挙型
+- [x] `src/types/log.ts` の作成
+    - [x] `OsfLogAttributes` インターフェース
+    - [x] `LogAction` 列挙型
 
 #### テスト作成
-- [ ] **Test:** Log 取得テスト
-- [ ] **Test:** Node のログ一覧テスト
-- [ ] **Test:** Actions 一覧テスト
+- [x] **Test:** Log 取得テスト
+- [x] **Test:** Node のログ一覧テスト
+- [x] **Test:** Actions 一覧テスト
+- [ ] **Test:** `tests/client.test.ts` への Log 関連テスト追加
 
 #### 実装
-- [ ] **Impl:** `Logs` クラスの実装 (`src/resources/Logs.ts`)
-    - [ ] `getById(id)` - ログ取得
-    - [ ] `listByNode(nodeId)` - ノードのログ一覧
-    - [ ] `listByNodePaginated(nodeId)` - ページネーション対応
-    - [ ] `listActions()` - アクション一覧
+- [x] **Impl:** `Logs` クラスの実装 (`src/resources/Logs.ts`)
+    - [x] `getById(id)` - ログ取得
+    - [x] `listByNode(nodeId)` - ノードのログ一覧
+    - [x] `listByNodePaginated(nodeId)` - ページネーション対応
+    - [x] `listActions()` - アクション一覧
 
 ### 4.2 Subjects リソース - TDD
 
@@ -288,6 +289,7 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 - [ ] **Test:** Subject 取得テスト
 - [ ] **Test:** Subject 一覧取得テスト
 - [ ] **Test:** Subject の子要素取得テスト
+- [ ] **Test:** `tests/client.test.ts` への Subject 関連テスト追加
 
 #### 実装
 - [ ] **Impl:** `Subjects` クラスの実装 (`src/resources/Subjects.ts`)
@@ -307,6 +309,7 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 #### テスト作成
 - [ ] **Test:** License 取得テスト
 - [ ] **Test:** License 一覧取得テスト
+- [ ] **Test:** `tests/client.test.ts` への License 関連テスト追加
 
 #### 実装
 - [ ] **Impl:** `Licenses` クラスの実装 (`src/resources/Licenses.ts`)

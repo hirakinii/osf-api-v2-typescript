@@ -10,6 +10,7 @@ import { DraftRegistrations } from './resources/DraftRegistrations';
 import { Collections } from './resources/Collections';
 import { Wikis } from './resources/Wikis';
 import { Comments } from './resources/Comments';
+import { Logs } from './resources/Logs';
 
 /**
  * Configuration options for the OSF client
@@ -53,6 +54,7 @@ export class OsfClient {
   private _collections?: Collections;
   private _wikis?: Wikis;
   private _comments?: Comments;
+  private _logs?: Logs;
 
   /**
    * Create a new OSF client
@@ -197,5 +199,17 @@ export class OsfClient {
       this._comments = new Comments(this.httpClient);
     }
     return this._comments;
+  }
+
+  /**
+   * Access the Logs resource
+   *
+   * Provides methods for working with activity logs (permanent immutable records of node history)
+   */
+  get logs(): Logs {
+    if (!this._logs) {
+      this._logs = new Logs(this.httpClient);
+    }
+    return this._logs;
   }
 }

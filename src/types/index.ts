@@ -9,6 +9,7 @@ export * from './draft-registration';
 export * from './collection';
 export * from './wiki';
 export * from './comment';
+export * from './log';
 
 export interface JsonApiResponse<T> {
   data: {

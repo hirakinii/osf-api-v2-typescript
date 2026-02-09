@@ -10,6 +10,7 @@ import { Preprints } from '../src/resources/Preprints';
 import { DraftRegistrations } from '../src/resources/DraftRegistrations';
 import { Collections } from '../src/resources/Collections';
 import { Wikis } from '../src/resources/Wikis';
+import { Logs } from '../src/resources/Logs';
 
 fetchMock.enableMocks();
 
@@ -127,6 +128,12 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.wikis).toBeInstanceOf(Wikis);
       expect(client.wikis).toBe(client.wikis);
+    });
+
+    it('should provide logs accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.logs).toBeInstanceOf(Logs);
+      expect(client.logs).toBe(client.logs);
     });
   });
 
