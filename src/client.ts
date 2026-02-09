@@ -8,6 +8,7 @@ import { Institutions } from './resources/Institutions';
 import { Preprints } from './resources/Preprints';
 import { DraftRegistrations } from './resources/DraftRegistrations';
 import { Collections } from './resources/Collections';
+import { Wikis } from './resources/Wikis';
 
 /**
  * Configuration options for the OSF client
@@ -49,6 +50,7 @@ export class OsfClient {
   private _preprints?: Preprints;
   private _draftRegistrations?: DraftRegistrations;
   private _collections?: Collections;
+  private _wikis?: Wikis;
 
   /**
    * Create a new OSF client
@@ -169,5 +171,17 @@ export class OsfClient {
       this._collections = new Collections(this.httpClient);
     }
     return this._collections;
+  }
+
+  /**
+   * Access the Wikis resource
+   *
+   * Provides methods for working with wiki pages and their version history
+   */
+  get wikis(): Wikis {
+    if (!this._wikis) {
+      this._wikis = new Wikis(this.httpClient);
+    }
+    return this._wikis;
   }
 }

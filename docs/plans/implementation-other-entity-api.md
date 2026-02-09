@@ -206,22 +206,22 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 プロジェクトドキュメンテーション機能。
 
 #### 型定義
-- [ ] `src/types/wiki.ts` の作成
-    - [ ] `OsfWikiAttributes` インターフェース
-    - [ ] `WikiVersionAttributes` インターフェース
+- [x] `src/types/wiki.ts` の作成
+    - [x] `OsfWikiAttributes` インターフェース
+    - [x] `WikiVersionAttributes` インターフェース
 
 #### テスト作成
-- [ ] **Test:** Wiki 取得テスト
-- [ ] **Test:** Wiki コンテンツ取得テスト
-- [ ] **Test:** Wiki バージョン一覧テスト
-- [ ] **Test:** Wiki バージョン作成テスト
+- [x] **Test:** Wiki 取得テスト
+- [x] **Test:** Wiki コンテンツ取得テスト
+- [x] **Test:** Wiki バージョン一覧テスト
+- [x] **Test:** Wiki バージョン作成テスト
 
 #### 実装
-- [ ] **Impl:** `Wikis` クラスの実装 (`src/resources/Wikis.ts`)
-    - [ ] `getById(id)` - Wiki 取得
-    - [ ] `getContent(id)` - コンテンツ取得
-    - [ ] `listVersions(id)` - バージョン一覧
-    - [ ] `createVersion(id, content)` - 新バージョン作成
+- [x] **Impl:** `Wikis` クラスの実装 (`src/resources/Wikis.ts`)
+    - [x] `getById(id)` - Wiki 取得
+    - [x] `getContent(id)` - コンテンツ取得
+    - [x] `listVersions(id)` - バージョン一覧
+    - [x] `createVersion(id, content)` - 新バージョン作成
 
 ### 3.3 Comments リソース - TDD
 
