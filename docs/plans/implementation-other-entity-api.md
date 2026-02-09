@@ -323,29 +323,29 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 認証、プロバイダー、その他の管理機能を実装します。
 
 ### 5.1 View Only Links リソース
-- [ ] `ViewOnlyLinks` クラスの実装
-    - [ ] `getById(id)` - VOL 取得
-    - [ ] `listNodes(linkId)` - VOL でアクセス可能なノード一覧
+- [x] `ViewOnlyLinks` クラスの実装
+    - [x] `getById(id)` - VOL 取得
+    - [x] `listNodes(linkId)` - VOL でアクセス可能なノード一覧
 
 ### 5.2 Identifiers リソース
-- [ ] `Identifiers` クラスの実装
-    - [ ] `getById(id)` - 識別子取得
-    - [ ] `listByNode(nodeId)` - ノードの識別子一覧
+- [x] `Identifiers` クラスの実装
+    - [x] `getById(id)` - 識別子取得
+    - [x] `listByNode(nodeId)` - ノードの識別子一覧
 
 ### 5.3 Citations リソース
-- [ ] `Citations` クラスの実装
-    - [ ] `listStyles()` - 引用スタイル一覧
-    - [ ] `getStyle(id)` - スタイル詳細取得
+- [x] `Citations` クラスの実装
+    - [x] `listStyles()` - 引用スタイル一覧
+    - [x] `getStyle(id)` - スタイル詳細取得
 
 ### 5.4 Providers リソース (オプション)
-- [ ] `PreprintProviders` クラスの実装
-- [ ] `RegistrationProviders` クラスの実装
-- [ ] `CollectionProviders` クラスの実装
+- [x] `PreprintProviders` クラスの実装
+- [x] `RegistrationProviders` クラスの実装
+- [x] `CollectionProviders` クラスの実装
 
 ### 5.5 認証関連 (オプション)
-- [ ] `Applications` クラスの実装 (OAuth アプリ管理)
-- [ ] `Tokens` クラスの実装 (PAT 管理)
-- [ ] `Scopes` クラスの実装 (OAuth スコープ)
+- [x] `Applications` クラスの実装 (OAuth アプリ管理)
+- [x] `Tokens` クラスの実装 (PAT 管理)
+- [x] `Scopes` クラスの実装 (OAuth スコープ)
 
 ---
 

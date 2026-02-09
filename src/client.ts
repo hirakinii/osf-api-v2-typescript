@@ -13,6 +13,15 @@ import { Comments } from './resources/Comments';
 import { Logs } from './resources/Logs';
 import { Subjects } from './resources/Subjects';
 import { Licenses } from './resources/Licenses';
+import { ViewOnlyLinks } from './resources/ViewOnlyLinks';
+import { Identifiers } from './resources/Identifiers';
+import { Citations } from './resources/Citations';
+import { PreprintProviders } from './resources/PreprintProviders';
+import { RegistrationProviders } from './resources/RegistrationProviders';
+import { CollectionProviders } from './resources/CollectionProviders';
+import { Scopes } from './resources/Scopes';
+import { Applications } from './resources/Applications';
+import { Tokens } from './resources/Tokens';
 
 /**
  * Configuration options for the OSF client
@@ -59,6 +68,15 @@ export class OsfClient {
   private _logs?: Logs;
   private _subjects?: Subjects;
   private _licenses?: Licenses;
+  private _viewOnlyLinks?: ViewOnlyLinks;
+  private _identifiers?: Identifiers;
+  private _citations?: Citations;
+  private _preprintProviders?: PreprintProviders;
+  private _registrationProviders?: RegistrationProviders;
+  private _collectionProviders?: CollectionProviders;
+  private _scopes?: Scopes;
+  private _applications?: Applications;
+  private _tokens?: Tokens;
 
   /**
    * Create a new OSF client
@@ -239,5 +257,113 @@ export class OsfClient {
       this._licenses = new Licenses(this.httpClient);
     }
     return this._licenses;
+  }
+
+  /**
+   * Access the View Only Links resource
+   *
+   * Provides methods for working with view-only links (sharing read-only access to private nodes)
+   */
+  get viewOnlyLinks(): ViewOnlyLinks {
+    if (!this._viewOnlyLinks) {
+      this._viewOnlyLinks = new ViewOnlyLinks(this.httpClient);
+    }
+    return this._viewOnlyLinks;
+  }
+
+  /**
+   * Access the Identifiers resource
+   *
+   * Provides methods for working with identifiers (DOIs, ARKs, and other permanent references)
+   */
+  get identifiers(): Identifiers {
+    if (!this._identifiers) {
+      this._identifiers = new Identifiers(this.httpClient);
+    }
+    return this._identifiers;
+  }
+
+  /**
+   * Access the Citations resource
+   *
+   * Provides methods for working with citation styles (APA, MLA, Chicago, etc.)
+   */
+  get citations(): Citations {
+    if (!this._citations) {
+      this._citations = new Citations(this.httpClient);
+    }
+    return this._citations;
+  }
+
+  /**
+   * Access the Preprint Providers resource
+   *
+   * Provides methods for working with preprint providers (services hosting preprints on OSF)
+   */
+  get preprintProviders(): PreprintProviders {
+    if (!this._preprintProviders) {
+      this._preprintProviders = new PreprintProviders(this.httpClient);
+    }
+    return this._preprintProviders;
+  }
+
+  /**
+   * Access the Registration Providers resource
+   *
+   * Provides methods for working with registration providers (services managing registrations on OSF)
+   */
+  get registrationProviders(): RegistrationProviders {
+    if (!this._registrationProviders) {
+      this._registrationProviders = new RegistrationProviders(this.httpClient);
+    }
+    return this._registrationProviders;
+  }
+
+  /**
+   * Access the Collection Providers resource
+   *
+   * Provides methods for working with collection providers (services curating collections on OSF)
+   */
+  get collectionProviders(): CollectionProviders {
+    if (!this._collectionProviders) {
+      this._collectionProviders = new CollectionProviders(this.httpClient);
+    }
+    return this._collectionProviders;
+  }
+
+  /**
+   * Access the Scopes resource
+   *
+   * Provides methods for working with OAuth scopes (permissions for applications and tokens)
+   */
+  get scopes(): Scopes {
+    if (!this._scopes) {
+      this._scopes = new Scopes(this.httpClient);
+    }
+    return this._scopes;
+  }
+
+  /**
+   * Access the Applications resource
+   *
+   * Provides methods for managing OAuth2 applications (registration, update, deactivation)
+   */
+  get applications(): Applications {
+    if (!this._applications) {
+      this._applications = new Applications(this.httpClient);
+    }
+    return this._applications;
+  }
+
+  /**
+   * Access the Tokens resource
+   *
+   * Provides methods for managing personal access tokens (creation, listing, deactivation)
+   */
+  get tokens(): Tokens {
+    if (!this._tokens) {
+      this._tokens = new Tokens(this.httpClient);
+    }
+    return this._tokens;
   }
 }
