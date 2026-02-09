@@ -11,6 +11,7 @@ import { Collections } from './resources/Collections';
 import { Wikis } from './resources/Wikis';
 import { Comments } from './resources/Comments';
 import { Logs } from './resources/Logs';
+import { Subjects } from './resources/Subjects';
 
 /**
  * Configuration options for the OSF client
@@ -55,6 +56,7 @@ export class OsfClient {
   private _wikis?: Wikis;
   private _comments?: Comments;
   private _logs?: Logs;
+  private _subjects?: Subjects;
 
   /**
    * Create a new OSF client
@@ -211,5 +213,17 @@ export class OsfClient {
       this._logs = new Logs(this.httpClient);
     }
     return this._logs;
+  }
+
+  /**
+   * Access the Subjects resource
+   *
+   * Provides methods for working with taxonomy subjects (hierarchical categorization of content)
+   */
+  get subjects(): Subjects {
+    if (!this._subjects) {
+      this._subjects = new Subjects(this.httpClient);
+    }
+    return this._subjects;
   }
 }

@@ -268,7 +268,7 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 - [x] **Test:** Log 取得テスト
 - [x] **Test:** Node のログ一覧テスト
 - [x] **Test:** Actions 一覧テスト
-- [ ] **Test:** `tests/client.test.ts` への Log 関連テスト追加
+- [x] **Test:** `tests/client.test.ts` への Log 関連テスト追加
 
 #### 実装
 - [x] **Impl:** `Logs` クラスの実装 (`src/resources/Logs.ts`)
@@ -282,21 +282,21 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 タクソノミー・分類機能。
 
 #### 型定義
-- [ ] `src/types/subject.ts` の作成
-    - [ ] `OsfSubjectAttributes` インターフェース
+- [x] `src/types/subject.ts` の作成
+    - [x] `OsfSubjectAttributes` インターフェース
 
 #### テスト作成
-- [ ] **Test:** Subject 取得テスト
-- [ ] **Test:** Subject 一覧取得テスト
-- [ ] **Test:** Subject の子要素取得テスト
-- [ ] **Test:** `tests/client.test.ts` への Subject 関連テスト追加
+- [x] **Test:** Subject 取得テスト
+- [x] **Test:** Subject 一覧取得テスト
+- [x] **Test:** Subject の子要素取得テスト
+- [x] **Test:** `tests/client.test.ts` への Subject 関連テスト追加
 
 #### 実装
-- [ ] **Impl:** `Subjects` クラスの実装 (`src/resources/Subjects.ts`)
-    - [ ] `getById(id)` - Subject 取得
-    - [ ] `listSubjects(params)` - 一覧取得
-    - [ ] `listSubjectsPaginated(params)` - ページネーション対応
-    - [ ] `listChildren(id)` - 子 Subject 一覧
+- [x] **Impl:** `Subjects` クラスの実装 (`src/resources/Subjects.ts`)
+    - [x] `getById(id)` - Subject 取得
+    - [x] `listSubjects(params)` - 一覧取得
+    - [x] `listSubjectsPaginated(params)` - ページネーション対応
+    - [x] `listChildren(id)` - 子 Subject 一覧
 
 ### 4.3 Licenses リソース - TDD
 

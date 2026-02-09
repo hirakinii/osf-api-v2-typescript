@@ -11,6 +11,7 @@ import { DraftRegistrations } from '../src/resources/DraftRegistrations';
 import { Collections } from '../src/resources/Collections';
 import { Wikis } from '../src/resources/Wikis';
 import { Logs } from '../src/resources/Logs';
+import { Subjects } from '../src/resources/Subjects';
 
 fetchMock.enableMocks();
 
@@ -134,6 +135,12 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.logs).toBeInstanceOf(Logs);
       expect(client.logs).toBe(client.logs);
+    });
+
+    it('should provide subjects accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.subjects).toBeInstanceOf(Subjects);
+      expect(client.subjects).toBe(client.subjects);
     });
   });
 

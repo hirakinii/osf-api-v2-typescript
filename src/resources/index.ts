@@ -11,3 +11,4 @@ export * from './Collections';
 export * from './Wikis';
 export * from './Comments';
 export * from './Logs';
+export * from './Subjects';
