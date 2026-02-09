@@ -352,18 +352,18 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 ## Phase 6: クライアント統合と品質保証 (Integration & QA)
 
 ### 6.1 OsfClient 拡張
-- [ ] 新規リソースクラスの統合
-    - [ ] `client.registrations`
-    - [ ] `client.contributors`
-    - [ ] `client.institutions`
-    - [ ] `client.preprints`
-    - [ ] `client.draftRegistrations`
-    - [ ] `client.collections`
-    - [ ] `client.wikis`
-    - [ ] `client.comments`
-    - [ ] `client.logs`
-    - [ ] `client.subjects`
-    - [ ] `client.licenses`
+- [x] 新規リソースクラスの統合
+    - [x] `client.registrations`
+    - [x] `client.contributors`
+    - [x] `client.institutions`
+    - [x] `client.preprints`
+    - [x] `client.draftRegistrations`
+    - [x] `client.collections`
+    - [x] `client.wikis`
+    - [x] `client.comments`
+    - [x] `client.logs`
+    - [x] `client.subjects`
+    - [x] `client.licenses`
 
 ### 6.2 統合テスト
 - [ ] 主要ユースケースの E2E テスト
