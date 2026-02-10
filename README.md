@@ -9,21 +9,32 @@ TypeScript client library for the [Open Science Framework (OSF) API v2](https://
 
 - **Type-safe**: Comprehensive TypeScript definitions for OSF entities.
 - **Resource-oriented**: Intuitive API for 22+ resource types including Nodes, Files, Users, Registrations, Preprints, and more.
+- **OAuth2 + PKCE**: Built-in OAuth2 Authorization Code flow with PKCE for browser-based and third-party apps.
 - **Automatic Pagination**: Effortlessly iterate through large datasets using `AsyncIterator`.
 - **JSON:API Simplified**: Flattens complex JSON:API structures into easy-to-use objects.
-- **Modern**: Built with modern TypeScript and native `fetch`.
+- **Dual Build**: CJS, ESM, and UMD outputs for Node.js, modern bundlers, and CDN usage.
+- **Browser Compatible**: Uses Web Crypto API and standard `fetch` with no Node.js-specific dependencies.
 
 ## Installation
 
 As of 2026/2/5, this library is not published to npm. You can install it from GitHub:
 
 ```bash
-npm install git+https://github.com/your-username/osf-api-v2-typescript.git
+npm install git+https://github.com/hirakinii/osf-api-v2-typescript.git
+```
+
+You can also load the UMD bundle directly via a CDN or `<script>` tag:
+
+```html
+<script src="dist/umd/osf-api-v2.min.js"></script>
+<script>
+  const client = new OsfApiV2.OsfClient({ token: 'your_token' });
+</script>
 ```
 
 ## Basic Usage
 
-### Initialization
+### Initialization with Personal Access Token (PAT)
 
 ```typescript
 import { OsfClient } from 'osf-api-v2-typescript';
@@ -32,6 +43,48 @@ const client = new OsfClient({
   token: 'your_personal_access_token',
   // baseUrl: 'https://api.test.osf.io/v2/', // Optional: Defaults to production
   // timeout: 30000 // Optional: Defaults to 30 seconds
+});
+```
+
+### Initialization with OAuth2 (Authorization Code + PKCE)
+
+```typescript
+import { OsfClient, OsfOAuth2Client } from 'osf-api-v2-typescript';
+
+// 1. Create an OAuth2 client
+const oauth2 = new OsfOAuth2Client({
+  clientId: 'your_client_id',
+  redirectUri: 'https://yourapp.example.com/callback',
+  scope: 'osf.full_read osf.full_write',
+});
+
+// 2. Build the authorization URL and redirect the user
+const { url, codeVerifier } = await oauth2.buildAuthorizationUrl({
+  accessType: 'offline', // Request a refresh token
+});
+// Redirect user to `url`, then handle the callback...
+
+// 3. Exchange the authorization code for tokens
+const tokenSet = await oauth2.exchangeCode(authorizationCode, codeVerifier);
+
+// 4. Create the client with automatic token refresh
+const client = new OsfClient({
+  oauth2Client: oauth2,
+  tokenSet,
+});
+
+// Tokens are refreshed automatically when expired
+const node = await client.nodes.getById('abc12');
+```
+
+You can also use a custom token provider:
+
+```typescript
+const client = new OsfClient({
+  tokenProvider: async () => {
+    // Your custom logic to provide a fresh access token
+    return await fetchTokenFromYourAuthServer();
+  },
 });
 ```
 
@@ -444,9 +497,26 @@ npm install
 # Run tests
 npm test
 
-# Build
+# Build all formats (CJS + ESM + UMD)
 npm run build
+
+# Build individual formats
+npm run build:cjs   # CommonJS → dist/cjs/
+npm run build:esm   # ES Modules → dist/esm/
+npm run build:umd   # UMD/IIFE → dist/umd/
 ```
+
+### Build Outputs
+
+| Format | Output | Use Case |
+|--------|--------|----------|
+| CJS | `dist/cjs/` | Node.js `require()` |
+| ESM | `dist/esm/` | Modern bundlers (Vite, webpack, etc.) and `import` |
+| UMD | `dist/umd/osf-api-v2.js` | `<script>` tags, CDN (global: `OsfApiV2`) |
+
+# Change log
+
+See [CHANGELOG.md](./CHANGELOG.md) for details.
 
 ## License
 
