@@ -19,6 +19,9 @@ import { Citations } from '../src/resources/Citations';
 import { PreprintProviders } from '../src/resources/PreprintProviders';
 import { RegistrationProviders } from '../src/resources/RegistrationProviders';
 import { CollectionProviders } from '../src/resources/CollectionProviders';
+import { Scopes } from '../src/resources/Scopes';
+import { Applications } from '../src/resources/Applications';
+import { Tokens } from '../src/resources/Tokens';
 
 fetchMock.enableMocks();
 
@@ -190,6 +193,24 @@ describe('OsfClient', () => {
       const client = new OsfClient({ token: 'test-token' });
       expect(client.collectionProviders).toBeInstanceOf(CollectionProviders);
       expect(client.collectionProviders).toBe(client.collectionProviders);
+    });
+
+    it('should provide scopes accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.scopes).toBeInstanceOf(Scopes);
+      expect(client.scopes).toBe(client.scopes);
+    });
+
+    it('should provide applications accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.applications).toBeInstanceOf(Applications);
+      expect(client.applications).toBe(client.applications);
+    });
+
+    it('should provide tokens accessor', () => {
+      const client = new OsfClient({ token: 'test-token' });
+      expect(client.tokens).toBeInstanceOf(Tokens);
+      expect(client.tokens).toBe(client.tokens);
     });
   });
 
