@@ -240,6 +240,57 @@ describe('HttpClient', () => {
         });
     });
 
+    describe('tokenProvider', () => {
+        it('should resolve token dynamically from tokenProvider', async () => {
+            const tokenProvider = jest.fn().mockReturnValue('dynamic-token');
+            const providerClient = new HttpClient({ tokenProvider, baseUrl });
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+
+            await providerClient.get('nodes/12345');
+
+            const [, options] = fetchMock.mock.calls[0];
+            const headers = options?.headers as Headers;
+            expect(headers.get('Authorization')).toBe('Bearer dynamic-token');
+            expect(tokenProvider).toHaveBeenCalledTimes(1);
+        });
+
+        it('should support async tokenProvider', async () => {
+            const tokenProvider = jest.fn().mockResolvedValue('async-token');
+            const providerClient = new HttpClient({ tokenProvider, baseUrl });
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+
+            await providerClient.get('nodes/12345');
+
+            const [, options] = fetchMock.mock.calls[0];
+            const headers = options?.headers as Headers;
+            expect(headers.get('Authorization')).toBe('Bearer async-token');
+        });
+
+        it('should call tokenProvider on every request', async () => {
+            let callCount = 0;
+            const tokenProvider = jest.fn().mockImplementation(() => `token-${++callCount}`);
+            const providerClient = new HttpClient({ tokenProvider, baseUrl });
+
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await providerClient.get('nodes/1');
+
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await providerClient.get('nodes/2');
+
+            expect(tokenProvider).toHaveBeenCalledTimes(2);
+            const headers1 = (fetchMock.mock.calls[0][1]?.headers as Headers);
+            const headers2 = (fetchMock.mock.calls[1][1]?.headers as Headers);
+            expect(headers1.get('Authorization')).toBe('Bearer token-1');
+            expect(headers2.get('Authorization')).toBe('Bearer token-2');
+        });
+
+        it('should throw error when neither token nor tokenProvider is provided', () => {
+            expect(() => new HttpClient({ baseUrl })).toThrow(
+                'Either token or tokenProvider must be provided'
+            );
+        });
+    });
+
     describe('Timeout handling', () => {
         it('should use default timeout of 30 seconds', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));

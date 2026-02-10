@@ -15,3 +15,6 @@ export * from './adapter';
 
 // Type definitions
 export * from './types';
+
+// Auth (OAuth2 + PKCE)
+export * from './auth';

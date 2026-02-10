@@ -1,4 +1,6 @@
 import { HttpClient } from './network/HttpClient';
+import { OsfOAuth2Client } from './auth/OsfOAuth2Client';
+import type { TokenSet } from './auth/types';
 import { Nodes } from './resources/Nodes';
 import { Files } from './resources/Files';
 import { Users } from './resources/Users';
@@ -27,8 +29,14 @@ import { Tokens } from './resources/Tokens';
  * Configuration options for the OSF client
  */
 export interface OsfClientConfig {
-  /** Personal access token for authentication */
-  token: string;
+  /** Personal access token for authentication (simplest mode) */
+  token?: string;
+  /** OAuth2 client for automatic token refresh */
+  oauth2Client?: OsfOAuth2Client;
+  /** Pre-obtained OAuth2 token set (used with oauth2Client) */
+  tokenSet?: TokenSet;
+  /** Custom async token provider function */
+  tokenProvider?: () => string | Promise<string>;
   /** Base URL for the API (defaults to https://api.osf.io/v2/) */
   baseUrl?: string;
   /** Request timeout in milliseconds (defaults to 30000) */
@@ -84,8 +92,25 @@ export class OsfClient {
    * @param config - Client configuration
    */
   constructor(config: OsfClientConfig) {
+    let tokenProvider: (() => string | Promise<string>) | undefined;
+    let token: string | undefined;
+
+    if (config.token) {
+      token = config.token;
+    } else if (config.oauth2Client) {
+      if (config.tokenSet) {
+        config.oauth2Client.setTokenSet(config.tokenSet);
+      }
+      tokenProvider = () => config.oauth2Client!.getAccessToken();
+    } else if (config.tokenProvider) {
+      tokenProvider = config.tokenProvider;
+    } else {
+      throw new Error('One of token, oauth2Client, or tokenProvider must be provided');
+    }
+
     this.httpClient = new HttpClient({
-      token: config.token,
+      token,
+      tokenProvider,
       baseUrl: config.baseUrl,
       timeout: config.timeout,
     });
