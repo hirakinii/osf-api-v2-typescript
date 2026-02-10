@@ -27,7 +27,7 @@
     "test": "jest",
     "build": "npm run build:cjs && npm run build:esm && npm run build:umd",
     "build:cjs": "tsc",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json && node scripts/fix-esm-imports.mjs",
     "build:umd": "node scripts/build-umd.mjs",
     "prepack": "npm run build",
     "lint": "eslint '{src,examples}/**/*.{ts,tsx}'",
