@@ -125,7 +125,7 @@ export class Files extends BaseResource {
    * @throws {Error} If file does not have a download link
    */
   async download(file: TransformedResource<OsfFileAttributes>): Promise<ArrayBuffer> {
-    const downloadUrl = file.links?.download;
+    const downloadUrl = file.links?.move ?? file.links?.upload ?? file.links?.delete;
     if (!downloadUrl) {
       throw new Error('File does not have a download link');
     }

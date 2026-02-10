@@ -27,6 +27,7 @@ export interface OsfFileAttributes {
 
 /**
  * File links including Waterbutler API endpoints
+ * remarks: the download link is valid only in browsers, so we should use move, upload, or delete link to fetch a file in a binary format.
  */
 export interface OsfFileLinks {
   self: string;

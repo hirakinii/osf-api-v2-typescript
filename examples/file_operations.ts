@@ -23,7 +23,11 @@ async function main() {
 
     if (!targetNodeId) {
       console.log('No nodeId provided. Fetching your first project...');
-      const myNodes = await client.nodes.listNodes({ 'page[size]': 1 });
+      const currentUser = await client.users.me();
+      const myNodes = await client.nodes.listNodes({
+        'filter[contributors]': currentUser.id,
+        'page[size]': 1,
+      });
       if (myNodes.data.length === 0) {
         console.error('No projects found in your account to list files from.');
         return;
@@ -38,7 +42,7 @@ async function main() {
     console.log('Providers available:', providers.data.map((p) => p.name).join(', '));
 
     // 2. List files in the first provider (usually osfstorage)
-    const providerId = providers.data[0]?.id || 'osfstorage';
+    const providerId = providers.data[0]?.provider || 'osfstorage';
     console.log(`\nListing files in '${providerId}'...`);
     const fileList = await client.files.listByNode(targetNodeId, providerId);
 
