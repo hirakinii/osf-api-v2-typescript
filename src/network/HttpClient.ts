@@ -11,8 +11,10 @@ import {
  * Configuration options for the HttpClient
  */
 export interface HttpClientConfig {
-  /** Personal access token for authentication */
-  token: string;
+  /** Static token string (PAT or OAuth2 access token) */
+  token?: string;
+  /** Dynamic token provider function (for OAuth2 auto-refresh) */
+  tokenProvider?: () => string | Promise<string>;
   /** Base URL for the API (defaults to https://api.osf.io/v2/) */
   baseUrl?: string;
   /** Request timeout in milliseconds (defaults to 30000) */
@@ -24,14 +26,26 @@ export interface HttpClientConfig {
  * Handles authentication, base URL resolution, and error mapping.
  */
 export class HttpClient {
-  private token: string;
+  private token?: string;
+  private tokenProvider?: () => string | Promise<string>;
   private baseUrl: string;
   private timeout: number;
 
   constructor(config: HttpClientConfig) {
+    if (!config.token && !config.tokenProvider) {
+      throw new Error('Either token or tokenProvider must be provided');
+    }
     this.token = config.token;
+    this.tokenProvider = config.tokenProvider;
     this.baseUrl = config.baseUrl || 'https://api.osf.io/v2/';
     this.timeout = config.timeout ?? 30000; // Default: 30 seconds
+  }
+
+  private async getToken(): Promise<string> {
+    if (this.tokenProvider) {
+      return this.tokenProvider();
+    }
+    return this.token!;
   }
 
   /**
@@ -116,7 +130,8 @@ export class HttpClient {
     const url = this.resolveUrl(endpoint);
     const headers = new Headers(options.headers);
 
-    headers.set('Authorization', `Bearer ${this.token}`);
+    const token = await this.getToken();
+    headers.set('Authorization', `Bearer ${token}`);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -151,7 +166,8 @@ export class HttpClient {
     const url = this.resolveUrl(endpoint);
     const headers = new Headers(options.headers);
 
-    headers.set('Authorization', `Bearer ${this.token}`);
+    const token = await this.getToken();
+    headers.set('Authorization', `Bearer ${token}`);
     if (!headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }

@@ -1,5 +1,6 @@
 import fetchMock from 'jest-fetch-mock';
 import { OsfClient } from '../src/client';
+import { OsfOAuth2Client } from '../src/auth/OsfOAuth2Client';
 import { Nodes } from '../src/resources/Nodes';
 import { Files } from '../src/resources/Files';
 import { Users } from '../src/resources/Users';
@@ -59,6 +60,79 @@ describe('OsfClient', () => {
         timeout: 60000,
       });
       expect(client).toBeInstanceOf(OsfClient);
+    });
+
+    it('should accept oauth2Client configuration', () => {
+      const oauth2Client = new OsfOAuth2Client({
+        clientId: 'test-client-id',
+        redirectUri: 'http://localhost:3000/callback',
+      });
+      const client = new OsfClient({ oauth2Client });
+      expect(client).toBeInstanceOf(OsfClient);
+    });
+
+    it('should accept oauth2Client with tokenSet', () => {
+      const oauth2Client = new OsfOAuth2Client({
+        clientId: 'test-client-id',
+        redirectUri: 'http://localhost:3000/callback',
+      });
+      const tokenSet = {
+        accessToken: 'test-access-token',
+        refreshToken: 'test-refresh-token',
+        expiresAt: Date.now() + 3600000,
+      };
+      const client = new OsfClient({ oauth2Client, tokenSet });
+      expect(client).toBeInstanceOf(OsfClient);
+    });
+
+    it('should accept tokenProvider configuration', () => {
+      const tokenProvider = () => 'custom-token';
+      const client = new OsfClient({ tokenProvider });
+      expect(client).toBeInstanceOf(OsfClient);
+    });
+
+    it('should throw error when no auth option is provided', () => {
+      expect(() => new OsfClient({})).toThrow(
+        'One of token, oauth2Client, or tokenProvider must be provided'
+      );
+    });
+
+    it('should use oauth2Client getAccessToken for API calls', async () => {
+      const oauth2Client = new OsfOAuth2Client({
+        clientId: 'test-client-id',
+        redirectUri: 'http://localhost:3000/callback',
+      });
+      oauth2Client.setTokenSet({
+        accessToken: 'oauth2-access-token',
+        refreshToken: 'oauth2-refresh-token',
+        expiresAt: Date.now() + 3600000,
+      });
+
+      const client = new OsfClient({ oauth2Client });
+
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          data: {
+            id: 'me-123',
+            type: 'users',
+            attributes: {
+              full_name: 'OAuth2 User',
+              given_name: 'OAuth2',
+              middle_names: '',
+              family_name: 'User',
+              suffix: '',
+              active: true,
+              date_registered: '2024-01-01T00:00:00.000000',
+            },
+          },
+        }),
+      );
+
+      await client.users.me();
+
+      const [, options] = fetchMock.mock.calls[0];
+      const headers = new Headers(options?.headers as HeadersInit);
+      expect(headers.get('Authorization')).toBe('Bearer oauth2-access-token');
     });
   });
 
