@@ -373,10 +373,10 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 - [x] テストカバレッジ確認 (80% 以上維持)
 
 ### 6.3 ドキュメント更新
-- [ ] README.md の更新 (新 API の使用例追加)
-- [ ] TSDoc コメントの網羅確認
-- [ ] CHANGELOG の更新
-- [ ] サンプルコードの追加
+- [x] README.md の更新 (新 API の使用例追加)
+- [x] TSDoc コメントの網羅確認
+- [x] CHANGELOG の更新
+- [x] サンプルコードの追加
 
 ---
 
