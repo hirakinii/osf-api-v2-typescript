@@ -27,7 +27,12 @@ export interface OsfFileAttributes {
 
 /**
  * File links including Waterbutler API endpoints
- * remarks: the download link is valid only in browsers, so we should use move, upload, or delete link to fetch a file in a binary format.
+ *
+ * @remarks
+ * The `download` link (`https://osf.io/download/{fileId}`) redirects to the Waterbutler API
+ * but causes Authorization headers to be dropped on cross-origin redirects. For programmatic
+ * file downloads, use the `upload` link which points directly to the Waterbutler API endpoint
+ * and preserves authentication.
  */
 export interface OsfFileLinks {
   self: string;

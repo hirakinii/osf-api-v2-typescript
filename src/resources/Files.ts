@@ -116,28 +116,32 @@ export class Files extends BaseResource {
   /**
    * Get the download URL for a file
    *
-   * This returns the Waterbutler URL that can be used to download the file.
+   * Returns the Waterbutler API URL that can be used to download the file directly.
+   * Note: The `download` link requires browser-based redirects, so we use the `upload`
+   * link which provides direct access to the same file content via the Waterbutler API.
    *
    * @param file - The file resource with links
-   * @returns The download URL, or undefined if not available
+   * @returns The direct download URL, or undefined if not available
    */
   getDownloadUrl(file: TransformedResource<OsfFileAttributes>): string | undefined {
-    return file.links?.download;
+    return file.links?.upload || file.links?.download;
   }
 
   /**
    * Download a file's content
    *
-   * Uses the Waterbutler download link from file metadata.
+   * Uses the Waterbutler API link from file metadata. The OSF `download` link
+   * (`https://osf.io/download/{fileId}`) redirects to the Waterbutler API, but
+   * this redirect causes the Authorization header to be dropped due to cross-origin
+   * security restrictions. Instead, we use the `upload` link which points directly
+   * to the Waterbutler API endpoint and allows authenticated access.
    *
    * @param file - The file resource with links
    * @returns The file content as an ArrayBuffer
    * @throws {Error} If file does not have a download link
    */
   async download(file: TransformedResource<OsfFileAttributes>): Promise<ArrayBuffer> {
-    // remarks: the download link is valid only in browsers, so we should use move, upload, or delete link to fetch a file in a binary format.
-    // const downloadUrl = file.links?.download;
-    const downloadUrl = file.links?.move ?? file.links?.upload ?? file.links?.delete;
+    const downloadUrl = file.links?.upload;
     if (!downloadUrl) {
       throw new Error('File does not have a download link');
     }

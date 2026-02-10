@@ -321,7 +321,7 @@ describe('Files', () => {
     });
 
     describe('getDownloadUrl(file)', () => {
-        it('should return download URL from file links', () => {
+        it('should prefer upload URL over download URL', () => {
             const file: TransformedResource<OsfFileAttributes> = {
                 id: 'file-123',
                 type: 'files',
@@ -337,13 +337,39 @@ describe('Files', () => {
                 links: {
                     self: 'https://api.osf.io/v2/files/file-123/',
                     info: 'https://api.osf.io/v2/files/file-123/',
+                    upload: 'https://files.osf.io/v1/upload/file-123',
                     download: 'https://files.osf.io/v1/download/file-123',
                 },
             };
 
             const url = files.getDownloadUrl(file);
 
-            expect(url).toBe('https://files.osf.io/v1/download/file-123');
+            expect(url).toBe('https://files.osf.io/v1/upload/file-123');
+        });
+
+        it('should fallback to download URL if upload is not available', () => {
+            const file: TransformedResource<OsfFileAttributes> = {
+                id: 'file-456',
+                type: 'files',
+                name: 'document.pdf',
+                kind: 'file',
+                path: '/document.pdf',
+                materialized_path: '/document.pdf',
+                provider: 'osfstorage',
+                date_created: '2024-01-01T00:00:00.000000',
+                date_modified: '2024-01-02T00:00:00.000000',
+                current_user_can_comment: true,
+                delete_allowed: true,
+                links: {
+                    self: 'https://api.osf.io/v2/files/file-456/',
+                    info: 'https://api.osf.io/v2/files/file-456/',
+                    download: 'https://files.osf.io/v1/download/file-456',
+                },
+            };
+
+            const url = files.getDownloadUrl(file);
+
+            expect(url).toBe('https://files.osf.io/v1/download/file-456');
         });
 
         it('should return undefined if no download link', () => {
@@ -372,7 +398,7 @@ describe('Files', () => {
     });
 
     describe('download(file)', () => {
-        it('should fetch file content as ArrayBuffer', async () => {
+        it('should fetch file content using upload URL', async () => {
             const file: TransformedResource<OsfFileAttributes> = {
                 id: 'file-123',
                 type: 'files',
@@ -388,6 +414,7 @@ describe('Files', () => {
                 links: {
                     self: 'https://api.osf.io/v2/files/file-123/',
                     info: 'https://api.osf.io/v2/files/file-123/',
+                    upload: 'https://files.osf.io/v1/upload/file-123',
                     download: 'https://files.osf.io/v1/download/file-123',
                 },
             };
@@ -398,7 +425,7 @@ describe('Files', () => {
 
             expect(fetchMock).toHaveBeenCalledTimes(1);
             const [url] = fetchMock.mock.calls[0];
-            expect(url).toBe('https://files.osf.io/v1/download/file-123');
+            expect(url).toBe('https://files.osf.io/v1/upload/file-123');
             expect(result).toBeInstanceOf(ArrayBuffer);
         });
 
