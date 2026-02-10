@@ -8,7 +8,7 @@ TypeScript client library for the [Open Science Framework (OSF) API v2](https://
 ## Features
 
 - **Type-safe**: Comprehensive TypeScript definitions for OSF entities.
-- **Resource-oriented**: Intuitive API for Nodes, Files, Users, Registrations, Contributors, and Institutions.
+- **Resource-oriented**: Intuitive API for 22+ resource types including Nodes, Files, Users, Registrations, Preprints, and more.
 - **Automatic Pagination**: Effortlessly iterate through large datasets using `AsyncIterator`.
 - **JSON:API Simplified**: Flattens complex JSON:API structures into easy-to-use objects.
 - **Modern**: Built with modern TypeScript and native `fetch`.
@@ -147,6 +147,230 @@ const nodes = await client.institutions.listNodes('inst1');
 const registrations = await client.institutions.listRegistrations('inst1');
 ```
 
+### Preprints
+
+```typescript
+// List preprints
+const preprints = await client.preprints.listPreprints({
+  'filter[provider]': 'osf',
+});
+
+// Get a preprint by ID
+const preprint = await client.preprints.getById('preprint1');
+console.log(preprint.title);
+
+// List contributors of a preprint
+const contributors = await client.preprints.listContributors('preprint1');
+
+// Get citation for a preprint (default: APA style)
+const citation = await client.preprints.getCitation('preprint1', 'apa');
+```
+
+### Draft Registrations
+
+```typescript
+// Create a draft registration
+const draft = await client.draftRegistrations.create({
+  registrationSupplement: 'Open-Ended Registration',
+  nodeLicenseId: 'abc12',
+});
+
+// Update a draft
+await client.draftRegistrations.update(draft.id, {
+  title: 'Updated Title',
+});
+
+// List draft registrations
+const drafts = await client.draftRegistrations.listDraftRegistrations();
+
+// List contributors
+const contributors = await client.draftRegistrations.listContributors(draft.id);
+
+// Delete a draft
+await client.draftRegistrations.delete(draft.id);
+```
+
+### Collections
+
+```typescript
+// Create a collection
+const collection = await client.collections.create({
+  title: 'My Collection',
+  bookmarks: false,
+});
+
+// Link a node to a collection
+await client.collections.addLinkedNode(collection.id, 'abc12');
+
+// List linked nodes
+const linkedNodes = await client.collections.listLinkedNodes(collection.id);
+
+// List linked registrations
+const linkedRegs = await client.collections.listLinkedRegistrations(collection.id);
+
+// Remove a linked node
+await client.collections.removeLinkedNode(collection.id, 'abc12');
+
+// Delete a collection
+await client.collections.delete(collection.id);
+```
+
+### Wikis
+
+```typescript
+// Get a wiki page
+const wiki = await client.wikis.getById('wiki1');
+console.log(wiki.name);
+
+// Get wiki content (markdown)
+const content = await client.wikis.getContent('wiki1');
+
+// List wiki versions
+const versions = await client.wikis.listVersions('wiki1');
+
+// Create a new version
+await client.wikis.createVersion('wiki1', '# Updated Content');
+```
+
+### Comments
+
+```typescript
+// List comments for a node
+const comments = await client.comments.listByNode('abc12');
+
+// Create a comment
+const comment = await client.comments.create('abc12', {
+  content: 'Great work!',
+});
+
+// Update a comment
+await client.comments.update(comment.id, { content: 'Updated comment' });
+
+// Delete a comment
+await client.comments.delete(comment.id);
+```
+
+### Logs
+
+```typescript
+// List activity logs for a node
+const logs = await client.logs.listByNode('abc12');
+
+// Get a specific log entry
+const log = await client.logs.getById('log1');
+console.log(log.action);
+
+// Filter logs by action
+const filteredLogs = await client.logs.listByNode('abc12', {
+  'filter[action]': 'project_created',
+});
+```
+
+### Subjects
+
+```typescript
+// List taxonomy subjects
+const subjects = await client.subjects.listSubjects({
+  'filter[text]': 'Biology',
+});
+
+// Get a subject by ID
+const subject = await client.subjects.getById('subj1');
+
+// List child subjects
+const children = await client.subjects.listChildren('subj1');
+```
+
+### Licenses
+
+```typescript
+// List available licenses
+const licenses = await client.licenses.listLicenses({
+  'filter[name]': 'MIT',
+});
+
+// Get a license by ID
+const license = await client.licenses.getById('license1');
+console.log(license.name);
+```
+
+### View Only Links
+
+```typescript
+// Get a view only link
+const vol = await client.viewOnlyLinks.getById('vol1');
+console.log(vol.key);
+
+// List nodes accessible via a view only link
+const nodes = await client.viewOnlyLinks.listNodes('vol1');
+```
+
+### Identifiers
+
+```typescript
+// List identifiers (DOI, ARK) for a node
+const identifiers = await client.identifiers.listByNode('abc12');
+
+// List identifiers for a registration
+const regIds = await client.identifiers.listByRegistration('reg12');
+
+// Get a specific identifier
+const id = await client.identifiers.getById('identifier1');
+console.log(id.category); // 'doi' | 'ark'
+```
+
+### Citations
+
+```typescript
+// List available citation styles
+const styles = await client.citations.listStyles({
+  'filter[title]': 'APA',
+});
+
+// Get a specific citation style
+const style = await client.citations.getStyle('apa');
+console.log(style.title);
+```
+
+### Providers
+
+```typescript
+// Preprint providers
+const ppProviders = await client.preprintProviders.listProviders();
+const osf = await client.preprintProviders.getById('osf');
+
+// Registration providers
+const regProviders = await client.registrationProviders.listProviders();
+
+// Collection providers
+const colProviders = await client.collectionProviders.listProviders();
+```
+
+### Authentication & OAuth
+
+```typescript
+// List OAuth scopes
+const scopes = await client.scopes.listScopes();
+const scope = await client.scopes.getById('osf.full_read');
+
+// Manage OAuth applications
+const app = await client.applications.create({
+  name: 'My App',
+  homeUrl: 'https://myapp.example.com',
+  callbackUrl: 'https://myapp.example.com/callback',
+});
+await client.applications.update(app.id, { name: 'Updated App' });
+await client.applications.delete(app.id);
+
+// Manage personal access tokens
+const token = await client.tokens.create({
+  name: 'My Token',
+  scopes: 'osf.full_read',
+});
+const tokens = await client.tokens.listTokens();
+await client.tokens.delete(token.id);
+```
+
 ### Pagination
 
 The library provides `PaginatedResult` for easy traversal of lists.
@@ -186,12 +410,22 @@ try {
 
 ## Samples
 
-We provide several sample scripts in the `examples/` directory to help you get started:
+We provide 20 sample scripts in the `examples/` directory covering all resource types. See [examples/README.md](examples/README.md) for the full list and required environment variables.
+
+Key samples:
 
 - `basic_usage.ts`: Client initialization and basic profile fetching.
 - `nodes_management.ts`: Project (Node) lifecycle: Create, List, Update, and Delete.
 - `file_operations.ts`: Listing storage providers, files, and downloading content.
 - `pagination_demo.ts`: Using the auto-pagination feature (`AsyncIterator`).
+- `registrations.ts`: Registration listing and sub-resource exploration.
+- `preprints.ts`: Preprint listing, contributors, files, and citations.
+- `draft_registrations.ts`: Draft Registration CRUD and contributors.
+- `collections.ts`: Collection creation, node linking/unlinking.
+- `wikis.ts`: Wiki metadata, content retrieval, and versioning.
+- `comments.ts`: Comment CRUD and replies.
+- `providers.ts`: Preprint, Registration, and Collection providers.
+- `auth.ts`: OAuth applications, personal access tokens, and scopes.
 
 To run the samples, set your OSF token as an environment variable and use `npx ts-node`:
 

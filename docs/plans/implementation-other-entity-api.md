@@ -352,31 +352,31 @@ Registration の下書き管理。Registration 作成ワークフローの一部
 ## Phase 6: クライアント統合と品質保証 (Integration & QA)
 
 ### 6.1 OsfClient 拡張
-- [ ] 新規リソースクラスの統合
-    - [ ] `client.registrations`
-    - [ ] `client.contributors`
-    - [ ] `client.institutions`
-    - [ ] `client.preprints`
-    - [ ] `client.draftRegistrations`
-    - [ ] `client.collections`
-    - [ ] `client.wikis`
-    - [ ] `client.comments`
-    - [ ] `client.logs`
-    - [ ] `client.subjects`
-    - [ ] `client.licenses`
+- [x] 新規リソースクラスの統合
+    - [x] `client.registrations`
+    - [x] `client.contributors`
+    - [x] `client.institutions`
+    - [x] `client.preprints`
+    - [x] `client.draftRegistrations`
+    - [x] `client.collections`
+    - [x] `client.wikis`
+    - [x] `client.comments`
+    - [x] `client.logs`
+    - [x] `client.subjects`
+    - [x] `client.licenses`
 
 ### 6.2 統合テスト
-- [ ] 主要ユースケースの E2E テスト
-    - [ ] Registration 作成フロー (Draft → Register)
-    - [ ] Preprint 投稿フロー
-    - [ ] コラボレーターの招待・権限管理
-- [ ] テストカバレッジ確認 (80% 以上維持)
+- [x] 主要ユースケースの E2E テスト
+    - [x] Registration 作成フロー (Draft → Register)
+    - [x] Preprint 投稿フロー
+    - [x] コラボレーターの招待・権限管理
+- [x] テストカバレッジ確認 (80% 以上維持)
 
 ### 6.3 ドキュメント更新
-- [ ] README.md の更新 (新 API の使用例追加)
-- [ ] TSDoc コメントの網羅確認
-- [ ] CHANGELOG の更新
-- [ ] サンプルコードの追加
+- [x] README.md の更新 (新 API の使用例追加)
+- [x] TSDoc コメントの網羅確認
+- [x] CHANGELOG の更新
+- [x] サンプルコードの追加
 
 ---
 
