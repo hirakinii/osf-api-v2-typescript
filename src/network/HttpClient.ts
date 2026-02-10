@@ -91,7 +91,11 @@ export class HttpClient {
    * PUT request for binary uploads (Waterbutler API)
    * Content-Type defaults to application/octet-stream
    */
-  async put<T>(endpoint: string, body: ArrayBuffer | Blob | Buffer | string, options: RequestInit = {}): Promise<T> {
+  async put<T>(
+    endpoint: string,
+    body: ArrayBuffer | Blob | Uint8Array | string,
+    options: RequestInit = {},
+  ): Promise<T> {
     const headers = new Headers(options.headers);
     if (!headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/octet-stream');
