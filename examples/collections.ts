@@ -58,7 +58,7 @@ async function main() {
       await client.collections.addLinkedNode(newCol.id, nodeId);
       console.log('Node linked successfully.');
     } else {
-      console.log("\nSkipped: Linking a node to collection. Set NODE_ID to demonstrate linking.")
+      console.log('\nSkipped: Linking a node to collection. Set NODE_ID to demonstrate linking.');
     }
 
     // 5. List linked nodes

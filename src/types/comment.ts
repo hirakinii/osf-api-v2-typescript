@@ -31,6 +31,8 @@ export interface CreateCommentInput {
 export interface UpdateCommentInput {
   content?: string;
   deleted?: boolean;
+  target_id: string;
+  target_type?: string;
 }
 
 /**

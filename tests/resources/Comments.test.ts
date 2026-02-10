@@ -268,7 +268,7 @@ describe('Comments', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await comments.update('comment123', { content: 'Updated content' });
+            const result = await comments.update('comment123', { content: 'Updated content', target_id: 'node123' });
 
             expect(fetchMock).toHaveBeenCalledTimes(1);
             const [url, options] = fetchMock.mock.calls[0];
@@ -279,6 +279,7 @@ describe('Comments', () => {
             expect(body.data.type).toBe('comments');
             expect(body.data.id).toBe('comment123');
             expect(body.data.attributes.content).toBe('Updated content');
+            expect(body.data.relationships.target.data).toEqual({ type: 'nodes', id: 'node123' });
 
             expect(result.id).toBe('comment123');
             expect(result.content).toBe('Updated content');
@@ -298,7 +299,7 @@ describe('Comments', () => {
 
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-            const result = await comments.update('comment123', { deleted: false });
+            const result = await comments.update('comment123', { deleted: false, target_id: 'node123' });
 
             const [, options] = fetchMock.mock.calls[0];
             const body = JSON.parse(options?.body as string);
@@ -310,7 +311,7 @@ describe('Comments', () => {
         it('should throw OsfNotFoundError for non-existent comment', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ errors: [{ detail: 'Not found.' }] }), { status: 404 });
 
-            await expect(comments.update('non-existent', { content: 'test' })).rejects.toThrow(OsfNotFoundError);
+            await expect(comments.update('non-existent', { content: 'test', target_id: 'node123' })).rejects.toThrow(OsfNotFoundError);
         });
 
         it('should throw OsfPermissionError without edit access', async () => {
@@ -318,7 +319,7 @@ describe('Comments', () => {
                 status: 403,
             });
 
-            await expect(comments.update('comment123', { content: 'test' })).rejects.toThrow(OsfPermissionError);
+            await expect(comments.update('comment123', { content: 'test', target_id: 'node123' })).rejects.toThrow(OsfPermissionError);
         });
     });
 

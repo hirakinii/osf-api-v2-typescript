@@ -123,11 +123,23 @@ export class Comments extends BaseResource {
    * @throws {OsfPermissionError} If user lacks edit access
    */
   async update(id: string, data: UpdateCommentInput): Promise<TransformedResource<OsfCommentAttributes>> {
+    const targetType = data.target_type ?? 'nodes';
     const payload = {
       data: {
         type: 'comments',
         id,
-        attributes: data,
+        attributes: {
+          ...(data.content !== undefined && { content: data.content }),
+          ...(data.deleted !== undefined && { deleted: data.deleted }),
+        },
+        relationships: {
+          target: {
+            data: {
+              type: targetType,
+              id: data.target_id,
+            },
+          },
+        },
       },
     };
     return super.put<OsfCommentAttributes>(`comments/${id}/`, payload);
