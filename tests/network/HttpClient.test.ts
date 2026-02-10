@@ -186,6 +186,22 @@ describe('HttpClient', () => {
             expect(result).toEqual(mockResponse);
         });
 
+        it('should send PUT request with Uint8Array body', async () => {
+            const mockResponse = { data: { id: 'file-456', type: 'files' } };
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const uint8Data = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]);
+            const result = await client.put('https://files.osf.io/v1/upload', uint8Data);
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url, options] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://files.osf.io/v1/upload');
+            expect(options?.method).toBe('PUT');
+            const headers = options?.headers as Headers;
+            expect(headers.get('Content-Type')).toBe('application/octet-stream');
+            expect(result).toEqual(mockResponse);
+        });
+
         it('should allow custom Content-Type header', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
 
