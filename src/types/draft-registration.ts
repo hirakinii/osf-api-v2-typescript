@@ -23,6 +23,11 @@ export interface OsfDraftRegistrationAttributes {
  * Input for creating a new draft registration
  */
 export interface CreateDraftRegistrationInput {
+  /**
+   * The ID of the registration schema to use (required by the API)
+   * You can find available schema IDs at: https://api.osf.io/v2/schemas/registrations/
+   */
+  registration_schema_id: string;
   title?: string;
   description?: string;
   category?: string;
@@ -33,6 +38,11 @@ export interface CreateDraftRegistrationInput {
   };
   registration_metadata?: Record<string, unknown>;
   registration_responses?: Record<string, unknown>;
+  /**
+   * Optional: The ID of the node to branch from
+   * If provided, the draft registration will be linked to this project
+   */
+  branched_from?: string;
 }
 
 /**

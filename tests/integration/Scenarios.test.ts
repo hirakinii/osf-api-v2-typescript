@@ -186,6 +186,7 @@ describe('Integrated Scenarios', () => {
       }));
 
       const draft = await client.draftRegistrations.create({
+        registration_schema_id: '61e02b6c90de34000ae3447a',
         title: 'My Draft Registration',
       });
       expect(draft.id).toBe(draftId);
@@ -194,6 +195,10 @@ describe('Integrated Scenarios', () => {
       const createCall = fetchMock.mock.calls[0];
       expect(createCall[0]).toContain('draft_registrations/');
       expect(createCall[1]?.method).toBe('POST');
+
+      // Verify relationships are included in the payload
+      const createBody = JSON.parse(createCall[1]?.body as string);
+      expect(createBody.data.relationships.registration_schema.data.id).toBe('61e02b6c90de34000ae3447a');
 
       // 2. Update the draft registration
       fetchMock.mockResponseOnce(JSON.stringify({
