@@ -1,9 +1,23 @@
 {
   "name": "osf-api-v2-typescript",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "このプロジェクトは、OSF (Open Science Framework) API v2 の仕様に基づき、TypeScript を用いたクライアントライブラリを実装することを目的としています。",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "default": "./dist/cjs/index.js"
+    }
+  },
   "files": [
     "dist",
     "README.md",
@@ -11,7 +25,10 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsc",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:umd",
+    "build:cjs": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json && node scripts/fix-esm-imports.mjs",
+    "build:umd": "node scripts/build-umd.mjs",
     "prepack": "npm run build",
     "lint": "eslint '{src,examples}/**/*.{ts,tsx}'",
     "format": "prettier --write '{src,examples}/**/*.{ts,tsx}'"
@@ -48,6 +65,7 @@
     "prettier": "^3.8.1",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "esbuild": "^0.25.0"
   }
 }

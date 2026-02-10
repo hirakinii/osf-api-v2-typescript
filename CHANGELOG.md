@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-02-10
+
+### Added
+- **OAuth2 Authorization Code + PKCE**:
+  - `OsfOAuth2Client`: Full OAuth2 flow management with automatic token refresh and concurrent refresh protection.
+  - `generateCodeVerifier()`, `computeCodeChallenge()`, `generatePkceChallenge()`: PKCE utilities using Web Crypto API.
+  - Type definitions: `OAuth2Config`, `AuthorizationUrlParams`, `PkceChallenge`, `TokenResponse`, `TokenSet`, `TokenProvider`.
+  - Token revocation support via `revokeToken()`.
+- **Flexible Authentication Modes**:
+  - `OsfClient` now supports three authentication modes: PAT (`token`), OAuth2 (`oauth2Client` + `tokenSet`), and custom (`tokenProvider`).
+  - `HttpClient` supports dynamic token resolution via `tokenProvider` for per-request token retrieval.
+- **ESM + UMD Dual Build**:
+  - ESM output via `tsconfig.esm.json` for modern bundlers.
+  - UMD/IIFE output via esbuild (`dist/umd/osf-api-v2.js` and `dist/umd/osf-api-v2.min.js`, global: `OsfApiV2`).
+  - `package.json` `exports` field for automatic CJS/ESM resolution.
+
+### Changed
+- `HttpClient.put()` signature: `Buffer` replaced with `Uint8Array` for browser compatibility (`Buffer` extends `Uint8Array`, so this is backward-compatible).
+- `OsfClientConfig.token` is now optional (was required) to support OAuth2 and custom token provider modes.
+- Build output directory changed from `dist/` to `dist/cjs/` for CJS; ESM output to `dist/esm/`.
+
 ## [0.2.0] - 2026-02-09
 
 ### Added
