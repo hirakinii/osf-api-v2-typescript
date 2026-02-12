@@ -64,7 +64,6 @@ async function main() {
     console.log(`\nUpdating comment ${newComment.id}...`);
     const updated = await client.comments.update(newComment.id, {
       content: 'This comment was updated via the API client.',
-      target_id: nodeId,
     });
     console.log(`Updated content: ${updated.content}`);
 
