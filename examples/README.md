@@ -21,7 +21,7 @@ npx ts-node examples/<ファイル名>.ts
 
 | ファイル | 説明 |
 | --- | --- |
-| [basic_usage.ts](basic_usage.ts) | クライアントの初期化、認証ユーザーの取得、公開ノードの一覧 |
+| [basic_usage.ts](basic_usage.ts) | クライアントの初期化、認証ユーザーの取得、公開ノードの一覧、認証ユーザーがコントリビューターとなっているノードの一覧 |
 | [nodes_management.ts](nodes_management.ts) | ノード（プロジェクト）の作成・更新・取得・削除（CRUD） |
 | [file_operations.ts](file_operations.ts) | ストレージプロバイダの一覧、ファイル一覧、メタデータ取得、ダウンロード |
 | [pagination_demo.ts](pagination_demo.ts) | `PaginatedResult` を使った自動ページネーション（ページ単位 / アイテム単位） |

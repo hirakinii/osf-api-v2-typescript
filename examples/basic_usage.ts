@@ -49,6 +49,19 @@ async function main() {
       // Attributes are flattened into the top level
       console.log(`- [${node.id}] ${node.title} (${node.category})`);
     });
+
+    // 4. List user's node
+    console.log('\nFetching nodes in which you are engaged as a contributor...');
+    const myNodes = await client.nodes.listNodes({
+      'filter[contributors]': me.id,
+      'page[size]': 5,
+    });
+    console.log(`Found ${myNodes.data.length} public nodes:`);
+    myNodes.data.forEach((node) => {
+      // Attributes are flattened into the top level
+      console.log(`- [${node.id}] ${node.title} (${node.category})`);
+    });
+
   } catch (error) {
     console.error('An error occurred:', error instanceof Error ? error.message : error);
   }
