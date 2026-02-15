@@ -92,17 +92,41 @@ export class DraftRegistrations extends BaseResource {
   /**
    * Create a new draft registration
    *
-   * @param data - Draft registration data including optional title and description
+   * @param data - Draft registration data including required registration_schema_id
    * @returns The created draft registration resource
    * @throws {OsfPermissionError} If user lacks permission to create draft registrations
+   * @throws {Error} If registration_schema_id is invalid or not found
    */
   async create(data: CreateDraftRegistrationInput): Promise<TransformedResource<OsfDraftRegistrationAttributes>> {
+    const { registration_schema_id, branched_from, ...attributes } = data;
+
+    const relationships: Record<string, unknown> = {
+      registration_schema: {
+        data: {
+          type: 'registration_schemas',
+          id: registration_schema_id,
+        },
+      },
+    };
+
+    // Add branched_from relationship if provided
+    if (branched_from) {
+      relationships.branched_from = {
+        data: {
+          type: 'nodes',
+          id: branched_from,
+        },
+      };
+    }
+
     const payload = {
       data: {
         type: 'draft_registrations',
-        attributes: data,
+        attributes,
+        relationships,
       },
     };
+
     return super.post<OsfDraftRegistrationAttributes>('draft_registrations/', payload);
   }
 

@@ -162,6 +162,35 @@ export class HttpClient {
     }
   }
 
+  /**
+   * PUT request for binary uploads that returns JSON response (Waterbutler API)
+   *
+   * Similar to put(), but explicitly designed for binary data uploads.
+   * Content-Type defaults to application/octet-stream.
+   *
+   * @param endpoint - The API endpoint path or full URL
+   * @param body - Binary data to upload
+   * @param options - Additional request options
+   * @returns The parsed JSON response
+   */
+  async putRaw<T>(
+    endpoint: string,
+    body: ArrayBuffer | Buffer | Blob | Uint8Array,
+    options: RequestInit = {},
+  ): Promise<T> {
+    const headers = new Headers(options.headers);
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/octet-stream');
+    }
+
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: body as BodyInit,
+      headers,
+    });
+  }
+
   private async request<T>(endpoint: string, options: RequestInit): Promise<T> {
     const url = this.resolveUrl(endpoint);
     const headers = new Headers(options.headers);

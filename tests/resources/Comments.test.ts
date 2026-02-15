@@ -273,7 +273,7 @@ describe('Comments', () => {
             expect(fetchMock).toHaveBeenCalledTimes(1);
             const [url, options] = fetchMock.mock.calls[0];
             expect(url).toBe('https://api.test-osf.io/v2/comments/comment123/');
-            expect(options?.method).toBe('PUT');
+            expect(options?.method).toBe('PATCH');
 
             const body = JSON.parse(options?.body as string);
             expect(body.data.type).toBe('comments');

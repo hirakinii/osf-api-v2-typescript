@@ -23,7 +23,11 @@ async function main() {
 
     if (!targetNodeId) {
       console.log('No nodeId provided. Fetching your first project...');
-      const myNodes = await client.nodes.listNodes({ 'page[size]': 1 });
+      const currentUser = await client.users.me();
+      const myNodes = await client.nodes.listNodes({
+        'filter[contributors]': currentUser.id,
+        'page[size]': 1,
+      });
       if (myNodes.data.length === 0) {
         console.error('No projects found in your account to list files from.');
         return;
@@ -38,7 +42,7 @@ async function main() {
     console.log('Providers available:', providers.data.map((p) => p.name).join(', '));
 
     // 2. List files in the first provider (usually osfstorage)
-    const providerId = providers.data[0]?.id || 'osfstorage';
+    const providerId = providers.data[0]?.provider || 'osfstorage';
     console.log(`\nListing files in '${providerId}'...`);
     const fileList = await client.files.listByNode(targetNodeId, providerId);
 
@@ -66,8 +70,32 @@ async function main() {
       const content = await client.files.download(firstFile);
       console.log(`Successfully downloaded ${content.byteLength} bytes.`);
     }
+
+    // 4. Demonstrate uploading a new file
+    console.log('\nDemonstrating file upload...');
+    const rootFolder = providers.data.find((p) => p.provider === 'osfstorage');
+    if (rootFolder) {
+      const testContent = new TextEncoder().encode('This is a test file created by the SDK example.');
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const testFileName = `test-upload-${timestamp}.txt`;
+
+      console.log(`Uploading new file: ${testFileName}...`);
+      const uploadedFile = await client.files.uploadNew(rootFolder, testFileName, testContent);
+      console.log(`Successfully uploaded file: ${uploadedFile.name} (ID: ${uploadedFile.id})`);
+
+      // 5. Demonstrate updating the uploaded file
+      console.log(`\nUpdating the uploaded file...`);
+      const updatedContent = new TextEncoder().encode('This file has been updated!');
+      const updatedFile = await client.files.upload(uploadedFile, updatedContent);
+      console.log(`Successfully updated file. New size: ${updatedFile.size} bytes`);
+
+      // 6. Clean up: delete the test file
+      console.log(`\nCleaning up: deleting test file...`);
+      await client.files.deleteFile(updatedFile);
+      console.log('Test file deleted successfully.');
+    }
   } catch (error) {
-    console.error('Error fetching files:', error);
+    console.error('Error in file operations:', error);
   }
 }
 

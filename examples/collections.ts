@@ -52,10 +52,14 @@ async function main() {
 
     // 4. Link a node to the collection (requires an existing node ID)
     // Uncomment the following lines and replace NODE_ID with a real node ID:
-    // const nodeId = 'NODE_ID';
-    // console.log(`\nLinking node ${nodeId} to collection ${newCol.id}...`);
-    // await client.collections.addLinkedNode(newCol.id, nodeId);
-    // console.log('Node linked successfully.');
+    const nodeId = process.env.NODE_ID;
+    if (nodeId) {
+      console.log(`\nLinking node ${nodeId} to collection ${newCol.id}...`);
+      await client.collections.addLinkedNode(newCol.id, nodeId);
+      console.log('Node linked successfully.');
+    } else {
+      console.log('\nSkipped: Linking a node to collection. Set NODE_ID to demonstrate linking.');
+    }
 
     // 5. List linked nodes
     console.log(`\nFetching linked nodes of collection ${newCol.id}...`);

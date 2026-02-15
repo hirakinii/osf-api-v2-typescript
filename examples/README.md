@@ -21,7 +21,7 @@ npx ts-node examples/<ファイル名>.ts
 
 | ファイル | 説明 |
 | --- | --- |
-| [basic_usage.ts](basic_usage.ts) | クライアントの初期化、認証ユーザーの取得、公開ノードの一覧 |
+| [basic_usage.ts](basic_usage.ts) | クライアントの初期化、認証ユーザーの取得、公開ノードの一覧、認証ユーザーがコントリビューターとなっているノードの一覧 |
 | [nodes_management.ts](nodes_management.ts) | ノード（プロジェクト）の作成・更新・取得・削除（CRUD） |
 | [file_operations.ts](file_operations.ts) | ストレージプロバイダの一覧、ファイル一覧、メタデータ取得、ダウンロード |
 | [pagination_demo.ts](pagination_demo.ts) | `PaginatedResult` を使った自動ページネーション（ページ単位 / アイテム単位） |
@@ -41,6 +41,7 @@ npx ts-node examples/<ファイル名>.ts
 | [citations.ts](citations.ts) | 引用スタイルの一覧・詳細取得、タイトルフィルタ、ページネーション |
 | [providers.ts](providers.ts) | Preprint / Registration / Collection プロバイダーの一覧・詳細取得、名前フィルタ |
 | [auth.ts](auth.ts) | OAuth アプリの CRUD、PAT の作成・削除、OAuth スコープの一覧・詳細取得 |
+| [oauth2.ts](oauth2.ts) | OAuth2 Authorization Code + PKCE フロー、トークン交換・リフレッシュ・失効 |
 
 ## サンプルごとの環境変数
 
@@ -67,8 +68,13 @@ npx ts-node examples/<ファイル名>.ts
 | `DEMO_APP_CRUD` | auth.ts | `true` に設定すると OAuth アプリの作成・更新・削除デモを実行 |
 | `TOKEN_ID` | auth.ts | PAT の ID（省略可） |
 | `DEMO_TOKEN_CRUD` | auth.ts | `true` に設定すると PAT の作成・削除デモを実行 |
+| `OAUTH_CLIENT_ID` | oauth2.ts | OAuth アプリの client_id（必須） |
+| `OAUTH_REDIRECT_URI` | oauth2.ts | OAuth アプリのリダイレクト URI（必須） |
+| `OAUTH_AUTH_CODE` | oauth2.ts | 認可後に取得した authorization code（省略可） |
+| `OAUTH_CODE_VERIFIER` | oauth2.ts | Step 2 で生成された code verifier（省略可） |
+| `DEMO_REVOKE` | oauth2.ts | `true` に設定するとトークン失効デモを実行 |
 
 ## 注意事項
 
-- `nodes_management.ts`、`contributors.ts`、`draft_registrations.ts`、`collections.ts`、`comments.ts`、`auth.ts`（CRUD デモ有効時）は実際にデータを作成・変更・削除します。テスト用のプロジェクトで実行することを推奨します。
+- `nodes_management.ts`、`contributors.ts`、`draft_registrations.ts`、`collections.ts`、`comments.ts`、`auth.ts`（CRUD デモ有効時）、`oauth2.ts`（トークン失効デモ有効時）は実際にデータを作成・変更・削除します。テスト用のプロジェクトで実行することを推奨します。
 - その他のサンプルは読み取り専用の操作のみです。

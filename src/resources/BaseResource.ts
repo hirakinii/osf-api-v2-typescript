@@ -85,6 +85,35 @@ export abstract class BaseResource {
   }
 
   /**
+   * Download raw binary data via GET request
+   *
+   * Used for file downloads from Waterbutler API endpoints.
+   *
+   * @param endpoint - API endpoint path (typically a Waterbutler URL)
+   * @returns Raw binary data as ArrayBuffer
+   */
+  protected async getRaw(endpoint: string): Promise<ArrayBuffer> {
+    return this.httpClient.getRaw(endpoint);
+  }
+
+  /**
+   * Upload raw binary data via PUT request
+   *
+   * Used for file uploads to Waterbutler API endpoints.
+   *
+   * @param endpoint - API endpoint path (typically a Waterbutler URL)
+   * @param data - Binary data to upload
+   * @returns Transformed resource with flattened attributes
+   */
+  protected async putRaw<T>(
+    endpoint: string,
+    data: ArrayBuffer | Buffer | Blob | Uint8Array,
+  ): Promise<TransformedResource<T>> {
+    const response = await this.httpClient.putRaw<JsonApiResponse<T>>(endpoint, data);
+    return this.adapter.transformSingle<T>(response);
+  }
+
+  /**
    * Delete a resource via DELETE request
    *
    * @param endpoint - API endpoint path

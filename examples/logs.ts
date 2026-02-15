@@ -62,7 +62,7 @@ async function main() {
     // 3. List available log actions
     console.log('\nFetching available log actions...');
     const actions = await client.logs.listActions();
-    console.log(`Found ${actions.data.length} available actions`);
+    console.log(`Found ${actions.length} available actions`);
 
     // 4. Filter logs by action type
     console.log('\nFetching file-related logs...');

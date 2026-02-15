@@ -130,7 +130,7 @@ export class Comments extends BaseResource {
         attributes: data,
       },
     };
-    return super.put<OsfCommentAttributes>(`comments/${id}/`, payload);
+    return super.patch<OsfCommentAttributes>(`comments/${id}/`, payload);
   }
 
   /**

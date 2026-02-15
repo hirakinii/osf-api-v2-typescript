@@ -36,7 +36,14 @@ async function main() {
 
     // 2. Create a new draft registration
     console.log('\nCreating a new draft registration...');
+    // NOTE: You need a valid registration_schema_id to create a draft registration.
+    // You can get available schemas from: https://api.osf.io/v2/schemas/registrations/
+    // Common schema IDs:
+    // - '5df83f7dd28338001ac0ab0d' (Open-Ended Registration)
+    // - '697b72f611a8e98484c6139b' (OSF Preregistration)
+    // Replace with a valid schema ID for your use case.
     const newDraft = await client.draftRegistrations.create({
+      registration_schema_id: '697b72f611a8e98484c6139b', // Open-Ended Registration
       title: 'Example Draft Registration',
       description: 'Created via the OSF API v2 TypeScript client example.',
       category: 'project',

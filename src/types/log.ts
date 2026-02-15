@@ -1,4 +1,12 @@
 /**
+ * Information about a loggable action
+ */
+export interface OsfLogActionInfo {
+  identifier: string;
+  description: string;
+}
+
+/**
  * Log action types as defined by the OSF API
  */
 export type LogAction =

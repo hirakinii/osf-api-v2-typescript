@@ -23,6 +23,16 @@ import { PaginatedResult } from '../pagination/PaginatedResult';
  * // Download a file
  * const content = await files.download(file);
  *
+ * // Upload a new file
+ * const providers = await files.listProviders('abc12');
+ * const osfstorage = providers.data.find(p => p.provider === 'osfstorage');
+ * const newContent = new TextEncoder().encode('Hello, world!');
+ * const newFile = await files.uploadNew(osfstorage, 'hello.txt', newContent);
+ *
+ * // Update an existing file
+ * const updatedContent = new TextEncoder().encode('Updated content');
+ * const updatedFile = await files.upload(file, updatedContent);
+ *
  * // Delete a file
  * await files.deleteFile(file);
  * ```
@@ -106,30 +116,94 @@ export class Files extends BaseResource {
   /**
    * Get the download URL for a file
    *
-   * This returns the Waterbutler URL that can be used to download the file.
+   * Returns the Waterbutler API URL that can be used to download the file directly.
+   * Note: The `download` link requires browser-based redirects, so we use the `upload`
+   * link which provides direct access to the same file content via the Waterbutler API.
    *
    * @param file - The file resource with links
-   * @returns The download URL, or undefined if not available
+   * @returns The direct download URL, or undefined if not available
    */
   getDownloadUrl(file: TransformedResource<OsfFileAttributes>): string | undefined {
-    return file.links?.download;
+    return file.links?.upload || file.links?.download;
   }
 
   /**
    * Download a file's content
    *
-   * Uses the Waterbutler download link from file metadata.
+   * Uses the Waterbutler API link from file metadata. The OSF `download` link
+   * (`https://osf.io/download/{fileId}`) redirects to the Waterbutler API, but
+   * this redirect causes the Authorization header to be dropped due to cross-origin
+   * security restrictions. Instead, we use the `upload` link which points directly
+   * to the Waterbutler API endpoint and allows authenticated access.
    *
    * @param file - The file resource with links
    * @returns The file content as an ArrayBuffer
    * @throws {Error} If file does not have a download link
    */
   async download(file: TransformedResource<OsfFileAttributes>): Promise<ArrayBuffer> {
-    const downloadUrl = file.links?.download;
+    const downloadUrl = file.links?.upload;
     if (!downloadUrl) {
       throw new Error('File does not have a download link');
     }
-    return this.httpClient.getRaw(downloadUrl);
+    return super.getRaw(downloadUrl);
+  }
+
+  /**
+   * Upload or update a file's content
+   *
+   * Uses the Waterbutler upload link from file metadata to update an existing file.
+   *
+   * @param file - The file resource with links
+   * @param content - The file content to upload (ArrayBuffer, Buffer, Blob, or Uint8Array)
+   * @returns The updated file resource with metadata
+   * @throws {Error} If file does not have an upload link
+   */
+  async upload(
+    file: TransformedResource<OsfFileAttributes>,
+    content: ArrayBuffer | Buffer | Blob | Uint8Array,
+  ): Promise<TransformedResource<OsfFileAttributes>> {
+    const uploadUrl = file.links?.upload;
+    if (!uploadUrl) {
+      throw new Error('File does not have an upload link');
+    }
+    return super.putRaw<OsfFileAttributes>(uploadUrl, content);
+  }
+
+  /**
+   * Upload a new file to a folder
+   *
+   * Uses the Waterbutler upload link from the parent folder to create a new file.
+   *
+   * @param parentFolder - The parent folder or storage provider resource with links
+   * @param fileName - The name of the new file to create
+   * @param content - The file content to upload (ArrayBuffer, Buffer, Blob, or Uint8Array)
+   * @returns The newly created file resource with metadata
+   * @throws {Error} If parent folder does not have an upload link
+   *
+   * @example
+   * ```typescript
+   * const files = new Files(httpClient);
+   *
+   * // Get the parent folder (e.g., root of osfstorage)
+   * const providers = await files.listProviders('abc12');
+   * const osfstorage = providers.data.find(p => p.provider === 'osfstorage');
+   *
+   * // Upload a new file
+   * const content = new TextEncoder().encode('Hello, world!');
+   * const newFile = await files.uploadNew(osfstorage, 'hello.txt', content.buffer);
+   * ```
+   */
+  async uploadNew(
+    parentFolder: { links?: { upload?: string } },
+    fileName: string,
+    content: ArrayBuffer | Buffer | Blob | Uint8Array,
+  ): Promise<TransformedResource<OsfFileAttributes>> {
+    const uploadUrl = parentFolder.links?.upload;
+    if (!uploadUrl) {
+      throw new Error('Parent folder does not have an upload link');
+    }
+    const urlWithParams = `${uploadUrl}?kind=file&name=${encodeURIComponent(fileName)}`;
+    return super.putRaw<OsfFileAttributes>(urlWithParams, content);
   }
 
   /**

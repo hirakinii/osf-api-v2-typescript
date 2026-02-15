@@ -205,19 +205,32 @@ describe('Logs', () => {
     });
 
     describe('listActions()', () => {
-        it('should fetch the list of available log actions', async () => {
-            const mockResponse = {
-                data: [],
-                meta: {},
-            };
+        it('should return the complete list of loggable actions', async () => {
+            const actions = await logs.listActions();
 
-            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+            // Should not make any API calls (local data)
+            expect(fetchMock).toHaveBeenCalledTimes(0);
 
-            await logs.listActions();
+            // Verify it returns an array
+            expect(Array.isArray(actions)).toBe(true);
+            
+            // Verify all actions have identifier and description
+            actions.forEach(action => {
+                expect(action).toHaveProperty('identifier');
+                expect(action).toHaveProperty('description');
+                expect(typeof action.identifier).toBe('string');
+                expect(typeof action.description).toBe('string');
+            });
 
-            expect(fetchMock).toHaveBeenCalledTimes(1);
-            const [url] = fetchMock.mock.calls[0];
-            expect(url).toBe('https://api.test-osf.io/v2/actions/');
+            // Verify some expected actions are present
+            const identifiers = actions.map(a => a.identifier);
+            expect(identifiers).toContain('project_created');
+            expect(identifiers).toContain('file_added');
+            expect(identifiers).toContain('comment_added');
+            expect(identifiers).toContain('registration_approved');
+            
+            // Verify expected total count (55 actions according to API docs)
+            expect(actions.length).toBe(55);
         });
     });
 });

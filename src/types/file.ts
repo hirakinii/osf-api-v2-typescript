@@ -27,6 +27,12 @@ export interface OsfFileAttributes {
 
 /**
  * File links including Waterbutler API endpoints
+ *
+ * @remarks
+ * The `download` link (`https://osf.io/download/{fileId}`) redirects to the Waterbutler API
+ * but causes Authorization headers to be dropped on cross-origin redirects. For programmatic
+ * file downloads, use the `upload` link which points directly to the Waterbutler API endpoint
+ * and preserves authentication.
  */
 export interface OsfFileLinks {
   self: string;

@@ -237,7 +237,7 @@ describe('DraftRegistrations', () => {
   });
 
   describe('create(data)', () => {
-    it('should create a new draft registration', async () => {
+    it('should create a new draft registration with required registration_schema_id', async () => {
       const mockResponse: JsonApiResponse<OsfDraftRegistrationAttributes> = {
         data: {
           id: 'new-draft',
@@ -255,6 +255,7 @@ describe('DraftRegistrations', () => {
       fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
       const input: CreateDraftRegistrationInput = {
+        registration_schema_id: '61e02b6c90de34000ae3447a',
         title: 'New Draft Registration',
         description: 'A newly created draft',
       };
@@ -269,9 +270,44 @@ describe('DraftRegistrations', () => {
       expect(body.data.type).toBe('draft_registrations');
       expect(body.data.attributes.title).toBe('New Draft Registration');
       expect(body.data.attributes.description).toBe('A newly created draft');
+      expect(body.data.relationships.registration_schema.data.type).toBe('registration_schemas');
+      expect(body.data.relationships.registration_schema.data.id).toBe('61e02b6c90de34000ae3447a');
 
       expect(result.id).toBe('new-draft');
       expect(result.title).toBe('New Draft Registration');
+    });
+
+    it('should create a draft registration with branched_from relationship', async () => {
+      const mockResponse: JsonApiResponse<OsfDraftRegistrationAttributes> = {
+        data: {
+          id: 'branched-draft',
+          type: 'draft_registrations',
+          attributes: buildDraftRegistrationAttributes({
+            title: 'Branched Draft',
+            has_project: true,
+          }),
+          links: {
+            html: 'https://osf.io/registries/drafts/branched-draft/',
+          },
+        },
+      };
+
+      fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+      const input: CreateDraftRegistrationInput = {
+        registration_schema_id: '61e02b6c90de34000ae3447a',
+        branched_from: 'abc12',
+        title: 'Branched Draft',
+      };
+      const result = await draftRegistrations.create(input);
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const [url, options] = fetchMock.mock.calls[0];
+      const body = JSON.parse(options?.body as string);
+
+      expect(body.data.relationships.branched_from.data.type).toBe('nodes');
+      expect(body.data.relationships.branched_from.data.id).toBe('abc12');
+      expect(result.id).toBe('branched-draft');
     });
 
     it('should throw OsfPermissionError without write access', async () => {
@@ -279,7 +315,12 @@ describe('DraftRegistrations', () => {
         status: 403,
       });
 
-      await expect(draftRegistrations.create({ title: 'Unauthorized' })).rejects.toThrow(OsfPermissionError);
+      await expect(
+        draftRegistrations.create({
+          registration_schema_id: '61e02b6c90de34000ae3447a',
+          title: 'Unauthorized',
+        }),
+      ).rejects.toThrow(OsfPermissionError);
     });
   });
 
