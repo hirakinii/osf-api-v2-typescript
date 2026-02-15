@@ -61,7 +61,6 @@ async function main() {
       // Attributes are flattened into the top level
       console.log(`- [${node.id}] ${node.title} (${node.category})`);
     });
-
   } catch (error) {
     console.error('An error occurred:', error instanceof Error ? error.message : error);
   }

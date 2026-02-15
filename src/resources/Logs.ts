@@ -5,7 +5,7 @@ import { OsfLogAttributes, LogListParams, OsfLogActionInfo } from '../types/log'
 
 /**
  * Complete list of loggable actions supported by the OSF
- * 
+ *
  * Note: The OSF API v2 does not actually implement the /actions/ endpoint,
  * so this list is provided locally based on the API documentation.
  */
@@ -34,7 +34,10 @@ const LOG_ACTIONS: OsfLogActionInfo[] = [
   { identifier: 'contributors_reordered', description: "A Contributor's position in a Node's bibliography is changed" },
   { identifier: 'permissions_updated', description: "A Contributor's permissions on a Node are changed" },
   { identifier: 'made_contributor_visible', description: 'A Contributor is made bibliographically visible on a Node' },
-  { identifier: 'made_contributor_invisible', description: 'A Contributor is made bibliographically invisible on a Node' },
+  {
+    identifier: 'made_contributor_invisible',
+    description: 'A Contributor is made bibliographically invisible on a Node',
+  },
   { identifier: 'wiki_updated', description: "A Node's wiki is updated" },
   { identifier: 'wiki_deleted', description: "A Node's wiki is deleted" },
   { identifier: 'wiki_renamed', description: "A Node's wiki is renamed" },
@@ -143,7 +146,7 @@ export class Logs extends BaseResource {
    * List all available log actions
    *
    * Returns the complete list of loggable actions supported by the OSF.
-   * 
+   *
    * Note: The OSF API v2 does not implement the /actions/ endpoint,
    * so this method returns a locally-defined list based on the API documentation.
    *
