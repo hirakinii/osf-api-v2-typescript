@@ -1,7 +1,7 @@
 {
   "name": "osf-api-v2-typescript",
   "version": "0.3.0",
-  "description": "このプロジェクトは、OSF (Open Science Framework) API v2 の仕様に基づき、TypeScript を用いたクライアントライブラリを実装することを目的としています。",
+  "description": "This project aims to implement a client library using TypeScript based on the OSF (Open Science Framework) API v2 specification.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.ts",
