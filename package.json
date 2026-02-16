@@ -1,6 +1,6 @@
 {
   "name": "osf-api-v2-typescript",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "This project aims to implement a client library using TypeScript based on the OSF (Open Science Framework) API v2 specification.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",

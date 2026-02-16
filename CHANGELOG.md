@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2026-02-17
+
+### Changed
+- `OsfClient.httpClient` visibility changed from `private` to `protected`, allowing subclasses to access the underlying `HttpClient` instance.
+
 ## [0.3.1] - 2026-02-16
 
 ### Added
