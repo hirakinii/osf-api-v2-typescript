@@ -19,6 +19,8 @@ export interface HttpClientConfig {
   baseUrl?: string;
   /** Request timeout in milliseconds (defaults to 30000) */
   timeout?: number;
+  /** Optional list of additional allowed hostnames for full-URL requests */
+  allowedHosts?: string[];
 }
 
 /**
@@ -30,6 +32,7 @@ export class HttpClient {
   private tokenProvider?: () => string | Promise<string>;
   private baseUrl: string;
   private timeout: number;
+  private allowedHosts: Set<string>;
 
   constructor(config: HttpClientConfig) {
     if (!config.token && !config.tokenProvider) {
@@ -39,6 +42,8 @@ export class HttpClient {
     this.tokenProvider = config.tokenProvider;
     this.baseUrl = config.baseUrl || 'https://api.osf.io/v2/';
     this.timeout = config.timeout ?? 30000; // Default: 30 seconds
+    const baseHost = new URL(this.baseUrl).hostname;
+    this.allowedHosts = new Set([baseHost, ...(config.allowedHosts ?? [])]);
   }
 
   private async getToken(): Promise<string> {
@@ -237,6 +242,12 @@ export class HttpClient {
 
   private resolveUrl(endpoint: string): string {
     if (endpoint.startsWith('http')) {
+      const url = new URL(endpoint);
+      if (!this.allowedHosts.has(url.hostname)) {
+        throw new OsfApiError(
+          `Request to disallowed host: ${url.hostname}. Allowed: ${[...this.allowedHosts].join(', ')}`,
+        );
+      }
       return endpoint;
     }
     return new URL(endpoint, this.baseUrl).toString();
