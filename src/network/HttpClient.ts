@@ -43,7 +43,10 @@ export class HttpClient {
     this.baseUrl = config.baseUrl || 'https://api.osf.io/v2/';
     this.timeout = config.timeout ?? 30000; // Default: 30 seconds
     const baseHost = new URL(this.baseUrl).hostname;
-    this.allowedHosts = new Set([baseHost, ...(config.allowedHosts ?? [])]);
+    // Derive the Waterbutler files host from the base API host (e.g., api.osf.io → files.osf.io)
+    const filesHost = baseHost.replace(/^api\./, 'files.');
+    const defaultHosts = filesHost !== baseHost ? [baseHost, filesHost] : [baseHost];
+    this.allowedHosts = new Set([...defaultHosts, ...(config.allowedHosts ?? [])]);
   }
 
   private async getToken(): Promise<string> {
