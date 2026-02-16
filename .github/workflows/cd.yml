@@ -2,7 +2,6 @@ name: CD
 
 on:
   push:
-    branches: [ main ]
     tags:
       - 'v*'
 
@@ -10,9 +9,10 @@ jobs:
   publish:
     name: Publish to NPM
     runs-on: ubuntu-latest
-    # Only run on tags or merge to main (depending on policy)
-    # Here we allow both for flexibility, but typically publishing happens on tags.
     if: github.repository == 'hirakinii/osf-api-v2-typescript'
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -30,9 +30,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      # The following step is commented out by default.
-      # To enable it, you need to add NPM_TOKEN to your GitHub repository secrets.
-      # - name: Publish
-      #   run: npm publish --access public
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Run tests
+        run: npm test
+
+      - name: Publish
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

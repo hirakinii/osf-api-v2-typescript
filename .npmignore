@@ -1,0 +1,27 @@
+# Source
+src/
+scripts/
+docs/
+examples/
+
+# Config
+tsconfig*.json
+jest.config.*
+eslint.config.*
+.prettierrc*
+.editorconfig
+
+# CI/CD
+.github/
+.gemini/
+
+# Tests
+__tests__/
+*.test.ts
+coverage/
+
+# Misc
+.gitignore
+.npmignore
+.vscode/
+.idea/
