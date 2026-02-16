@@ -271,8 +271,11 @@ export class HttpClient {
         throw new OsfPermissionError(errorMessage);
       case 404:
         throw new OsfNotFoundError(errorMessage);
-      case 429:
-        throw new OsfRateLimitError(errorMessage);
+      case 429: {
+        const retryAfterHeader = response.headers.get('Retry-After');
+        const retryAfter = retryAfterHeader ? parseInt(retryAfterHeader, 10) : undefined;
+        throw new OsfRateLimitError(errorMessage, Number.isNaN(retryAfter) ? undefined : retryAfter);
+      }
       default:
         if (response.status >= 500) {
           throw new OsfServerError(errorMessage);

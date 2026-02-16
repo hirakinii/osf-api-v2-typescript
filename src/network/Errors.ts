@@ -32,9 +32,13 @@ export class OsfNotFoundError extends OsfApiError {
 
 /** Thrown when the rate limit is exceeded (429) */
 export class OsfRateLimitError extends OsfApiError {
-  constructor(message = 'Rate limit exceeded') {
+  /** Seconds to wait before retrying, from Retry-After header */
+  readonly retryAfter?: number;
+
+  constructor(message = 'Rate limit exceeded', retryAfter?: number) {
     super(message);
     this.name = 'OsfRateLimitError';
+    this.retryAfter = retryAfter;
   }
 }
 

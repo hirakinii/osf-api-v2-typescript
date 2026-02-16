@@ -103,6 +103,45 @@ describe('HttpClient', () => {
         await expect(client.get('nodes')).rejects.toThrow(OsfRateLimitError);
     });
 
+    it('should include retryAfter when Retry-After header is present on 429', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), {
+            status: 429,
+            headers: { 'Retry-After': '60' },
+        });
+        try {
+            await client.get('nodes');
+            fail('Expected OsfRateLimitError');
+        } catch (error) {
+            expect(error).toBeInstanceOf(OsfRateLimitError);
+            expect((error as OsfRateLimitError).retryAfter).toBe(60);
+        }
+    });
+
+    it('should have undefined retryAfter when Retry-After header is absent on 429', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 429 });
+        try {
+            await client.get('nodes');
+            fail('Expected OsfRateLimitError');
+        } catch (error) {
+            expect(error).toBeInstanceOf(OsfRateLimitError);
+            expect((error as OsfRateLimitError).retryAfter).toBeUndefined();
+        }
+    });
+
+    it('should have undefined retryAfter when Retry-After header is non-numeric on 429', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), {
+            status: 429,
+            headers: { 'Retry-After': 'invalid' },
+        });
+        try {
+            await client.get('nodes');
+            fail('Expected OsfRateLimitError');
+        } catch (error) {
+            expect(error).toBeInstanceOf(OsfRateLimitError);
+            expect((error as OsfRateLimitError).retryAfter).toBeUndefined();
+        }
+    });
+
     it('should throw OsfServerError on 500', async () => {
         fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 500 });
         await expect(client.get('nodes')).rejects.toThrow(OsfServerError);
