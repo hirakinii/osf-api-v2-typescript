@@ -9,15 +9,21 @@ TypeScript client library for the [Open Science Framework (OSF) API v2](https://
 
 - **Type-safe**: Comprehensive TypeScript definitions for OSF entities.
 - **Resource-oriented**: Intuitive API for 22+ resource types including Nodes, Files, Users, Registrations, Preprints, and more.
+- **File Upload & Download**: Upload new files and update existing ones via the Waterbutler API.
 - **OAuth2 + PKCE**: Built-in OAuth2 Authorization Code flow with PKCE for browser-based and third-party apps.
 - **Automatic Pagination**: Effortlessly iterate through large datasets using `AsyncIterator`.
 - **JSON:API Simplified**: Flattens complex JSON:API structures into easy-to-use objects.
 - **Dual Build**: CJS, ESM, and UMD outputs for Node.js, modern bundlers, and CDN usage.
 - **Browser Compatible**: Uses Web Crypto API and standard `fetch` with no Node.js-specific dependencies.
+- **Security**: URL host validation to prevent requests to untrusted origins; rate-limit `Retry-After` support.
 
 ## Installation
 
-As of 2026/2/5, this library is not published to npm. You can install it from GitHub:
+```bash
+npm install osf-api-v2-typescript
+```
+
+Or install directly from GitHub:
 
 ```bash
 npm install git+https://github.com/hirakinii/osf-api-v2-typescript.git
@@ -42,7 +48,8 @@ import { OsfClient } from 'osf-api-v2-typescript';
 const client = new OsfClient({
   token: 'your_personal_access_token',
   // baseUrl: 'https://api.test.osf.io/v2/', // Optional: Defaults to production
-  // timeout: 30000 // Optional: Defaults to 30 seconds
+  // timeout: 30000, // Optional: Defaults to 30 seconds
+  // allowedHosts: ['custom-files.example.com'], // Optional: Additional trusted hostnames
 });
 ```
 
@@ -121,6 +128,16 @@ const files = await client.files.listByNode('abc12', 'osfstorage');
 // Download a file (returns ArrayBuffer)
 const file = files.data[0];
 const content = await client.files.download(file);
+
+// Upload a new file
+const providers = await client.files.listProviders('abc12');
+const osfstorage = providers.data.find(p => p.provider === 'osfstorage');
+const newContent = new TextEncoder().encode('Hello, world!');
+const newFile = await client.files.uploadNew(osfstorage, 'hello.txt', newContent);
+
+// Update an existing file
+const updatedContent = new TextEncoder().encode('Updated content');
+const updatedFile = await client.files.upload(file, updatedContent);
 
 // List file versions
 const versions = await client.files.listVersions(file.id);
@@ -222,10 +239,11 @@ const citation = await client.preprints.getCitation('preprint1', 'apa');
 ### Draft Registrations
 
 ```typescript
-// Create a draft registration
+// Create a draft registration (registration_schema_id is required)
 const draft = await client.draftRegistrations.create({
-  registrationSupplement: 'Open-Ended Registration',
-  nodeLicenseId: 'abc12',
+  registration_schema_id: '564d31db8c5e4a7c9694b2c0', // Open-Ended Registration schema
+  title: 'My Draft Registration',
+  branched_from: 'abc12', // Optional: link to an existing project
 });
 
 // Update a draft
@@ -448,7 +466,7 @@ const allNodes = await result.toArray();
 ### Error Handling
 
 ```typescript
-import { OsfNotFoundError, OsfPermissionError } from 'osf-api-v2-typescript';
+import { OsfNotFoundError, OsfPermissionError, OsfRateLimitError } from 'osf-api-v2-typescript';
 
 try {
   const node = await client.nodes.getById('invalid-id');
@@ -457,19 +475,21 @@ try {
     console.error('Node not found');
   } else if (error instanceof OsfPermissionError) {
     console.error('You do not have permission to view this node');
+  } else if (error instanceof OsfRateLimitError) {
+    console.error(`Rate limited. Retry after ${error.retryAfter} seconds`);
   }
 }
 ```
 
 ## Samples
 
-We provide 20 sample scripts in the `examples/` directory covering all resource types. See [examples/README.md](examples/README.md) for the full list and required environment variables.
+We provide 20+ sample scripts in the `examples/` directory covering all resource types. See [examples/README.md](examples/README.md) for the full list and required environment variables.
 
 Key samples:
 
 - `basic_usage.ts`: Client initialization and basic profile fetching.
 - `nodes_management.ts`: Project (Node) lifecycle: Create, List, Update, and Delete.
-- `file_operations.ts`: Listing storage providers, files, and downloading content.
+- `file_operations.ts`: Listing storage providers, files, downloading, and uploading content.
 - `pagination_demo.ts`: Using the auto-pagination feature (`AsyncIterator`).
 - `registrations.ts`: Registration listing and sub-resource exploration.
 - `preprints.ts`: Preprint listing, contributors, files, and citations.
@@ -479,6 +499,7 @@ Key samples:
 - `comments.ts`: Comment CRUD and replies.
 - `providers.ts`: Preprint, Registration, and Collection providers.
 - `auth.ts`: OAuth applications, personal access tokens, and scopes.
+- `oauth2.ts`: Full OAuth2 Authorization Code + PKCE flow demonstration.
 
 To run the samples, set your OSF token as an environment variable and use `npx ts-node`:
 
@@ -514,7 +535,7 @@ npm run build:umd   # UMD/IIFE → dist/umd/
 | ESM | `dist/esm/` | Modern bundlers (Vite, webpack, etc.) and `import` |
 | UMD | `dist/umd/osf-api-v2.js` | `<script>` tags, CDN (global: `OsfApiV2`) |
 
-# Change log
+## Change log
 
 See [CHANGELOG.md](./CHANGELOG.md) for details.
 
