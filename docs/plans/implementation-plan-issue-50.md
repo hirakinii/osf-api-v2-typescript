@@ -13,11 +13,12 @@
 
 ---
 
-## Task 1: OAuth2 エラーレスポンスのサニタイズ
+## Task 1: OAuth2 エラーレスポンスのサニタイズ ✅ 完了
 
 **深刻度:** MEDIUM
 **対象ファイル:** `src/auth/OsfOAuth2Client.ts`
 **関連テスト:** `tests/auth/OsfOAuth2Client.test.ts`
+**コミット:** `ac4f1c6 fix: handle response message`
 
 ### 問題
 
@@ -74,17 +75,18 @@ throw new Error(message);
 
 ### テスト修正
 
-- [ ] 既存のエラーケーステストを更新し、サニタイズされたメッセージ形式を検証
-- [ ] JSON レスポンスを返すエラーケースのテストを追加（`error_description` の抽出確認）
-- [ ] JSON パースに失敗するエラーケースのテストを追加（ステータスコードのみのフォールバック確認）
+- [x] 既存のエラーケーステストを更新し、サニタイズされたメッセージ形式を検証
+- [x] JSON レスポンスを返すエラーケースのテストを追加（`error_description` の抽出確認）
+- [x] JSON パースに失敗するエラーケースのテストを追加（ステータスコードのみのフォールバック確認）
 
 ---
 
-## Task 2: PKCE code_verifier 生成のモジュロバイアス排除
+## Task 2: PKCE code_verifier 生成のモジュロバイアス排除 ✅ 完了
 
 **深刻度:** MEDIUM
 **対象ファイル:** `src/auth/pkce.ts`
 **関連テスト:** `tests/auth/pkce.test.ts`
+**コミット:** `b80361f fix: handle random code verifier string`
 
 ### 問題
 
@@ -130,17 +132,18 @@ export function generateCodeVerifier(length = 128): string {
 
 ### テスト修正
 
-- [ ] 既存のテストが引き続き通過することを確認（長さ・文字セットの検証）
-- [ ] 生成されるverifierが全てRFC 7636の unreserved characters のみであることを確認
-- [ ] 境界値テスト（length=43, length=128）の通過を確認
+- [x] 既存のテストが引き続き通過することを確認（長さ・文字セットの検証）
+- [x] 生成されるverifierが全てRFC 7636の unreserved characters のみであることを確認
+- [x] 境界値テスト（length=43, length=128）の通過を確認
 
 ---
 
-## Task 3: HttpClient の URL バリデーション追加
+## Task 3: HttpClient の URL バリデーション追加 ✅ 完了
 
 **深刻度:** LOW
 **対象ファイル:** `src/network/HttpClient.ts`
 **関連テスト:** `tests/network/HttpClient.test.ts`
+**コミット:** `91c8441 fix: add URL validation`
 
 ### 問題
 
@@ -203,18 +206,19 @@ private resolveUrl(endpoint: string): string {
 
 ### テスト修正
 
-- [ ] 許可ホストへのリクエストが正常に通過することを確認
-- [ ] 未許可ホストへのリクエストが `OsfApiError` をスローすることを確認
-- [ ] `allowedHosts` を指定して追加ホストを許可できることを確認
-- [ ] 相対パスのエンドポイントが従来通り動作することを確認
+- [x] 許可ホストへのリクエストが正常に通過することを確認
+- [x] 未許可ホストへのリクエストが `OsfApiError` をスローすることを確認
+- [x] `allowedHosts` を指定して追加ホストを許可できることを確認
+- [x] 相対パスのエンドポイントが従来通り動作することを確認
 
 ---
 
-## Task 4: OsfRateLimitError に Retry-After 情報を付与
+## Task 4: OsfRateLimitError に Retry-After 情報を付与 ✅ 完了
 
 **深刻度:** LOW
 **対象ファイル:** `src/network/Errors.ts`, `src/network/HttpClient.ts`
 **関連テスト:** `tests/network/HttpClient.test.ts`
+**コミット:** `dc07ba5 fix: add Retry-After info OsfRateLimitError`
 
 ### 問題
 
@@ -253,13 +257,13 @@ case 429: {
 
 ### テスト修正
 
-- [ ] `Retry-After` ヘッダー付き 429 レスポンスで `retryAfter` が正しく設定されることを確認
-- [ ] `Retry-After` ヘッダーなし 429 レスポンスで `retryAfter` が `undefined` であることを確認
-- [ ] 不正な `Retry-After` 値（非数値）の場合に `undefined` になることを確認
+- [x] `Retry-After` ヘッダー付き 429 レスポンスで `retryAfter` が正しく設定されることを確認
+- [x] `Retry-After` ヘッダーなし 429 レスポンスで `retryAfter` が `undefined` であることを確認
+- [x] 不正な `Retry-After` 値（非数値）の場合に `undefined` になることを確認
 
 ---
 
-## Task 5: セキュリティベストプラクティスのドキュメント整備
+## Task 5: セキュリティベストプラクティスのドキュメント整備 ✅ 完了
 
 **深刻度:** LOW
 **対象ファイル:** 新規 `docs/security-best-practices.md`
@@ -270,30 +274,30 @@ case 429: {
 
 ### ドキュメント内容
 
-- [ ] トークンの安全な保管方法（環境変数、シークレットマネージャーの使用推奨）
-- [ ] トークンをログに出力しないための注意事項
-- [ ] OAuth2 フロー使用時の PKCE の重要性の説明
-- [ ] `allowedHosts` オプションの使用推奨（Task 3 完了後）
-- [ ] 429 エラー時の `retryAfter` を利用したリトライ戦略の例（Task 4 完了後）
+- [x] トークンの安全な保管方法（環境変数、シークレットマネージャーの使用推奨）
+- [x] トークンをログに出力しないための注意事項
+- [x] OAuth2 フロー使用時の PKCE の重要性の説明
+- [x] `allowedHosts` オプションの使用推奨（Task 3 完了後）
+- [x] 429 エラー時の `retryAfter` を利用したリトライ戦略の例（Task 4 完了後）
 
 ---
 
 ## 実装順序と依存関係
 
 ```
-Task 1 (OAuth2 エラーサニタイズ)     ── 独立、最優先
-Task 2 (PKCE モジュロバイアス)       ── 独立、最優先
-Task 3 (URL バリデーション)          ── 独立
-Task 4 (RateLimitError 拡張)         ── 独立
-Task 5 (ドキュメント)                ── Task 3, 4 完了後
+Task 1 (OAuth2 エラーサニタイズ)     ── ✅ 完了 (ac4f1c6)
+Task 2 (PKCE モジュロバイアス)       ── ✅ 完了 (b80361f)
+Task 3 (URL バリデーション)          ── ✅ 完了 (91c8441)
+Task 4 (RateLimitError 拡張)         ── ✅ 完了 (dc07ba5)
+Task 5 (ドキュメント)                ── ✅ 完了
 ```
 
-Task 1〜4 は相互に依存関係がないため並行して実施可能。Task 5 は Task 3・4 の内容を反映するため最後に実施する。
+全タスク完了済み。
 
 ## 完了基準
 
-- [ ] 全タスクの修正コードがマージされている
-- [ ] テストカバレッジ 80% 以上を維持している
-- [ ] 既存テストが全て通過している
-- [ ] 新規テストが追加・通過している
-- [ ] セキュリティドキュメントが整備されている
+- [x] 全タスクの修正コードがマージされている
+- [x] テストカバレッジ 80% 以上を維持している（Statements: 95.65%, Branches: 91.26%, Functions: 95.12%, Lines: 95.94%）
+- [x] 既存テストが全て通過している（31 suites, 482 tests passed）
+- [x] 新規テストが追加・通過している
+- [x] セキュリティドキュメントが整備されている（`docs/security-best-practices.md`）
