@@ -14,7 +14,7 @@ describe('Files', () => {
 
     beforeEach(() => {
         fetchMock.resetMocks();
-        httpClient = new HttpClient({ token, baseUrl });
+        httpClient = new HttpClient({ token, baseUrl, allowedHosts: ['files.osf.io'] });
         files = new Files(httpClient);
     });
 

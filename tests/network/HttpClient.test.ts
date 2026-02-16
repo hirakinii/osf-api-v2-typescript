@@ -5,6 +5,7 @@ import {
     OsfNotFoundError,
     OsfRateLimitError,
     OsfServerError,
+    OsfApiError,
 } from '../../src/network/Errors';
 import fetchMock from 'jest-fetch-mock';
 
@@ -40,9 +41,9 @@ describe('HttpClient', () => {
         expect(headers.get('Content-Type')).toBe('text/plain');
     });
 
-    it('should use provided full URL', async () => {
+    it('should use provided full URL when host is allowed', async () => {
         fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
-        const fullUrl = 'https://other-domain.com/v2/nodes';
+        const fullUrl = 'https://api.test-osf.io/v2/nodes';
         await client.get(fullUrl);
 
         expect(fetchMock.mock.calls[0][0]).toBe(fullUrl);
@@ -100,6 +101,45 @@ describe('HttpClient', () => {
     it('should throw OsfRateLimitError on 429', async () => {
         fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 429 });
         await expect(client.get('nodes')).rejects.toThrow(OsfRateLimitError);
+    });
+
+    it('should include retryAfter when Retry-After header is present on 429', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), {
+            status: 429,
+            headers: { 'Retry-After': '60' },
+        });
+        try {
+            await client.get('nodes');
+            fail('Expected OsfRateLimitError');
+        } catch (error) {
+            expect(error).toBeInstanceOf(OsfRateLimitError);
+            expect((error as OsfRateLimitError).retryAfter).toBe(60);
+        }
+    });
+
+    it('should have undefined retryAfter when Retry-After header is absent on 429', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 429 });
+        try {
+            await client.get('nodes');
+            fail('Expected OsfRateLimitError');
+        } catch (error) {
+            expect(error).toBeInstanceOf(OsfRateLimitError);
+            expect((error as OsfRateLimitError).retryAfter).toBeUndefined();
+        }
+    });
+
+    it('should have undefined retryAfter when Retry-After header is non-numeric on 429', async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), {
+            status: 429,
+            headers: { 'Retry-After': 'invalid' },
+        });
+        try {
+            await client.get('nodes');
+            fail('Expected OsfRateLimitError');
+        } catch (error) {
+            expect(error).toBeInstanceOf(OsfRateLimitError);
+            expect((error as OsfRateLimitError).retryAfter).toBeUndefined();
+        }
     });
 
     it('should throw OsfServerError on 500', async () => {
@@ -170,12 +210,18 @@ describe('HttpClient', () => {
     });
 
     describe('put()', () => {
+        let fileClient: HttpClient;
+
+        beforeEach(() => {
+            fileClient = new HttpClient({ token, baseUrl, allowedHosts: ['files.osf.io'] });
+        });
+
         it('should send PUT request with binary body', async () => {
             const mockResponse = { data: { id: 'file-123', type: 'files' } };
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
             const binaryData = new ArrayBuffer(10);
-            const result = await client.put('https://files.osf.io/v1/upload', binaryData);
+            const result = await fileClient.put('https://files.osf.io/v1/upload', binaryData);
 
             expect(fetchMock).toHaveBeenCalledTimes(1);
             const [url, options] = fetchMock.mock.calls[0];
@@ -191,7 +237,7 @@ describe('HttpClient', () => {
             fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
             const uint8Data = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]);
-            const result = await client.put('https://files.osf.io/v1/upload', uint8Data);
+            const result = await fileClient.put('https://files.osf.io/v1/upload', uint8Data);
 
             expect(fetchMock).toHaveBeenCalledTimes(1);
             const [url, options] = fetchMock.mock.calls[0];
@@ -205,7 +251,7 @@ describe('HttpClient', () => {
         it('should allow custom Content-Type header', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
 
-            await client.put('https://files.osf.io/v1/upload', 'test', {
+            await fileClient.put('https://files.osf.io/v1/upload', 'test', {
                 headers: { 'Content-Type': 'text/plain' },
             });
 
@@ -216,6 +262,12 @@ describe('HttpClient', () => {
     });
 
     describe('getRaw()', () => {
+        let fileClient: HttpClient;
+
+        beforeEach(() => {
+            fileClient = new HttpClient({ token, baseUrl, allowedHosts: ['files.osf.io'] });
+        });
+
         it('should return ArrayBuffer for binary download', async () => {
             // Use a simple string that will be converted to ArrayBuffer
             const binaryString = 'Hello';
@@ -223,7 +275,7 @@ describe('HttpClient', () => {
                 headers: { 'Content-Type': 'application/octet-stream' },
             });
 
-            const result = await client.getRaw('https://files.osf.io/v1/download/abc123');
+            const result = await fileClient.getRaw('https://files.osf.io/v1/download/abc123');
 
             expect(fetchMock).toHaveBeenCalledTimes(1);
             const [url, options] = fetchMock.mock.calls[0];
@@ -234,7 +286,7 @@ describe('HttpClient', () => {
 
         it('should throw error on download failure', async () => {
             fetchMock.mockResponseOnce(JSON.stringify({ errors: [] }), { status: 404 });
-            await expect(client.getRaw('https://files.osf.io/v1/download/unknown')).rejects.toThrow(
+            await expect(fileClient.getRaw('https://files.osf.io/v1/download/unknown')).rejects.toThrow(
                 OsfNotFoundError
             );
         });
@@ -332,6 +384,41 @@ describe('HttpClient', () => {
 
             const [, options] = fetchMock.mock.calls[0];
             expect(options?.signal).toBeDefined();
+        });
+    });
+
+    describe('URL host validation', () => {
+        it('should allow requests to the base URL host', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await client.get('https://api.test-osf.io/v2/nodes');
+
+            expect(fetchMock.mock.calls[0][0]).toBe('https://api.test-osf.io/v2/nodes');
+        });
+
+        it('should throw OsfApiError for disallowed hosts', async () => {
+            await expect(client.get('https://evil.example.com/v2/nodes')).rejects.toThrow(OsfApiError);
+            await expect(client.get('https://evil.example.com/v2/nodes')).rejects.toThrow(
+                'Request to disallowed host: evil.example.com',
+            );
+        });
+
+        it('should allow additional hosts via allowedHosts config', async () => {
+            const clientWithExtra = new HttpClient({
+                token,
+                baseUrl,
+                allowedHosts: ['files.osf.io'],
+            });
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await clientWithExtra.get('https://files.osf.io/v1/download/abc123');
+
+            expect(fetchMock.mock.calls[0][0]).toBe('https://files.osf.io/v1/download/abc123');
+        });
+
+        it('should still resolve relative paths normally', async () => {
+            fetchMock.mockResponseOnce(JSON.stringify({ data: {} }));
+            await client.get('nodes/12345');
+
+            expect(fetchMock.mock.calls[0][0]).toBe('https://api.test-osf.io/v2/nodes/12345');
         });
     });
 });

@@ -41,6 +41,8 @@ export interface OsfClientConfig {
   baseUrl?: string;
   /** Request timeout in milliseconds (defaults to 30000) */
   timeout?: number;
+  /** Optional list of additional allowed hostnames for full-URL requests (e.g., Waterbutler hosts) */
+  allowedHosts?: string[];
 }
 
 /**
@@ -113,6 +115,7 @@ export class OsfClient {
       tokenProvider,
       baseUrl: config.baseUrl,
       timeout: config.timeout,
+      allowedHosts: config.allowedHosts,
     });
   }
 

@@ -19,6 +19,8 @@ export interface HttpClientConfig {
   baseUrl?: string;
   /** Request timeout in milliseconds (defaults to 30000) */
   timeout?: number;
+  /** Optional list of additional allowed hostnames for full-URL requests */
+  allowedHosts?: string[];
 }
 
 /**
@@ -30,6 +32,7 @@ export class HttpClient {
   private tokenProvider?: () => string | Promise<string>;
   private baseUrl: string;
   private timeout: number;
+  private allowedHosts: Set<string>;
 
   constructor(config: HttpClientConfig) {
     if (!config.token && !config.tokenProvider) {
@@ -39,6 +42,11 @@ export class HttpClient {
     this.tokenProvider = config.tokenProvider;
     this.baseUrl = config.baseUrl || 'https://api.osf.io/v2/';
     this.timeout = config.timeout ?? 30000; // Default: 30 seconds
+    const baseHost = new URL(this.baseUrl).hostname;
+    // Derive the Waterbutler files host from the base API host (e.g., api.osf.io → files.osf.io)
+    const filesHost = baseHost.replace(/^api\./, 'files.');
+    const defaultHosts = filesHost !== baseHost ? [baseHost, filesHost] : [baseHost];
+    this.allowedHosts = new Set([...defaultHosts, ...(config.allowedHosts ?? [])]);
   }
 
   private async getToken(): Promise<string> {
@@ -237,6 +245,12 @@ export class HttpClient {
 
   private resolveUrl(endpoint: string): string {
     if (endpoint.startsWith('http')) {
+      const url = new URL(endpoint);
+      if (!this.allowedHosts.has(url.hostname)) {
+        throw new OsfApiError(
+          `Request to disallowed host: ${url.hostname}. Allowed: ${[...this.allowedHosts].join(', ')}`,
+        );
+      }
       return endpoint;
     }
     return new URL(endpoint, this.baseUrl).toString();
@@ -260,8 +274,11 @@ export class HttpClient {
         throw new OsfPermissionError(errorMessage);
       case 404:
         throw new OsfNotFoundError(errorMessage);
-      case 429:
-        throw new OsfRateLimitError(errorMessage);
+      case 429: {
+        const retryAfterHeader = response.headers.get('Retry-After');
+        const retryAfter = retryAfterHeader ? parseInt(retryAfterHeader, 10) : undefined;
+        throw new OsfRateLimitError(errorMessage, Number.isNaN(retryAfter) ? undefined : retryAfter);
+      }
       default:
         if (response.status >= 500) {
           throw new OsfServerError(errorMessage);

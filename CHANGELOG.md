@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2026-02-16
+
+### Added
+- **Security Hardening**:
+  - URL validation with host allowlist in `HttpClient` to prevent SSRF-like issues. Only the OSF API host, Waterbutler files host, and explicitly configured `allowedHosts` are permitted.
+  - `OsfClientConfig.allowedHosts` option for registering additional trusted hostnames (e.g., custom Waterbutler hosts).
+- **`OsfRateLimitError` Enhancement**:
+  - `retryAfter` property parsed from the `Retry-After` response header, enabling callers to implement backoff strategies.
+- **CD Workflow**:
+  - GitHub Actions CD workflow for automated npm publication via OIDC.
+  - `.npmignore` for cleaner published packages.
+
+### Changed
+- **PKCE Code Verifier**: `generateCodeVerifier()` now uses rejection sampling to eliminate modulo bias, producing a uniformly distributed random string.
+- **OAuth2 Error Messages**: `OsfOAuth2Client` now extracts structured `error_description`/`error` fields from OAuth2 error responses for clearer diagnostics.
+- **ESM Build**: Added `fix-esm-imports.mjs` post-build script and `dist/esm/package.json` with `"type": "module"` for proper ESM resolution.
+- Package description translated to English in `package.json`.
+
+### Fixed
+- None yet.
+
 ## [0.3.0] - 2026-02-10
 
 ### Added
@@ -17,11 +38,28 @@ All notable changes to this project will be documented in this file.
   - ESM output via `tsconfig.esm.json` for modern bundlers.
   - UMD/IIFE output via esbuild (`dist/umd/osf-api-v2.js` and `dist/umd/osf-api-v2.min.js`, global: `OsfApiV2`).
   - `package.json` `exports` field for automatic CJS/ESM resolution.
+- **File Upload Support**:
+  - `Files.upload()`: Update an existing file's content via Waterbutler API.
+  - `Files.uploadNew()`: Upload a new file to a folder or storage provider.
+  - `HttpClient.putRaw()` and `BaseResource.putRaw()`: Binary upload primitives for Waterbutler endpoints.
+  - `BaseResource.getRaw()`: Binary download primitive exposed to resource subclasses.
+- **OAuth2 Example**: New `examples/oauth2.ts` demonstrating the full OAuth2 + PKCE flow.
+- **Logs**: `Logs.listActions()` now returns a locally-defined complete list of 50+ OSF log action types with descriptions (the API endpoint is not implemented server-side).
 
 ### Changed
 - `HttpClient.put()` signature: `Buffer` replaced with `Uint8Array` for browser compatibility (`Buffer` extends `Uint8Array`, so this is backward-compatible).
 - `OsfClientConfig.token` is now optional (was required) to support OAuth2 and custom token provider modes.
 - Build output directory changed from `dist/` to `dist/cjs/` for CJS; ESM output to `dist/esm/`.
+- `Files.download()` now uses the Waterbutler `upload` link instead of the OSF `download` link to avoid cross-origin redirect issues that drop Authorization headers.
+- `DraftRegistrations.create()` now uses JSON:API relationships for `registration_schema_id` and optional `branched_from`, matching the API's expected payload format.
+- `CreateDraftRegistrationInput` now requires `registration_schema_id` and accepts optional `branched_from`.
+
+### Fixed
+- File download URL resolution: fixed cross-origin redirect causing authentication headers to be dropped.
+- `DraftRegistrations.create()`: fixed schema ID and branched_from being sent as attributes instead of relationships.
+- `Comments.update()`: added missing `target_id` parameter.
+- `Collections`: fixed link/unlink operations.
+- `Logs.listActions()`: replaced broken API call with local action data.
 
 ## [0.2.0] - 2026-02-09
 

@@ -26,12 +26,20 @@ export function generateCodeVerifier(length = 128): string {
     throw new Error('Code verifier length must be between 43 and 128 characters');
   }
 
-  const randomBytes = new Uint8Array(length);
-  crypto.getRandomValues(randomBytes);
+  const charsetLen = UNRESERVED_CHARACTERS.length; // 66
+  // Largest multiple of charsetLen that fits in a byte (66 * 3 = 198)
+  const maxValid = Math.floor(256 / charsetLen) * charsetLen; // 198
 
   let verifier = '';
-  for (let i = 0; i < length; i++) {
-    verifier += UNRESERVED_CHARACTERS[randomBytes[i] % UNRESERVED_CHARACTERS.length];
+  while (verifier.length < length) {
+    const randomBytes = new Uint8Array(length - verifier.length);
+    crypto.getRandomValues(randomBytes);
+    for (let i = 0; i < randomBytes.length && verifier.length < length; i++) {
+      if (randomBytes[i] < maxValid) {
+        verifier += UNRESERVED_CHARACTERS[randomBytes[i] % charsetLen];
+      }
+      // Bytes >= maxValid are rejected (rejection sampling)
+    }
   }
   return verifier;
 }
