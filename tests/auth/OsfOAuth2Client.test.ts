@@ -133,12 +133,36 @@ describe('OsfOAuth2Client', () => {
       expect(client.getTokenSet()?.accessToken).toBe('mock-access-token');
     });
 
-    it('should throw on error response', async () => {
-      fetchMock.mockResponseOnce('invalid_grant', { status: 400 });
+    it('should throw on error response with sanitized message', async () => {
+      fetchMock.mockResponseOnce('not json at all', { status: 400 });
 
       const client = new OsfOAuth2Client(DEFAULT_CONFIG);
       await expect(client.exchangeCode('bad-code', 'verifier')).rejects.toThrow(
-        'Token exchange failed: 400',
+        'Token exchange failed: 400 Bad Request',
+      );
+    });
+
+    it('should extract error_description from JSON error response', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({ error: 'invalid_grant', error_description: 'Authorization code expired' }),
+        { status: 400 },
+      );
+
+      const client = new OsfOAuth2Client(DEFAULT_CONFIG);
+      await expect(client.exchangeCode('bad-code', 'verifier')).rejects.toThrow(
+        'Token exchange failed: 400 Bad Request - Authorization code expired',
+      );
+    });
+
+    it('should extract error field when error_description is absent', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({ error: 'invalid_grant' }),
+        { status: 400 },
+      );
+
+      const client = new OsfOAuth2Client(DEFAULT_CONFIG);
+      await expect(client.exchangeCode('bad-code', 'verifier')).rejects.toThrow(
+        'Token exchange failed: 400 Bad Request - invalid_grant',
       );
     });
   });
@@ -197,6 +221,27 @@ describe('OsfOAuth2Client', () => {
       const body = new URLSearchParams(fetchMock.mock.calls[0][1]!.body as string);
       expect(body.get('refresh_token')).toBe('explicit-refresh-token');
     });
+
+    it('should throw sanitized error on failure with JSON response', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({ error: 'invalid_grant', error_description: 'Refresh token revoked' }),
+        { status: 400 },
+      );
+
+      const client = new OsfOAuth2Client(DEFAULT_CONFIG);
+      await expect(client.refreshAccessToken('bad-token')).rejects.toThrow(
+        'Token refresh failed: 400 Bad Request - Refresh token revoked',
+      );
+    });
+
+    it('should throw sanitized error on failure with non-JSON response', async () => {
+      fetchMock.mockResponseOnce('Internal server error with sensitive data', { status: 500 });
+
+      const client = new OsfOAuth2Client(DEFAULT_CONFIG);
+      await expect(client.refreshAccessToken('some-token')).rejects.toThrow(
+        'Token refresh failed: 500 Internal Server Error',
+      );
+    });
   });
 
   describe('revokeToken', () => {
@@ -245,6 +290,37 @@ describe('OsfOAuth2Client', () => {
     it('should throw if no token is available to revoke', async () => {
       const client = new OsfOAuth2Client(DEFAULT_CONFIG);
       await expect(client.revokeToken()).rejects.toThrow('No token to revoke');
+    });
+
+    it('should throw sanitized error on failure with JSON response', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({ error: 'invalid_token', error_description: 'Token not found' }),
+        { status: 400 },
+      );
+
+      const client = new OsfOAuth2Client(DEFAULT_CONFIG);
+      client.setTokenSet({
+        accessToken: 'token-to-revoke',
+        expiresAt: Date.now() + 3600000,
+      });
+
+      await expect(client.revokeToken()).rejects.toThrow(
+        'Token revocation failed: 400 Bad Request - Token not found',
+      );
+    });
+
+    it('should throw sanitized error on failure with non-JSON response', async () => {
+      fetchMock.mockResponseOnce('raw server error with token fragments', { status: 503 });
+
+      const client = new OsfOAuth2Client(DEFAULT_CONFIG);
+      client.setTokenSet({
+        accessToken: 'token-to-revoke',
+        expiresAt: Date.now() + 3600000,
+      });
+
+      await expect(client.revokeToken()).rejects.toThrow(
+        'Token revocation failed: 503 Service Unavailable',
+      );
     });
   });
 

@@ -74,8 +74,8 @@ export class OsfOAuth2Client {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Token exchange failed: ${response.status} ${errorText}`);
+      const message = await this.extractErrorMessage(response, 'Token exchange failed');
+      throw new Error(message);
     }
 
     const tokenResponse: TokenResponse = await response.json();
@@ -107,8 +107,8 @@ export class OsfOAuth2Client {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Token refresh failed: ${response.status} ${errorText}`);
+      const message = await this.extractErrorMessage(response, 'Token refresh failed');
+      throw new Error(message);
     }
 
     const tokenResponse: TokenResponse = await response.json();
@@ -141,8 +141,8 @@ export class OsfOAuth2Client {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Token revocation failed: ${response.status} ${errorText}`);
+      const message = await this.extractErrorMessage(response, 'Token revocation failed');
+      throw new Error(message);
     }
 
     // Clear internal token state if we revoked the stored token
@@ -192,6 +192,17 @@ export class OsfOAuth2Client {
   isTokenExpired(): boolean {
     if (!this.currentTokenSet) return true;
     return Date.now() >= this.currentTokenSet.expiresAt - TOKEN_EXPIRY_BUFFER_MS;
+  }
+
+  private async extractErrorMessage(response: Response, context: string): Promise<string> {
+    const base = `${context}: ${response.status} ${response.statusText}`;
+    try {
+      const body = await response.json();
+      const detail = body.error_description || body.error;
+      return detail ? `${base} - ${detail}` : base;
+    } catch {
+      return base;
+    }
   }
 
   private tokenResponseToTokenSet(response: TokenResponse): TokenSet {
