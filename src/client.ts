@@ -62,7 +62,7 @@ export interface OsfClientConfig {
  * ```
  */
 export class OsfClient {
-  private httpClient: HttpClient;
+  protected httpClient: HttpClient;
 
   private _nodes?: Nodes;
   private _files?: Files;
