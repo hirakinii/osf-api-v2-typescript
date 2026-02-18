@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-02-18
+
+### Added
+- **Model Context Protocol (MCP) Server**:
+  - Implemented a specialized MCP server for code symbol extraction and discovery.
+  - Tools:
+    - `list_symbols`: Search and filter exported symbols (Classes, Interfaces, Functions, etc.) across the project.
+    - `get_symbol_details`: Retrieve detailed information, including signatures and JSDoc, for specific symbols.
+    - `refresh_symbols`: Re-scan source files to update the symbol cache.
+  - Powered by `ts-morph` for accurate TypeScript AST analysis.
+  - New build script `npm run build:mcp` generating `dist/mcp/server.cjs`.
+
 ## [0.3.2] - 2026-02-17
 
 ### Changed
