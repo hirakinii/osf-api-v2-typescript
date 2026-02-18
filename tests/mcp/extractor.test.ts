@@ -106,4 +106,48 @@ export const exportedVar = 2;
     expect(methodSymbol).toBeDefined();
     expect(methodSymbol?.kind).toBe('Method');
   });
+
+  it('should not extract non-exported classes, interfaces, functions, type aliases, or enums', () => {
+    const internalFilePath = path.join(__dirname, 'test-internal.ts');
+    const internalContent = `
+class InternalClass {}
+interface InternalInterface { x: number; }
+function internalFunction(): void {}
+type InternalType = string;
+enum InternalEnum { X }
+const internalConst = 1;
+`;
+    fs.writeFileSync(internalFilePath, internalContent);
+    try {
+      const symbols = extractor.extractSymbols(internalFilePath);
+      expect(symbols).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(internalFilePath);
+    }
+  });
+
+  it('should handle a class without a name gracefully', () => {
+    const anonFilePath = path.join(__dirname, 'test-anon.ts');
+    const anonContent = `export default class { foo() { return 1; } }`;
+    fs.writeFileSync(anonFilePath, anonContent);
+    try {
+      const symbols = extractor.extractSymbols(anonFilePath);
+      const classSymbol = symbols.find(s => s.kind === 'Class');
+      expect(classSymbol).toBeUndefined();
+    } finally {
+      fs.unlinkSync(anonFilePath);
+    }
+  });
+
+  it('should extract method signature', () => {
+    const symbols = extractor.extractSymbols(testFilePath);
+    const methodSymbol = symbols.find(s => s.name === 'TestClass/testMethod');
+    expect(methodSymbol?.signature).toContain('(param: string): number');
+  });
+
+  it('should handle symbols without JSDoc', () => {
+    const symbols = extractor.extractSymbols(testFilePath);
+    const ifaceSymbol = symbols.find(s => s.name === 'TestInterface');
+    expect(ifaceSymbol?.jsDoc).toBeUndefined();
+  });
 });

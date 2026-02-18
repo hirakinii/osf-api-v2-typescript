@@ -1,14 +1,7 @@
 /**
  * Supported symbol kinds for extraction.
  */
-export type SymbolKind =
-  | 'Class'
-  | 'Interface'
-  | 'Function'
-  | 'TypeAlias'
-  | 'Enum'
-  | 'Variable'
-  | 'Method';
+export type SymbolKind = 'Class' | 'Interface' | 'Function' | 'TypeAlias' | 'Enum' | 'Variable' | 'Method';
 
 /**
  * Information about a code symbol.
