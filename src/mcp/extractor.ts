@@ -1,5 +1,5 @@
-import { Project, SourceFile, SyntaxKind, Node } from 'ts-morph';
-import { SymbolInfo, SymbolKind } from './types';
+import { Project, SourceFile, Node, FunctionDeclaration, MethodDeclaration } from 'ts-morph';
+import { SymbolInfo } from './types';
 
 /**
  * Extracts symbol information from TypeScript source files using ts-morph.
@@ -136,21 +136,22 @@ export class SymbolExtractor {
   }
 
   private getJsDoc(node: Node): string | undefined {
-    const jsDocs = (node as any).getJsDocs?.();
-    if (!jsDocs || jsDocs.length === 0) return undefined;
-    return jsDocs.map((doc: any) => doc.getDescription().trim()).join('\n');
+    if (!('getJsDocs' in node)) return undefined;
+    const jsDocs = (node as Node & { getJsDocs(): { getDescription(): string }[] }).getJsDocs();
+    if (jsDocs.length === 0) return undefined;
+    return jsDocs.map((doc) => doc.getDescription().trim()).join('\n');
   }
 
-  private getFunctionSignature(func: any): string {
+  private getFunctionSignature(func: FunctionDeclaration | MethodDeclaration): string {
     const params = func
       .getParameters()
-      .map((p: any) => `${p.getName()}: ${p.getType().getText()}`)
+      .map((p) => `${p.getName()}: ${p.getType().getText()}`)
       .join(', ');
     const returnType = func.getReturnType().getText();
     return `(${params}): ${returnType}`;
   }
 
-  private getMethodSignature(method: any): string {
+  private getMethodSignature(method: MethodDeclaration): string {
     return this.getFunctionSignature(method);
   }
 }
