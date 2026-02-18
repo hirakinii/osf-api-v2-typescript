@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
-import * as path from 'path';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { createMcpServer } from './server';
+import { createMcpServer, resolveSrcDir } from './server';
 
 /**
  * Entry point for the MCP server via stdio transport.
  */
 async function main(): Promise<void> {
-  const srcDir = process.argv[2] || path.join(process.cwd(), 'src');
+  const projectRoot = process.cwd();
+  const rawSrcDir = process.argv[2] || 'src';
+  const srcDir = resolveSrcDir(rawSrcDir, projectRoot);
 
   const server = createMcpServer(srcDir);
   const transport = new StdioServerTransport();
@@ -16,6 +17,7 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  console.error('MCP server error:', error);
+  const message = error instanceof Error ? error.message : 'Unknown error';
+  console.error(`MCP server error: ${message}`);
   process.exit(1);
 });

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import { createMcpServer, collectTsFiles } from '../../src/mcp/server';
+import { createMcpServer, collectTsFiles, resolveSrcDir } from '../../src/mcp/server';
 
 describe('collectTsFiles', () => {
   const testDir = path.join(__dirname, 'test-collect-fixtures');
@@ -48,6 +48,76 @@ describe('collectTsFiles', () => {
     const files = collectTsFiles(testDir);
     const names = files.map((f) => path.basename(f));
     expect(names).toContain('g.ts');
+  });
+
+  it('should skip symlinks pointing outside the base directory', () => {
+    const symlinkDir = path.join(__dirname, 'test-symlink-fixtures');
+    const targetDir = path.join(__dirname, 'test-symlink-target');
+    fs.mkdirSync(symlinkDir, { recursive: true });
+    fs.mkdirSync(targetDir, { recursive: true });
+    fs.writeFileSync(path.join(symlinkDir, 'real.ts'), 'export const r = 1;');
+    fs.writeFileSync(path.join(targetDir, 'external.ts'), 'export const e = 1;');
+    try {
+      fs.symlinkSync(targetDir, path.join(symlinkDir, 'linked'), 'dir');
+    } catch {
+      // Symlinks may not be supported; skip test
+      fs.rmSync(symlinkDir, { recursive: true, force: true });
+      fs.rmSync(targetDir, { recursive: true, force: true });
+      return;
+    }
+
+    try {
+      const files = collectTsFiles(symlinkDir);
+      const names = files.map((f) => path.basename(f));
+      expect(names).toContain('real.ts');
+      expect(names).not.toContain('external.ts');
+    } finally {
+      fs.rmSync(symlinkDir, { recursive: true, force: true });
+      fs.rmSync(targetDir, { recursive: true, force: true });
+    }
+  });
+
+  it('should respect max recursion depth', () => {
+    const deepDir = path.join(__dirname, 'test-deep-fixtures');
+    let current = deepDir;
+    // Create a directory 25 levels deep (default max is 20)
+    for (let i = 0; i < 25; i++) {
+      current = path.join(current, `level${i}`);
+    }
+    fs.mkdirSync(current, { recursive: true });
+    fs.writeFileSync(path.join(current, 'deep.ts'), 'export const d = 1;');
+    // Also place a file at level 1
+    fs.writeFileSync(path.join(deepDir, 'shallow.ts'), 'export const s = 1;');
+
+    try {
+      const files = collectTsFiles(deepDir);
+      const names = files.map((f) => path.basename(f));
+      expect(names).toContain('shallow.ts');
+      expect(names).not.toContain('deep.ts');
+    } finally {
+      fs.rmSync(deepDir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('resolveSrcDir', () => {
+  it('should accept a path under projectRoot', () => {
+    const projectRoot = path.join(__dirname, '../..');
+    const srcDir = path.join(projectRoot, 'src');
+    expect(resolveSrcDir(srcDir, projectRoot)).toBe(fs.realpathSync(srcDir));
+  });
+
+  it('should reject a path outside projectRoot', () => {
+    const projectRoot = path.join(__dirname, '../..');
+    expect(() => resolveSrcDir('/etc', projectRoot)).toThrow(
+      /must be within the project root/,
+    );
+  });
+
+  it('should resolve relative paths under projectRoot', () => {
+    const projectRoot = path.join(__dirname, '../..');
+    const result = resolveSrcDir('src', projectRoot);
+    expect(result).toBe(fs.realpathSync(path.join(projectRoot, 'src')));
   });
 });
 
@@ -178,6 +248,27 @@ export const sampleVar = 42;
     expect(result.isError).toBe(true);
     const content = result.content as Array<{ type: string; text: string }>;
     expect(content[0].text).toContain('No symbol found');
+  });
+
+  it('should limit results with limit parameter', async () => {
+    const result = await client.callTool({
+      name: 'list_symbols',
+      arguments: { limit: 2 },
+    });
+    const content = result.content as Array<{ type: string; text: string }>;
+    const symbols = JSON.parse(content[0].text);
+    expect(symbols).toHaveLength(2);
+  });
+
+  it('should use default limit of 100 when not specified', async () => {
+    const result = await client.callTool({
+      name: 'list_symbols',
+      arguments: {},
+    });
+    const content = result.content as Array<{ type: string; text: string }>;
+    const symbols = JSON.parse(content[0].text);
+    // Our test fixture has fewer than 100 symbols, so all should be returned
+    expect(symbols.length).toBeLessThanOrEqual(100);
   });
 
   it('should refresh symbol cache', async () => {

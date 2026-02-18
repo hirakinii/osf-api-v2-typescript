@@ -7,16 +7,46 @@ import { SymbolInfo, SymbolKind } from './types';
 
 const SYMBOL_KINDS: SymbolKind[] = ['Class', 'Interface', 'Function', 'TypeAlias', 'Enum', 'Variable', 'Method'];
 
+const DEFAULT_LIMIT = 100;
+const MAX_RECURSION_DEPTH = 20;
+
+/**
+ * Resolve and validate the source directory path.
+ * Ensures the resolved path is within the project root to prevent path traversal.
+ */
+export function resolveSrcDir(srcDir: string, projectRoot: string): string {
+  const resolvedRoot = fs.realpathSync(projectRoot);
+  const absolute = path.isAbsolute(srcDir) ? srcDir : path.join(resolvedRoot, srcDir);
+
+  let resolved: string;
+  try {
+    resolved = fs.realpathSync(absolute);
+  } catch {
+    throw new Error(`Source directory does not exist: ${absolute}`);
+  }
+
+  if (!resolved.startsWith(resolvedRoot + path.sep) && resolved !== resolvedRoot) {
+    throw new Error(`Source directory must be within the project root: ${resolvedRoot}`);
+  }
+
+  return resolved;
+}
+
 /**
  * Collect all TypeScript files under a directory recursively.
+ * Skips symlinks and respects a maximum recursion depth.
  */
-export function collectTsFiles(dir: string): string[] {
+export function collectTsFiles(dir: string, depth: number = 0): string[] {
+  if (depth >= MAX_RECURSION_DEPTH) return [];
+
   const results: string[] = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
+    if (entry.isSymbolicLink()) continue;
+
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory() && entry.name !== 'node_modules') {
-      results.push(...collectTsFiles(fullPath));
+      results.push(...collectTsFiles(fullPath, depth + 1));
     } else if (
       entry.isFile() &&
       (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) &&
@@ -70,6 +100,13 @@ export function createMcpServer(srcDir: string): McpServer {
         .optional()
         .describe('Filter by symbol kind'),
       pattern: z.string().optional().describe('Filter by name pattern (case-insensitive substring match)'),
+      limit: z
+        .number()
+        .int()
+        .min(1)
+        .max(1000)
+        .optional()
+        .describe('Maximum number of results to return (default: 100)'),
     },
     async (args) => {
       let symbols = getAllSymbols();
@@ -88,6 +125,9 @@ export function createMcpServer(srcDir: string): McpServer {
         const lowerPattern = args.pattern.toLowerCase();
         symbols = symbols.filter((s) => s.name.toLowerCase().includes(lowerPattern));
       }
+
+      const limit = args.limit ?? DEFAULT_LIMIT;
+      symbols = symbols.slice(0, limit);
 
       return {
         content: [
