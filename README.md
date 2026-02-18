@@ -16,6 +16,7 @@ TypeScript client library for the [Open Science Framework (OSF) API v2](https://
 - **Dual Build**: CJS, ESM, and UMD outputs for Node.js, modern bundlers, and CDN usage.
 - **Browser Compatible**: Uses Web Crypto API and standard `fetch` with no Node.js-specific dependencies.
 - **Security**: URL host validation to prevent requests to untrusted origins; rate-limit `Retry-After` support.
+- **MCP Server**: Built-in Model Context Protocol server for code symbol discovery and analysis.
 
 ## Installation
 
@@ -477,6 +478,41 @@ try {
     console.error('You do not have permission to view this node');
   } else if (error instanceof OsfRateLimitError) {
     console.error(`Rate limited. Retry after ${error.retryAfter} seconds`);
+  }
+}
+```
+
+### Model Context Protocol (MCP) Server
+
+This library includes a built-in MCP server that allows AI agents and other MCP-compatible tools to explore and understand the codebase by extracting exported symbols (classes, interfaces, functions, etc.).
+
+#### Features
+- **Symbol Discovery**: Search for symbols by name, kind, or file path.
+- **Detailed Metadata**: Retrieve function signatures, line numbers, and JSDoc descriptions.
+- **TypeScript AST Based**: Uses `ts-morph` for reliable parsing of TypeScript source files.
+
+#### Building the MCP Server
+```bash
+npm run build:mcp
+```
+The output will be generated at `dist/mcp/server.cjs`.
+
+#### Using the MCP Server
+You can run the server directly using Node.js. It uses `stdio` for communication:
+
+```bash
+node dist/mcp/server.cjs [src_dir]
+```
+
+To use it with an MCP client (like Claude Desktop), add it to your configuration:
+
+```json
+{
+  "mcpServers": {
+    "osf-api-v2": {
+      "command": "node",
+      "args": ["/path/to/osf-api-v2-typescript/dist/mcp/server.cjs", "src"]
+    }
   }
 }
 ```
