@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.1] - 2026-02-19
 
+### Added
+
+- **MCP Server Execution**: Added support for running the MCP server via `npx osf-api-v2-typescript` or `npx osf-mcp`. The package now exposes a binary executable.
+
 ### Fixed
 
 - **MCP Server**: Fixed an issue where the server failed to start when executed from a directory other than the project root. The server now correctly resolves the project root relative to its own location.

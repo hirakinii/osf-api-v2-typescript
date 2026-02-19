@@ -8,6 +8,9 @@ await build({
     format: 'cjs',
     outfile: 'dist/mcp/server.cjs',
     sourcemap: true,
+    banner: {
+      js: '#!/usr/bin/env node',
+    },
     external: [],
 });
 
