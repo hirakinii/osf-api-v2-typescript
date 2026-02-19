@@ -62,18 +62,22 @@ For more detailed examples including OAuth2, file operations, and resource-speci
 This library includes a built-in MCP server that allows AI agents and other MCP-compatible tools to explore and understand the codebase by extracting exported symbols (classes, interfaces, functions, etc.).
 
 #### Features
+
 - **Symbol Discovery**: Search for symbols by name, kind, or file path.
 - **Detailed Metadata**: Retrieve function signatures, line numbers, and JSDoc descriptions.
 - **TypeScript AST Based**: Uses `ts-morph` for reliable parsing of TypeScript source files.
 
 #### Building the MCP Server
+
 ```bash
 npm run build:mcp
 ```
+
 The output will be generated at `dist/mcp/server.cjs`.
 
 #### Using the MCP Server
-You can run the server directly using Node.js. It uses `stdio` for communication:
+
+You can run the server directly using Node.js from any directory. It uses `stdio` for communication:
 
 ```bash
 node dist/mcp/server.cjs [src_dir]
@@ -119,7 +123,6 @@ export OSF_TOKEN='your_personal_access_token'
 npx ts-node examples/basic_usage.ts
 ```
 
-
 ## Development
 
 ```bash
@@ -140,11 +143,11 @@ npm run build:umd   # UMD/IIFE → dist/umd/
 
 ### Build Outputs
 
-| Format | Output | Use Case |
-|--------|--------|----------|
-| CJS | `dist/cjs/` | Node.js `require()` |
-| ESM | `dist/esm/` | Modern bundlers (Vite, webpack, etc.) and `import` |
-| UMD | `dist/umd/osf-api-v2.js` | `<script>` tags, CDN (global: `OsfApiV2`) |
+| Format | Output                   | Use Case                                           |
+| ------ | ------------------------ | -------------------------------------------------- |
+| CJS    | `dist/cjs/`              | Node.js `require()`                                |
+| ESM    | `dist/esm/`              | Modern bundlers (Vite, webpack, etc.) and `import` |
+| UMD    | `dist/umd/osf-api-v2.js` | `<script>` tags, CDN (global: `OsfApiV2`)          |
 
 ## Change log
 

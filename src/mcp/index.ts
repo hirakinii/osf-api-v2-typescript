@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import * as path from 'path';
 import { createMcpServer, resolveSrcDir } from './server';
 
 /**
  * Entry point for the MCP server via stdio transport.
  */
 async function main(): Promise<void> {
-  const projectRoot = process.cwd();
+  const projectRoot = path.resolve(__dirname, '../../');
   const rawSrcDir = process.argv[2] || 'src';
   const srcDir = resolveSrcDir(rawSrcDir, projectRoot);
 

@@ -2,9 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2026-02-19
+
+### Fixed
+
+- **MCP Server**: Fixed an issue where the server failed to start when executed from a directory other than the project root. The server now correctly resolves the project root relative to its own location.
+
 ## [0.4.0] - 2026-02-18
 
 ### Added
+
 - **Model Context Protocol (MCP) Server**:
   - Implemented a specialized MCP server for code symbol extraction and discovery.
   - Tools:
@@ -17,11 +24,13 @@ All notable changes to this project will be documented in this file.
 ## [0.3.2] - 2026-02-17
 
 ### Changed
+
 - `OsfClient.httpClient` visibility changed from `private` to `protected`, allowing subclasses to access the underlying `HttpClient` instance.
 
 ## [0.3.1] - 2026-02-16
 
 ### Added
+
 - **Security Hardening**:
   - URL validation with host allowlist in `HttpClient` to prevent SSRF-like issues. Only the OSF API host, Waterbutler files host, and explicitly configured `allowedHosts` are permitted.
   - `OsfClientConfig.allowedHosts` option for registering additional trusted hostnames (e.g., custom Waterbutler hosts).
@@ -32,17 +41,20 @@ All notable changes to this project will be documented in this file.
   - `.npmignore` for cleaner published packages.
 
 ### Changed
+
 - **PKCE Code Verifier**: `generateCodeVerifier()` now uses rejection sampling to eliminate modulo bias, producing a uniformly distributed random string.
 - **OAuth2 Error Messages**: `OsfOAuth2Client` now extracts structured `error_description`/`error` fields from OAuth2 error responses for clearer diagnostics.
 - **ESM Build**: Added `fix-esm-imports.mjs` post-build script and `dist/esm/package.json` with `"type": "module"` for proper ESM resolution.
 - Package description translated to English in `package.json`.
 
 ### Fixed
+
 - None yet.
 
 ## [0.3.0] - 2026-02-10
 
 ### Added
+
 - **OAuth2 Authorization Code + PKCE**:
   - `OsfOAuth2Client`: Full OAuth2 flow management with automatic token refresh and concurrent refresh protection.
   - `generateCodeVerifier()`, `computeCodeChallenge()`, `generatePkceChallenge()`: PKCE utilities using Web Crypto API.
@@ -64,6 +76,7 @@ All notable changes to this project will be documented in this file.
 - **Logs**: `Logs.listActions()` now returns a locally-defined complete list of 50+ OSF log action types with descriptions (the API endpoint is not implemented server-side).
 
 ### Changed
+
 - `HttpClient.put()` signature: `Buffer` replaced with `Uint8Array` for browser compatibility (`Buffer` extends `Uint8Array`, so this is backward-compatible).
 - `OsfClientConfig.token` is now optional (was required) to support OAuth2 and custom token provider modes.
 - Build output directory changed from `dist/` to `dist/cjs/` for CJS; ESM output to `dist/esm/`.
@@ -72,6 +85,7 @@ All notable changes to this project will be documented in this file.
 - `CreateDraftRegistrationInput` now requires `registration_schema_id` and accepts optional `branched_from`.
 
 ### Fixed
+
 - File download URL resolution: fixed cross-origin redirect causing authentication headers to be dropped.
 - `DraftRegistrations.create()`: fixed schema ID and branched_from being sent as attributes instead of relationships.
 - `Comments.update()`: added missing `target_id` parameter.
@@ -81,6 +95,7 @@ All notable changes to this project will be documented in this file.
 ## [0.2.0] - 2026-02-09
 
 ### Added
+
 - **Resources** (Phase 2 - Core Scholarly Entities):
   - `Registrations`: List, get, update registrations; access children, contributors, files, and comments.
   - `Contributors`: Full CRUD for node and registration contributors with permission management.
@@ -116,6 +131,7 @@ All notable changes to this project will be documented in this file.
 ## [0.1.0] - 2026-02-05
 
 ### Added
+
 - Initial release of the OSF API v2 TypeScript Client.
 - **Core Library**:
   - `OsfClient`: Unified entry point for the API.
