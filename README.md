@@ -77,20 +77,26 @@ The output will be generated at `dist/mcp/server.cjs`.
 
 #### Using the MCP Server
 
-You can run the server directly using Node.js from any directory. It uses `stdio` for communication:
+You can run the server directly using `npx` (recommended):
+
+```bash
+npx osf-api-v2-typescript
+```
+
+Or using Node.js from the built output:
 
 ```bash
 node dist/mcp/server.cjs [src_dir]
 ```
 
-To use it with an MCP client (like Claude Desktop), add it to your configuration:
+To use it with an MCP client (like Claude Desktop or Serena), add it to your configuration:
 
 ```json
 {
   "mcpServers": {
     "osf-api-v2": {
-      "command": "node",
-      "args": ["/path/to/osf-api-v2-typescript/dist/mcp/server.cjs", "src"]
+      "command": "npx",
+      "args": ["-y", "osf-api-v2-typescript"]
     }
   }
 }

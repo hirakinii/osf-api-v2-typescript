@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import * as path from 'path';
 import { createMcpServer, resolveSrcDir } from './server';
