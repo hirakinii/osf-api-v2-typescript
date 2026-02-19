@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.2] - 2026-02-19
+
+### Fixed
+
+- **MCP Server**: Fixed "Source directory does not exist" error when running `npx osf-api-v2-typescript` after global installation (`npm install -g`). The `src` directory is now included in the published npm package so the MCP server can locate TypeScript source files correctly.
+
 ## [0.4.1] - 2026-02-19
 
 ### Added
