@@ -1,6 +1,8 @@
 # OSF API v2 TypeScript Client
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![npm version](https://badge.fury.io/js/osf-api-v2-typescript.svg)](https://badge.fury.io/js/osf-api-v2-typescript)
+[![CI](https://github.com/hirakinii/osf-api-v2-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/hirakinii/osf-api-v2-typescript/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 TypeScript client library for the [Open Science Framework (OSF) API v2](https://developer.osf.io/).
