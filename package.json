@@ -1,6 +1,6 @@
 {
   "name": "osf-api-v2-typescript",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "This project aims to implement a client library using TypeScript based on the OSF (Open Science Framework) API v2 specification.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -31,9 +31,11 @@
     "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json && node scripts/fix-esm-imports.mjs",
     "build:umd": "node scripts/build-umd.mjs",
     "build:mcp": "node scripts/build-mcp.mjs",
+    "verify:mcp": "node scripts/verify-mcp-build.mjs",
     "prepack": "npm run build",
     "lint": "eslint '{src,examples}/**/*.{ts,tsx}'",
-    "format": "prettier --write '{src,examples}/**/*.{ts,tsx}'"
+    "format": "prettier --write '{src,examples}/**/*.{ts,tsx}'",
+    "prepublishOnly": "npm run format && npm run lint && npm run test && npm run build"
   },
   "bin": {
     "osf-api-v2-typescript": "./dist/mcp/server.cjs",
@@ -58,8 +60,11 @@
     "url": "https://github.com/hirakinii/osf-api-v2-typescript/issues"
   },
   "homepage": "https://github.com/hirakinii/osf-api-v2-typescript#readme",
-  "devDependencies": {
+  "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
+    "ts-morph": "^27.0.2"
+  },
+  "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^25.2.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
@@ -72,7 +77,6 @@
     "jest-fetch-mock": "^3.0.3",
     "prettier": "^3.8.1",
     "ts-jest": "^29.4.6",
-    "ts-morph": "^27.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
