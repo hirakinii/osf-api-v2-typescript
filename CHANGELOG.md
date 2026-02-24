@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - 2026-02-24
+
+### Fixed
+
+- **MCP Server Build**: Drastically reduced `dist/mcp/server.cjs` size from 15 MB to 309 KB by marking `@modelcontextprotocol/sdk` and `ts-morph` as external in the esbuild configuration. Both packages are now declared as runtime `dependencies` instead of `devDependencies`.
+- **MCP Server Build**: Removed the 20 MB source map (`dist/mcp/server.cjs.map`) from the build output by disabling `sourcemap` in the esbuild configuration. The build script also cleans up any stale map file left by previous builds.
+- **MCP Server Build**: Enabled esbuild `minify` option to further reduce bundle size.
+
+### Added
+
+- `npm run verify:mcp` script (`scripts/verify-mcp-build.mjs`): smoke test that asserts `dist/mcp/server.cjs` is under 500 KB and that no source map is present.
+
 ## [0.4.2] - 2026-02-19
 
 ### Fixed
