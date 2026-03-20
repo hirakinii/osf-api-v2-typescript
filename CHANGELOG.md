@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] - 2026-03-20
+
+### Added
+
+- **`Files.listByPath()`**: List files within a specific subfolder by OSF internal path (e.g. `/abc123/`). Maps to `GET nodes/{nodeId}/files/{provider}/{folderPath}`. Leading slash is stripped automatically.
+- **`Files.listByPathPaginated()`**: Same as `listByPath` but returns a `PaginatedResult` for async iteration over all pages. Enables lazy-load subfolder expansion.
+
 ## [0.4.3] - 2026-02-24
 
 ### Fixed
