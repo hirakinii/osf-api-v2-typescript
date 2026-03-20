@@ -63,7 +63,22 @@ async function main() {
       }
     }
 
-    // 3. Demonstrate download (first file found)
+    // 3. Demonstrate listing files inside a subfolder
+    const firstFolder = fileList.data.find((f) => f.kind === 'folder');
+    if (firstFolder && firstFolder.path) {
+      console.log(`\nListing contents of subfolder: ${firstFolder.name} (path: ${firstFolder.path})`);
+      const subfolderFiles = await client.files.listByPath(targetNodeId, providerId, firstFolder.path);
+      if (subfolderFiles.data.length === 0) {
+        console.log('  (empty folder)');
+      } else {
+        for (const item of subfolderFiles.data) {
+          const type = item.kind === 'folder' ? '[DIR]' : '[FILE]';
+          console.log(`  ${type} ${item.name}`);
+        }
+      }
+    }
+
+    // 4. Demonstrate download (first file found)
     const firstFile = fileList.data.find((f) => f.kind === 'file');
     if (firstFile) {
       console.log(`\nDemonstrating download for: ${firstFile.name}...`);
@@ -71,7 +86,7 @@ async function main() {
       console.log(`Successfully downloaded ${content.byteLength} bytes.`);
     }
 
-    // 4. Demonstrate uploading a new file
+    // 5. Demonstrate uploading a new file
     console.log('\nDemonstrating file upload...');
     const rootFolder = providers.data.find((p) => p.provider === 'osfstorage');
     if (rootFolder) {
@@ -83,13 +98,13 @@ async function main() {
       const uploadedFile = await client.files.uploadNew(rootFolder, testFileName, testContent);
       console.log(`Successfully uploaded file: ${uploadedFile.name} (ID: ${uploadedFile.id})`);
 
-      // 5. Demonstrate updating the uploaded file
+      // 6. Demonstrate updating the uploaded file
       console.log(`\nUpdating the uploaded file...`);
       const updatedContent = new TextEncoder().encode('This file has been updated!');
       const updatedFile = await client.files.upload(uploadedFile, updatedContent);
       console.log(`Successfully updated file. New size: ${updatedFile.size} bytes`);
 
-      // 6. Clean up: delete the test file
+      // 7. Clean up: delete the test file
       console.log(`\nCleaning up: deleting test file...`);
       await client.files.deleteFile(updatedFile);
       console.log('Test file deleted successfully.');
