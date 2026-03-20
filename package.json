@@ -35,7 +35,8 @@
     "prepack": "npm run build",
     "lint": "eslint '{src,examples}/**/*.{ts,tsx}'",
     "format": "prettier --write '{src,examples}/**/*.{ts,tsx}'",
-    "prepublishOnly": "npm run format && npm run lint && npm run test && npm run build"
+    "typecheck": "tsc -b --noEmit",
+    "prepublishOnly": "npm run format && npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "bin": {
     "osf-api-v2-typescript": "./dist/mcp/server.cjs",
