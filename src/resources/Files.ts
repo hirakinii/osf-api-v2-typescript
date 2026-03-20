@@ -104,6 +104,56 @@ export class Files extends BaseResource {
   }
 
   /**
+   * List files in a specific folder within a node's storage provider.
+   *
+   * @param nodeId - The unique identifier of the node
+   * @param provider - The storage provider (e.g. 'osfstorage')
+   * @param folderPath - The OSF internal folder path (e.g. '/abc123/'), leading slash stripped internally
+   * @param params - Optional filter and pagination parameters
+   * @returns Paginated list of files and folders within the given folder
+   */
+  async listByPath(
+    nodeId: string,
+    provider: string,
+    folderPath: string,
+    params?: FileListParams,
+  ): Promise<TransformedList<OsfFileAttributes>> {
+    return super.list<OsfFileAttributes>(`nodes/${nodeId}/files/${provider}/${folderPath.replace(/^\//, '')}`, params);
+  }
+
+  /**
+   * List files in a specific folder with automatic pagination support.
+   *
+   * Returns a PaginatedResult that can iterate through all pages automatically.
+   *
+   * @param nodeId - The unique identifier of the node
+   * @param provider - The storage provider (e.g. 'osfstorage')
+   * @param folderPath - The OSF internal folder path (e.g. '/abc123/'), leading slash stripped internally
+   * @param params - Optional filter and pagination parameters
+   * @returns PaginatedResult with async iteration support
+   *
+   * @example
+   * ```typescript
+   * const result = await files.listByPathPaginated('abc12', 'osfstorage', '/abc123/');
+   *
+   * for await (const file of result.items()) {
+   *   console.log(file.name);
+   * }
+   * ```
+   */
+  async listByPathPaginated(
+    nodeId: string,
+    provider: string,
+    folderPath: string,
+    params?: FileListParams,
+  ): Promise<PaginatedResult<OsfFileAttributes>> {
+    return super.listPaginated<OsfFileAttributes>(
+      `nodes/${nodeId}/files/${provider}/${folderPath.replace(/^\//, '')}`,
+      params,
+    );
+  }
+
+  /**
    * List storage providers for a node
    *
    * @param nodeId - The unique identifier of the node

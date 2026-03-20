@@ -1,6 +1,6 @@
 {
   "name": "osf-api-v2-typescript",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "This project aims to implement a client library using TypeScript based on the OSF (Open Science Framework) API v2 specification.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -35,7 +35,8 @@
     "prepack": "npm run build",
     "lint": "eslint '{src,examples}/**/*.{ts,tsx}'",
     "format": "prettier --write '{src,examples}/**/*.{ts,tsx}'",
-    "prepublishOnly": "npm run format && npm run lint && npm run test && npm run build"
+    "typecheck": "tsc -b --noEmit",
+    "prepublishOnly": "npm run format && npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "bin": {
     "osf-api-v2-typescript": "./dist/mcp/server.cjs",

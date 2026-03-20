@@ -289,6 +289,172 @@ describe('Files', () => {
         });
     });
 
+    describe('listByPath(nodeId, provider, folderPath)', () => {
+        it('should list files in a subfolder stripping leading slash', async () => {
+            const mockResponse: JsonApiListResponse<OsfFileAttributes> = {
+                data: [
+                    {
+                        id: 'file-sub-1',
+                        type: 'files',
+                        attributes: {
+                            name: 'report.pdf',
+                            kind: 'file',
+                            path: '/abc123/report.pdf',
+                            materialized_path: '/docs/report.pdf',
+                            provider: 'osfstorage',
+                            date_created: '2024-01-01T00:00:00.000000',
+                            date_modified: '2024-01-02T00:00:00.000000',
+                            current_user_can_comment: true,
+                            delete_allowed: true,
+                        },
+                    },
+                ],
+                meta: { total: 1 },
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const result = await files.listByPath('abc12', 'osfstorage', '/abc123/');
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/nodes/abc12/files/osfstorage/abc123/');
+
+            expect(result.data).toHaveLength(1);
+            expect(result.data[0].name).toBe('report.pdf');
+            expect(result.data[0].kind).toBe('file');
+        });
+
+        it('should work with folderPath that has no leading slash', async () => {
+            const mockResponse: JsonApiListResponse<OsfFileAttributes> = {
+                data: [],
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            await files.listByPath('abc12', 'osfstorage', 'abc123/');
+
+            const [url] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/nodes/abc12/files/osfstorage/abc123/');
+        });
+
+        it('should return both files and folders inside the subfolder', async () => {
+            const mockResponse: JsonApiListResponse<OsfFileAttributes> = {
+                data: [
+                    {
+                        id: 'inner-file',
+                        type: 'files',
+                        attributes: {
+                            name: 'data.csv',
+                            kind: 'file',
+                            path: '/abc123/data.csv',
+                            materialized_path: '/docs/data.csv',
+                            provider: 'osfstorage',
+                            date_created: '2024-01-01T00:00:00.000000',
+                            date_modified: '2024-01-02T00:00:00.000000',
+                            current_user_can_comment: true,
+                            delete_allowed: true,
+                        },
+                    },
+                    {
+                        id: 'inner-folder',
+                        type: 'files',
+                        attributes: {
+                            name: 'sub',
+                            kind: 'folder',
+                            path: '/abc123/sub/',
+                            materialized_path: '/docs/sub/',
+                            provider: 'osfstorage',
+                            date_created: '2024-01-01T00:00:00.000000',
+                            date_modified: '2024-01-02T00:00:00.000000',
+                            current_user_can_comment: true,
+                            delete_allowed: true,
+                        },
+                    },
+                ],
+                meta: { total: 2 },
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const result = await files.listByPath('abc12', 'osfstorage', '/abc123/');
+
+            expect(result.data).toHaveLength(2);
+            expect(result.data[0].kind).toBe('file');
+            expect(result.data[1].kind).toBe('folder');
+        });
+
+        it('should forward params as query parameters', async () => {
+            const mockResponse: JsonApiListResponse<OsfFileAttributes> = {
+                data: [],
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            await files.listByPath('abc12', 'osfstorage', '/abc123/', {
+                'filter[kind]': 'file',
+            });
+
+            const [url] = fetchMock.mock.calls[0];
+            expect(url).toContain('filter%5Bkind%5D=file');
+        });
+
+        it('should handle empty subfolder', async () => {
+            const mockResponse: JsonApiListResponse<OsfFileAttributes> = {
+                data: [],
+                meta: { total: 0 },
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const result = await files.listByPath('abc12', 'osfstorage', '/abc123/');
+
+            expect(result.data).toHaveLength(0);
+            expect(result.meta?.total).toBe(0);
+        });
+    });
+
+    describe('listByPathPaginated(nodeId, provider, folderPath)', () => {
+        it('should return PaginatedResult for subfolder contents', async () => {
+            const mockResponse: JsonApiListResponse<OsfFileAttributes> = {
+                data: [
+                    {
+                        id: 'paged-file-1',
+                        type: 'files',
+                        attributes: {
+                            name: 'page1.txt',
+                            kind: 'file',
+                            path: '/abc123/page1.txt',
+                            materialized_path: '/docs/page1.txt',
+                            provider: 'osfstorage',
+                            date_created: '2024-01-01T00:00:00.000000',
+                            date_modified: '2024-01-02T00:00:00.000000',
+                            current_user_can_comment: true,
+                            delete_allowed: true,
+                        },
+                    },
+                ],
+                meta: { total: 50, per_page: 10 },
+                links: {
+                    self: 'https://api.test-osf.io/v2/nodes/abc12/files/osfstorage/abc123/',
+                    next: 'https://api.test-osf.io/v2/nodes/abc12/files/osfstorage/abc123/?page=2',
+                },
+            };
+
+            fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
+
+            const result = await files.listByPathPaginated('abc12', 'osfstorage', '/abc123/');
+
+            expect(fetchMock).toHaveBeenCalledTimes(1);
+            const [url] = fetchMock.mock.calls[0];
+            expect(url).toBe('https://api.test-osf.io/v2/nodes/abc12/files/osfstorage/abc123/');
+
+            expect(result.data).toHaveLength(1);
+            expect(result.data[0].name).toBe('page1.txt');
+            expect(result.hasNext).toBe(true);
+        });
+    });
+
     describe('listProviders(nodeId)', () => {
         it('should list storage providers for a node', async () => {
             const mockResponse: JsonApiListResponse<StorageProviderAttributes> = {
