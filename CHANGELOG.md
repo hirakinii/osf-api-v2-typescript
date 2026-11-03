@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-11-04
+
+### Changed
+
+- **BREAKING (MCP server users)**: `@modelcontextprotocol/sdk` and `ts-morph` are no longer installed with the library. They are now optional `peerDependencies`, so library-only consumers no longer install the MCP server stack or inherit its `npm audit` advisories (#75).
+  - The launch command changed from `npx osf-api-v2-typescript` to:
+    `npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk -p ts-morph osf-mcp`
+  - Update `mcpServers` entries in MCP client configurations accordingly (see README).
+  - Global installs must include the peers: `npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk ts-morph`.
+
+### Added
+
+- The MCP server checks for its optional peer packages at startup. If they are missing, it lists them, prints the launch command and exits with code 1, instead of crashing with `MODULE_NOT_FOUND`.
+- `npm run verify:mcp` also checks that the bundle prints this guidance when the peers are missing, and that the MCP-only packages are optional peer dependencies.
+
 ## [0.4.4] - 2026-03-20
 
 ### Added
