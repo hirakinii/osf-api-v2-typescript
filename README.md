@@ -79,13 +79,20 @@ The output will be generated at `dist/mcp/server.cjs`.
 
 #### Using the MCP Server
 
-You can run the server directly using `npx` (recommended):
+The MCP server requires two packages, `@modelcontextprotocol/sdk` and `ts-morph`. They are optional peer dependencies, so they are **not** installed when you install this library. Pass them to `npx` together with this package (recommended):
 
 ```bash
-npx osf-api-v2-typescript
+npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk -p ts-morph osf-mcp
 ```
 
-Or using Node.js from the built output:
+Alternatively, install all three packages globally and run `osf-mcp`:
+
+```bash
+npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk ts-morph
+osf-mcp
+```
+
+From a checkout of this repository (the packages are installed as devDependencies), you can run the built output directly:
 
 ```bash
 node dist/mcp/server.cjs [src_dir]
@@ -98,11 +105,14 @@ To use it with an MCP client (like Claude Desktop or Serena), add it to your con
   "mcpServers": {
     "osf-api-v2": {
       "command": "npx",
-      "args": ["-y", "osf-api-v2-typescript"]
+      "args": ["-y", "-p", "osf-api-v2-typescript", "-p", "@modelcontextprotocol/sdk", "-p", "ts-morph", "osf-mcp"]
     }
   }
 }
 ```
+
+> [!NOTE]
+> Since v0.5.0, `npx osf-api-v2-typescript` alone no longer starts the server. If the required packages cannot be found, the server prints the packages that are missing and the launch command above, then exits with code 1. The MCP server may move to a separate package in a future release.
 
 ## Samples
 
