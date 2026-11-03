@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2026-11-04
+
+### Fixed
+
+- **MCP Server**: The launch command documented in 0.5.0 failed with `npm error code ERESOLVE`, because `-p ts-morph` installed `ts-morph` 28, which was outside the peer range `^27.0.2` (#79). Library usage was not affected.
+  - The launch command now pins the major versions of the peer packages. Update MCP client configurations that use the 0.5.0 command:
+    `npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk@1 -p ts-morph@28 osf-mcp`
+  - The global install command is now `npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk@1 ts-morph@28`.
+  - The startup error message for missing peer packages shows the new commands.
+
+### Changed
+
+- `ts-morph` 28 is now supported: the peer range is `^27.0.2 || ^28.0.0`, and development uses `ts-morph` 28.
+
 ## [0.5.0] - 2026-11-04
 
 ### Changed

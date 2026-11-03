@@ -82,13 +82,15 @@ The output will be generated at `dist/mcp/server.cjs`.
 The MCP server requires two packages, `@modelcontextprotocol/sdk` and `ts-morph`. They are optional peer dependencies, so they are **not** installed when you install this library. Pass them to `npx` together with this package (recommended):
 
 ```bash
-npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk -p ts-morph osf-mcp
+npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk@1 -p ts-morph@28 osf-mcp
 ```
+
+Keep the major versions (`@1`, `@28`) in the command. Without them, `npx` installs the latest releases, which may fall outside the supported peer ranges and make npm fail with `ERESOLVE`. The supported ranges are `@modelcontextprotocol/sdk` `^1.26.0` and `ts-morph` `^27.0.2 || ^28.0.0`.
 
 Alternatively, install all three packages globally and run `osf-mcp`:
 
 ```bash
-npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk ts-morph
+npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk@1 ts-morph@28
 osf-mcp
 ```
 
@@ -105,7 +107,7 @@ To use it with an MCP client (like Claude Desktop or Serena), add it to your con
   "mcpServers": {
     "osf-api-v2": {
       "command": "npx",
-      "args": ["-y", "-p", "osf-api-v2-typescript", "-p", "@modelcontextprotocol/sdk", "-p", "ts-morph", "osf-mcp"]
+      "args": ["-y", "-p", "osf-api-v2-typescript", "-p", "@modelcontextprotocol/sdk@1", "-p", "ts-morph@28", "osf-mcp"]
     }
   }
 }
