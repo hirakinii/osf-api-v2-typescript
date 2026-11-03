@@ -19,7 +19,9 @@ await build({
     target: 'node18',
     format: 'cjs',
     outfile: 'dist/mcp/server.cjs',
-    // Exclude Node.js built-ins and runtime dependencies.
+    // Exclude Node.js built-ins and the optional peer packages
+    // (@modelcontextprotocol/sdk, ts-morph). The peers are resolved at runtime
+    // after the startup check in src/mcp/peerCheck.ts. zod is bundled.
     external: [
         'node:*',
         'path', 'fs', 'os', 'stream', 'events', 'util', 'crypto', 'url', 'http', 'https', 'net',

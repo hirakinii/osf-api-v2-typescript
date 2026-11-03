@@ -1,6 +1,6 @@
 {
   "name": "osf-api-v2-typescript",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "This project aims to implement a client library using TypeScript based on the OSF (Open Science Framework) API v2 specification.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -61,11 +61,20 @@
     "url": "https://github.com/hirakinii/osf-api-v2-typescript/issues"
   },
   "homepage": "https://github.com/hirakinii/osf-api-v2-typescript#readme",
-  "dependencies": {
+  "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
     "ts-morph": "^27.0.2"
   },
+  "peerDependenciesMeta": {
+    "@modelcontextprotocol/sdk": {
+      "optional": true
+    },
+    "ts-morph": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.2.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
@@ -78,7 +87,9 @@
     "jest-fetch-mock": "^3.0.3",
     "prettier": "^3.8.1",
     "ts-jest": "^29.4.6",
+    "ts-morph": "^27.0.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   }
 }
