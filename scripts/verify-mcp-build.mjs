@@ -58,7 +58,9 @@ if (existsSync(sourceMapPath)) {
 // --- Check 3: missing peers must produce launch guidance, not MODULE_NOT_FOUND ---
 /** Packages used only by the MCP server; they must be optional peers. */
 const MCP_ONLY_PACKAGES = ['@modelcontextprotocol/sdk', 'ts-morph'];
-const NPX_LAUNCH_COMMAND = 'npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk -p ts-morph osf-mcp';
+// Keep in sync with NPX_LAUNCH_COMMAND in src/mcp/peerCheck.ts. This script checks
+// the built bundle, so it cannot import the TypeScript source; check 3 fails on drift.
+const NPX_LAUNCH_COMMAND = 'npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk@1 -p ts-morph@28 osf-mcp';
 
 if (existsSync(bundlePath)) {
   // Copy the bundle outside the project so the peers cannot be resolved.

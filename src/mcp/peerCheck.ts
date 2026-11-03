@@ -15,6 +15,12 @@ export interface RequiredPackage {
   name: string;
   /** Module specifier passed to the resolver to test availability. */
   probe: string;
+  /**
+   * Package spec used in launch commands. It pins a major version within the
+   * peer range, because an unpinned spec resolves to the latest release,
+   * which may fall outside the supported range and make npm fail (ERESOLVE).
+   */
+  launchSpec: string;
 }
 
 /** Resolves a module specifier to a file path, throwing if it cannot be found. */
@@ -26,15 +32,26 @@ export type Resolver = (specifier: string) => string;
  * map does not guarantee that the bare package name resolves.
  */
 export const REQUIRED_PACKAGES: readonly RequiredPackage[] = [
-  { name: '@modelcontextprotocol/sdk', probe: '@modelcontextprotocol/sdk/server/stdio.js' },
-  { name: 'ts-morph', probe: 'ts-morph' },
+  {
+    name: '@modelcontextprotocol/sdk',
+    probe: '@modelcontextprotocol/sdk/server/stdio.js',
+    launchSpec: '@modelcontextprotocol/sdk@1',
+  },
+  { name: 'ts-morph', probe: 'ts-morph', launchSpec: 'ts-morph@28' },
 ];
 
 /** Recommended command to launch the MCP server with its peer packages. */
-export const NPX_LAUNCH_COMMAND = 'npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk -p ts-morph osf-mcp';
+export const NPX_LAUNCH_COMMAND = [
+  'npx -y -p osf-api-v2-typescript',
+  ...REQUIRED_PACKAGES.map((pkg) => `-p ${pkg.launchSpec}`),
+  'osf-mcp',
+].join(' ');
 
 /** Alternative: install the server and its peer packages globally. */
-export const GLOBAL_INSTALL_COMMAND = 'npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk ts-morph';
+export const GLOBAL_INSTALL_COMMAND = [
+  'npm install -g osf-api-v2-typescript',
+  ...REQUIRED_PACKAGES.map((pkg) => pkg.launchSpec),
+].join(' ');
 
 /**
  * Find the required packages that cannot be resolved.

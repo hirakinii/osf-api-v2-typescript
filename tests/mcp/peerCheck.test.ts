@@ -30,7 +30,7 @@ describe('findMissingPackages', () => {
 
   it('passes probe specifiers to the resolver and returns display names', () => {
     const resolver = jest.fn(() => '/resolved');
-    const packages = [{ name: 'display-name', probe: 'display-name/sub/path.js' }];
+    const packages = [{ name: 'display-name', probe: 'display-name/sub/path.js', launchSpec: 'display-name@1' }];
 
     expect(findMissingPackages(resolver, packages)).toEqual([]);
     expect(resolver).toHaveBeenCalledWith('display-name/sub/path.js');
@@ -60,12 +60,14 @@ describe('formatMissingPackagesMessage', () => {
   });
 
   it('includes the exact npx launch command', () => {
-    expect(NPX_LAUNCH_COMMAND).toBe('npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk -p ts-morph osf-mcp');
+    expect(NPX_LAUNCH_COMMAND).toBe(
+      'npx -y -p osf-api-v2-typescript -p @modelcontextprotocol/sdk@1 -p ts-morph@28 osf-mcp',
+    );
     expect(message).toContain(NPX_LAUNCH_COMMAND);
   });
 
   it('includes the global install alternative', () => {
-    expect(GLOBAL_INSTALL_COMMAND).toBe('npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk ts-morph');
+    expect(GLOBAL_INSTALL_COMMAND).toBe('npm install -g osf-api-v2-typescript @modelcontextprotocol/sdk@1 ts-morph@28');
     expect(message).toContain(GLOBAL_INSTALL_COMMAND);
   });
 
@@ -78,5 +80,17 @@ describe('formatMissingPackagesMessage', () => {
     const partial = formatMissingPackagesMessage(['ts-morph']);
     expect(partial).toContain('  - ts-morph');
     expect(partial).not.toContain('  - @modelcontextprotocol/sdk');
+  });
+});
+
+describe('REQUIRED_PACKAGES launch specs', () => {
+  it.each(REQUIRED_PACKAGES)('pins a major version for $name', ({ name, launchSpec }) => {
+    expect(launchSpec.startsWith(`${name}@`)).toBe(true);
+    expect(launchSpec.slice(name.length + 1)).toMatch(/^\d+$/);
+  });
+
+  it.each(REQUIRED_PACKAGES)('uses the launch spec of $name in both commands', ({ launchSpec }) => {
+    expect(NPX_LAUNCH_COMMAND).toContain(` -p ${launchSpec} `);
+    expect(GLOBAL_INSTALL_COMMAND.split(' ')).toContain(launchSpec);
   });
 });
